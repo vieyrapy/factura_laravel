@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Pago;
+use App\Clientes;
 use Illuminate\Http\Request;
 
 class PagoController extends Controller
@@ -36,7 +37,17 @@ class PagoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //  
+         
+        $cliente_id = Clientes::all()->last()->id;
+
+          $pago = new Pago;
+          $pago-> concepto  = $request->input('concepto');
+          $pago-> total = $request->input('total');
+          $pago-> entrega = $request->input('entrega');
+          $pago-> saldo = $request->input('saldo');
+          $pago-> clientes_id =  $cliente_id;
+          $pago->save();
     }
 
     /**

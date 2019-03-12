@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ 
 use App\Clientes;
+use App\Pago;
 use Illuminate\Http\Request;
 
 class ClientesController extends Controller
@@ -55,6 +56,16 @@ class ClientesController extends Controller
           $cliente->telefono = $request->input('telefono');
           $cliente->save();
 
+
+        $cliente_id = Clientes::all()->last()->id;
+
+          $pago = new Pago;
+          $pago-> concepto  = $request->input('concepto');
+          $pago-> total = $request->input('total');
+          $pago-> entrega = $request->input('entrega');
+          $pago-> saldo = $request->input('saldo');
+          $pago-> clientes_id =  $cliente_id;
+          $pago->save();
           //realizar un mensaje de guardado 
           return redirect(' ')->with('success', 'Cliente guardado');
 
