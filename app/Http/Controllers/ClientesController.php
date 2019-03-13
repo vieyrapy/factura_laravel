@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Clientes;
 use App\Pago;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ClientesController extends Controller
 {
@@ -21,6 +22,7 @@ class ClientesController extends Controller
 
         // es igual a clientes/index y pedimos que devuelva todos los clientes en index (nombre_tabla, variablecreada)
         return view('clientes.index')->with('clientes', $cliente); 
+
     }
 
     /**
@@ -56,8 +58,9 @@ class ClientesController extends Controller
           $cliente->telefono = $request->input('telefono');
           $cliente->save();
 
-
+          //Se obtiene el ultimo id del cliente guardado 
         $cliente_id = Clientes::all()->last()->id;
+       
 
           $pago = new Pago;
           $pago-> concepto  = $request->input('concepto');
@@ -66,7 +69,23 @@ class ClientesController extends Controller
           $pago-> saldo = $request->input('saldo');
           $pago-> clientes_id =  $cliente_id;
           $pago->save();
+
+        // Se obtiene el correo electronico 
+        //$email_last = Clientes::all()->last()->email;
+
+
+          // se realiza un array de los datos guaradados para enviara por email 
+
+          $data = array(
+          
+          );
+                Mail::send('clientes.index', $data, function($menssage){
+                $menssage->from('vieyrasite@hotmail.com', 'Studio Sánchez');
+                $menssage->to(Clientes::all()->last()->email)->subject('Comprobante de pago');
+            });
+
           //realizar un mensaje de guardado 
+            return "Tu email ha sido enviado";
           return redirect(' ')->with('success', 'Cliente guardado');
 
     }
