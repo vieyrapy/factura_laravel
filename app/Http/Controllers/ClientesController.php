@@ -20,7 +20,7 @@ class ClientesController extends Controller
         // Laravel utiliza ORM = Object Relational Mapping
         //$cliente = Clientes::all();//trae todos los clientes
 
-        $cliente = Clientes::orderBy('id', 'DESC')->paginate();//trae todos los clientes
+        $cliente = Clientes::orderBy('id', 'DESC')->paginate(10);//trae todos los clientes
         // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos 
         //var_dump($cliente);
 
