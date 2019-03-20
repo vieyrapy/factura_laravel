@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center"> 
     <div class="col-sm">
-        <h2>Ejemplo de un foreach</h2>
+        <h2>Ejemplo de un foreach con lista 1</h2>
             <ul>
                 @foreach($clientes as $cliente)
                 <li>{{ $cliente-> nombre}}</li>
@@ -23,6 +23,20 @@
                 @endforeach
             </ul>
 </div>
+    
+       
+           @if(count($pagos)>0)
+                @foreach($cliente->pagos as $pagos)
+                <div class="card">
+                     <h2>Ejemplo de un foreach con lista 2</h2>
+                    <div class="card-body">
+                        <h3><a href="clientes/{{$pagos->id}}">{{$cliente->nombre}}</a></h3>
+                    </div>
+                </div>
+
+                @endforeach
+            @endif
+            
 
     
         <div class="col-sm">
