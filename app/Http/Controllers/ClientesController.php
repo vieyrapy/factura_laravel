@@ -20,6 +20,10 @@ class ClientesController extends Controller
         // Laravel utiliza ORM = Object Relational Mapping
         $cliente = Clientes::all();
 
+        // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos 
+        //var_dump($cliente);
+
+
         // es igual a clientes/index y pedimos que devuelva todos los clientes en index (nombre_tabla, variablecreada)
         return view('clientes.index')->with('clientes', $cliente); 
 
@@ -70,23 +74,33 @@ class ClientesController extends Controller
           $pago-> clientes_id =  $cliente_id;
           $pago->save();
 
+
+       
         // Se obtiene el correo electronico 
         //$email_last = Clientes::all()->last()->email;
 
 
           // se realiza un array de los datos guaradados para enviara por email 
-
+          $fecha_recibo = Pago::all()->last()->created_at;
           $data = array(
-          
+            
+           'nombre' => $request->input('nombre'),
+           'concepto' => $request->input('concepto'),
+           'total' => $request->input('total'),
+           'entrega' => $request->input('entrega'),
+            'saldo' => $request->input('saldo'), 
+            'fecha' => $fecha_recibo
+
+
           );
-                Mail::send('clientes.index', $data, function($menssage){
+                Mail::send('emails.comprobante', $data, function($menssage){
                 $menssage->from('vieyrasite@hotmail.com', 'Studio Sánchez');
                 $menssage->to(Clientes::all()->last()->email)->subject('Comprobante de pago');
-            });
+            }); 
 
           //realizar un mensaje de guardado 
             return "Tu email ha sido enviado";
-          return redirect(' ')->with('success', 'Cliente guardado');
+          //return redirect('../inc/mensajes')->with('success', 'Cliente guardado');
 
     }
 
@@ -96,9 +110,18 @@ class ClientesController extends Controller
      * @param  \App\Clientes  $clientes
      * @return \Illuminate\Http\Response
      */
-    public function show(Clientes $clientes)
+    public function show($id)
     {
+        //Mostrar detalles de un cliente
+        //$cliente_nombre = Pago::with('cliente')->get();
+
         //
+        $pago = Pago::find($id);     
+        return view('clientes.detalles')->with('pagos', $pago); 
+
+      
+
+
     }
 
     /**

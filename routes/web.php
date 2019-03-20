@@ -20,3 +20,5 @@ Route::resource('clientes', 'ClientesController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/emails', 'Email@index')->name('comprobante');
+
