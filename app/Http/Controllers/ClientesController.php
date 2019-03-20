@@ -18,8 +18,9 @@ class ClientesController extends Controller
     {
         // Creamos una variable en este caso $cliente y le pedimos que traiga todos los clientes de la BD 
         // Laravel utiliza ORM = Object Relational Mapping
-        $cliente = Clientes::all();
+        //$cliente = Clientes::all();//trae todos los clientes
 
+        $cliente = Clientes::orderBy('id', 'DESC')->paginate();//trae todos los clientes
         // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos 
         //var_dump($cliente);
 
@@ -104,6 +105,20 @@ class ClientesController extends Controller
 
     }
 
+
+    //Crear controlador de busqueda
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Clientes  $clientes
+     * @return \Illuminate\Http\Response
+     */
+    public function scopeSearch($query, $nombre)
+    {
+        // Query recibe tres parametros  
+        return $query->where('nombre', 'Like', "%$nombre%");
+  
+    }
     /**
      * Display the specified resource.
      *

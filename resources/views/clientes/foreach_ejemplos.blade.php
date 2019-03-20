@@ -3,54 +3,47 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center"> 
-
-        <div class="col-sm">
-            <h2>Lista de pagos</h2>
-
-
-                    <form method="POST" action="{{ route('clientes.store') }}">
-                        @csrf
-                        <input id="nombre" type="text" class="form-control" name="nombre" placeholder="Buscar" value="{{ old('nombre') }}" required autofocus>
-                    </form>
+    <div class="col-sm">
+        <h2>Ejemplo de un foreach con lista 1</h2>
+            <ul>
+                @foreach($clientes as $cliente)
+                <li>{{ $cliente-> nombre}}</li>
 
 
+                    <!--Ejemplo de un foreach dentro de un forech con formularios anidados-->
 
-            <table class="table table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th width="20px"> ID</th>
-                        <th>Nombre</th>
-                        <th>Debe</th>
-                        <th colspan="3">&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($clientes as $cliente)
-                         @foreach($cliente->pagos as $pagos)
-                         <tr>
-                             <td></td>
-                             <td><a href="clientes/{{$pagos->id}}">{{$cliente->nombre}}</a></td>
-                             <td><a href="clientes/{{$pagos->id}}">{{$pagos->saldo}}</a></td>
-                         </tr>
-                            
-
-                        @endforeach
-
+                    @foreach($cliente->pagos as $pagos)
+                        <strong>Fecha:</strong>{{$pagos->created_at}}<br>
+                        <strong>Concepto:</strong>{{$pagos->concepto}}<br>
+                        <strong>Total:</strong>{{$pagos->total}}<br>
+                        <strong>Entrega:</strong>{{$pagos->entrega}}<br>
+                        <strong>Saldo:</strong>{{$pagos->saldo}}<br>
                     @endforeach
-                </tbody>
-            </table>
-               {!! $clientes->render() !!}  
-        </div>
+
+                @endforeach
+            </ul>
+</div>
     
        
-      
+           @if(count($pagos)>0)
+                @foreach($cliente->pagos as $pagos)
+                <div class="card">
+                     <h2>Ejemplo de un foreach con lista 2</h2>
+                    <div class="card-body">
+                        <h3><a href="clientes/{{$pagos->id}}">{{$cliente->nombre}}</a></h3>
+                    </div>
+                </div>
+
+                @endforeach
+            @endif
+            
 
     
         <div class="col-sm">
             <div class="card">
                 
                 <div class="card-body">
-                <h2>Comprobante de Pago</h2>
+                <h1>Formulario Cliente</h1>
                         <form method="POST" action="{{ route('clientes.store') }}">
                             @csrf
 
@@ -124,10 +117,6 @@
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Guardar') }}
                                     </button>
-
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Imprimir') }}
-                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -141,5 +130,4 @@
 
            
 </div>
-
 @endsection
