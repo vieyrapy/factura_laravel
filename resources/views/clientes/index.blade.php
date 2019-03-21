@@ -7,18 +7,26 @@
         <div class="col-sm">
             <h2>Lista de pagos</h2>
 
+                <div class="cold-md-4">
+                    {!! Form::open(['route'=> 'clientes.index', 'method'=>'GET', 'class'=>'navbar-form navbar.left pull-rigth', 'role'=>'search']) !!}
+                    <div class="form-group">
+                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Nombre a buscar', 'required']) !!}
 
-                    <form method="POST" action="{{ route('clientes.store') }}">
-                        @csrf
-                        <input id="nombre" type="text" class="form-control" name="nombre" placeholder="Buscar" value="{{ old('nombre') }}" required autofocus>
-                    </form>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    {!! Form::close() !!}
+                
 
+                  
+                    
+                </div>
 
 
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
                         <th width="20px"> ID</th>
+                        <th>Fecha</th>
                         <th>Nombre</th>
                         <th>Debe</th>
                         <th colspan="3">&nbsp;</th>
@@ -29,6 +37,7 @@
                          @foreach($cliente->pagos as $pagos)
                          <tr>
                              <td></td>
+                             <td>{{date_format($cliente->created_at, 'd/m/Y')}}</td>
                              <td><a href="clientes/{{$pagos->id}}">{{$cliente->nombre}}</a></td>
                              <td><a href="clientes/{{$pagos->id}}">{{$pagos->saldo}}</a></td>
                          </tr>

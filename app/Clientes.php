@@ -11,4 +11,15 @@ class Clientes extends Model
     public function pagos(){
     	return $this->hasMany('App\Pago');
     }
+
+
+
+    public function scopeName($query, $name){
+    	//dd("scope:".$name);
+    	if ($name != ""){
+    		$query->where('nombre', "LIKE", "%$name%");
+    	}
+    	
+    }
+
 }

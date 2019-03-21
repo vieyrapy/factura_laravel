@@ -21,5 +21,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/emails', 'Email@index')->name('comprobante');
-//Route::post('/clientes', 'ClientesController@scopeSearch')->name('clientes/index');
+Route::get('/clientes/search', 'ClientesController@search')->name('index');
+
 

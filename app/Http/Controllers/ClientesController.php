@@ -7,20 +7,22 @@ use App\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class ClientesController extends Controller
+class ClientesController extends Controller 
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        //dd($request->get('name'));//probaar request 
+
         // Creamos una variable en este caso $cliente y le pedimos que traiga todos los clientes de la BD 
         // Laravel utiliza ORM = Object Relational Mapping
         //$cliente = Clientes::all();//trae todos los clientes
 
-        $cliente = Clientes::orderBy('id', 'DESC')->paginate(10);//trae todos los clientes
+        $cliente = Clientes::name($request->get('name'))->orderBy('id', 'DESC')->paginate(10);//trae todos los clientes
         // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos 
         //var_dump($cliente);
 
@@ -29,6 +31,7 @@ class ClientesController extends Controller
         return view('clientes.index')->with('clientes', $cliente); 
 
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -50,12 +53,6 @@ class ClientesController extends Controller
     {
 
     
-        //Realizamos primero una validación a todos los campos 
-        //$this->validate($request, [
-         //   'nombre' => 'requerid',
-          //  'email' => 'requerid',
-        //    'telefono' => 'requerid'
-       // ]);
           //Crear un nuevo cliente en nuestra base de datos
           $cliente = new Clientes;
           $cliente->nombre = $request->input('nombre');  
@@ -106,19 +103,6 @@ class ClientesController extends Controller
     }
 
 
-    //Crear controlador de busqueda
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Clientes  $clientes
-     * @return \Illuminate\Http\Response
-     */
-    public function scopeSearch($query, $nombre)
-    {
-        // Query recibe tres parametros  
-        return $query->where('nombre', 'Like', "%$nombre%");
-  
-    }
     /**
      * Display the specified resource.
      *
@@ -135,8 +119,6 @@ class ClientesController extends Controller
         return view('clientes.detalles')->with('pagos', $pago); 
 
       
-
-
     }
 
     /**
