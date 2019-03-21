@@ -5,12 +5,12 @@
     <div class="row justify-content-center"> 
 
         <div class="col-sm">
-            <h2>Lista de pagos</h2>
+            <!--<h2>Lista de pagos</h2>-->
 
                 <div class="cold-md-4">
                     {!! Form::open(['route'=> 'clientes.index', 'method'=>'GET', 'class'=>'navbar-form navbar.left pull-rigth', 'role'=>'search']) !!}
-                    <div class="form-group">
-                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Nombre a buscar', 'required']) !!}
+                    <div class="active-cyan-3 active-cyan-4 mb-4">
+                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Nombre: "Pablo" - Fecha: 2019-03-20  - Email - Teléfono', 'required']) !!}
 
                     </div>
                     <button type="submit" class="btn btn-primary">Buscar</button>
@@ -59,7 +59,7 @@
             <div class="card">
                 
                 <div class="card-body">
-                <h2>Comprobante de Pago</h2>
+                <!--<h2>Comprobante de Pago</h2>-->
                         <form method="POST" action="{{ route('clientes.store') }}">
                             @csrf
 
@@ -131,12 +131,10 @@
                                 <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        {{ __('Guardar') }}
+                                        {{ __('Guardar y Enviar') }}
                                     </button>
 
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Imprimir') }}
-                                    </button>
+                                   
                                 </div>
                             </div>
                         </form>

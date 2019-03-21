@@ -17,7 +17,10 @@ class Clientes extends Model
     public function scopeName($query, $name){
     	//dd("scope:".$name);
     	if ($name != ""){
-    		$query->where('nombre', "LIKE", "%$name%");
+    		$query->where('nombre', "LIKE", "%$name%")
+    		 ->orWhere('created_at',  "LIKE", "%$name%")
+    		 ->orWhere('email',  "LIKE", "%$name%")
+    		 ->orWhere('telefono',  "LIKE", "%$name%");
     	}
     	
     }
