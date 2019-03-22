@@ -39,7 +39,7 @@
                              <td></td>
                              <td>{{date_format($cliente->created_at, 'd/m/Y')}}</td>
                              <td><a href="clientes/{{$pagos->id}}">{{$cliente->nombre}}</a></td>
-                             <td><a href="clientes/{{$pagos->id}}">{{$pagos->saldo}}</a></td>
+                             <td><a href="clientes/{{$pagos->id}}">{{number_format($pagos->saldo, 0, ',', '.')}}</a></td>
                          </tr>
                             
 
@@ -59,8 +59,11 @@
             <div class="card">
                 
                 <div class="card-body">
+
+                             
+
                 <!--<h2>Comprobante de Pago</h2>-->
-                        <form method="POST" action="{{ route('clientes.store') }}">
+                        <form method="POST" action="{{ route('clientes.store') }}" name="f">
                             @csrf
 
                             <div class="form-group row">
@@ -99,11 +102,16 @@
                                     </div>
                                 </div>
 
+
+
+
+
+
                                   <div class="form-group row">
                                     <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Total') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="total" type="text" class="form-control" name="total" value="{{ old('total') }}" required autofocus>
+                                        <input id="total" type="text" class="form-control" name="total" value="{{ old('total') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" onchange="cal()" required autofocus>
                                     
                                     </div>
                                 </div>
@@ -113,7 +121,7 @@
                                     <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Entrega') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="entrega" type="text" class="form-control" name="entrega" value="{{ old('entrega') }}" required autofocus>
+                                        <input id="entrega" type="text" class="form-control" name="entrega" value="{{ old('entrega') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" onchange="cal()"  required autofocus>
                                     
                                     </div>
                                 </div>
@@ -123,7 +131,8 @@
                                     <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Saldo') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="saldo" type="text" class="form-control" name="saldo" value="{{ old('saldo') }}" required autofocus>
+
+                                        <input id="saldo" type="text" class="form-control" name="saldo" value="{{ old('saldo') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus readonly="readonly">
                                     
                                     </div>
                                 </div>
@@ -131,7 +140,7 @@
                                 <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        {{ __('Guardar y Enviar') }}
+                                        {{ __('Guardar y enviar') }}
                                     </button>
 
                                    
@@ -150,3 +159,73 @@
 </div>
 
 @endsection
+
+
+<script language="JavaScript">
+//Código para colocar 
+//los indicadores de miles mientras se escribe
+//script por tunait!
+function puntitos(donde,caracter)
+{
+pat = /[\*,\+,\(,\),\?,\\,\$,\[,\],\^]/
+valor = donde.value
+largo = valor.length
+crtr = true
+if(isNaN(caracter) || pat.test(caracter) == true)
+    {
+    if (pat.test(caracter)==true) 
+        {caracter = "\\" + caracter}
+    carcter = new RegExp(caracter,"g")
+    valor = valor.replace(carcter,"")
+    donde.value = valor
+    crtr = false
+    }
+else
+    {
+    var nums = new Array()
+    cont = 0
+    for(m=0;m<largo;m++)
+        {
+        if(valor.charAt(m) == "," || valor.charAt(m) == " ")
+            {continue;}
+        else{
+            nums[cont] = valor.charAt(m)
+            cont++
+            }
+        
+        }
+    }
+
+
+var cad1="",cad2="",tres=0
+if(largo > 3 && crtr == true)
+    {
+    for (k=nums.length-1;k>=0;k--)
+        {
+        cad1 = nums[k]
+        cad2 = cad1 + cad2
+        tres++
+        if((tres%3) == 0)
+            {
+            if(k!=0){
+                cad2 = "," + cad2
+                }
+            }
+        }
+     donde.value = cad2
+    }
+}   
+</script>
+
+                                <script>function cal() {
+                                  try {
+                                    var a = document.f.total.value,
+                                        b = document.f.entrega.value;
+
+                                    var a = a.replace(/,/g, "");
+                                    var b = b.replace(/,/g, "");
+                                    document.f.saldo.value = a - b;
+
+                                     } catch (e) {
+                                  }
+                                }</script>

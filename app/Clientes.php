@@ -20,7 +20,8 @@ class Clientes extends Model
     		$query->where('nombre', "LIKE", "%$name%")
     		 ->orWhere('created_at',  "LIKE", "%$name%")
     		 ->orWhere('email',  "LIKE", "%$name%")
-    		 ->orWhere('telefono',  "LIKE", "%$name%");
+    		 ->orWhere('telefono',  "LIKE", "%$name%")
+    		 ->orWhere('id',  "LIKE", "%$name%");
     	}
     	
     }

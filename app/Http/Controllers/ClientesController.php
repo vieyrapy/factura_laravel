@@ -66,9 +66,9 @@ class ClientesController extends Controller
 
           $pago = new Pago;
           $pago-> concepto  = $request->input('concepto');
-          $pago-> total = $request->input('total');
-          $pago-> entrega = $request->input('entrega');
-          $pago-> saldo = $request->input('saldo');
+          $pago-> total = preg_replace('/\D/', '', $request->input('total'));
+          $pago-> entrega = preg_replace('/\D/', '', $request->input('entrega'));
+          $pago-> saldo = preg_replace('/\D/', '', $request->input('saldo'));
           $pago-> clientes_id =  $cliente_id;
           $pago->save();
 
@@ -84,9 +84,9 @@ class ClientesController extends Controller
             
            'nombre' => $request->input('nombre'),
            'concepto' => $request->input('concepto'),
-           'total' => $request->input('total'),
-           'entrega' => $request->input('entrega'),
-            'saldo' => $request->input('saldo'), 
+           'total' => preg_replace('/\D/', '', $request->input('total')),
+           'entrega' => preg_replace('/\D/', '', $request->input('entrega')),
+            'saldo' => preg_replace('/\D/', '', $request->input('saldo')), 
             'fecha' => $fecha_recibo
 
 
