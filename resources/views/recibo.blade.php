@@ -1,12 +1,5 @@
-
-
-
-                    <a href="../recibo">Crear PDF</a>
-                    <a href="../clientes" class="btn btn-default float-right">Volver</a>
-
-               
-                <style type="text/css">
-    body {
+<style type="text/css">
+	body {
   padding: 50px;
 }
 
@@ -71,45 +64,48 @@
   
   <div class="receipt-section pull-left">
     <span class="receipt-label text-large">Número:</span>
-    <span class="text-large">{{$pagos->id}}</span>
+    <span class="text-large">2016/02</span>
   </div>
   
   <div class="pull-right receipt-section">
-    <span class="text-large receipt-label">Gs:</span>
-    <span class="text-large">{{$pagos->entrega}}</span>
+    <span class="text-large receipt-label">R$</span>
+    <span class="text-large">50,00</span>
   </div>
   
   <div class="clearfix"></div>
   
   <div class="receipt-section">
-    <span class="receipt-label">Total:</span>
-    <span>{{$pagos->total}}</span>
+    <span class="receipt-label">Beneficiário:</span>
+    <span>Tabata Ruiz (CPF: 333.333.333-99)</span>
   </div>
   
   <div class="receipt-section">
-    <span class="receipt-label">Saldo:</span>
-    <span>{{$pagos->saldo}}</span>
+    <span class="receipt-label">Responsável:</span>
+    <span>Tabata Ruiz (CPF: 333.333.333-99)</span>
   </div>
   
   <div class="receipt-section">
-    <p>El presente documento fue realizado en concepto de {{$pagos->concepto}} </p>
+    <p>Recebi de Tabata Ruiz a importância de cinquenta reais</p>
+    <p>Referente a meus serviços profissionais</p>
   </div>
   
   <div class="receipt-section">
-    <p class="pull-right text-large">Encarnación, {{$pagos->created_at}}</p>
+    <p class="pull-right text-large">São Paulo, 07/11/2016</p>
   </div>
   
   <div class="clearfix"></div>
   
   <div class="receipt-signature col-xs-6">
     <p class="receipt-line"></p>
-    <p>Studio Digital Sánchez</p>
-    <p>071 - 208 206</p>
-    <p>Mons. Wiessen Nº 856 e/ Avda. Irrazábal y Tte. Honorio González</p>
-    <p>Encarnación - Paraguay</p>
+    <p>Clínica Matriz</p>
+    <p>41.254.455/0001-00</p>
+    <p>Rua Blablabla, 3456 - Jd. das Cerejeiras</p>
+    <p>São Paulo - SP - 09889-349</p>
   </div>
 
-
+  <div class="receipt-signature col-xs-6">
+    <p class="receipt-line"></p>
+    <p>Tabata Ruiz</p>
+    <p>333.333.333-99</p>
+  </div>
 </div>
-
-               

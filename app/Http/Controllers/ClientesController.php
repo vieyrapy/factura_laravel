@@ -6,6 +6,7 @@ use App\Clientes;
 use App\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\PDF;
 
 class ClientesController extends Controller 
 {
@@ -81,7 +82,8 @@ class ClientesController extends Controller
           // se realiza un array de los datos guaradados para enviara por email 
           $fecha_recibo = Pago::all()->last()->created_at;
           $data = array(
-            
+            // preg_replace('/\D/', '', ) se utiliza para retirar caracteres de un lista recibe tres datos el valor a quitar '/\D/' el valor nuevo "" y cual es valor que debemos analizar y hacer los cambios 
+
            'nombre' => $request->input('nombre'),
            'concepto' => $request->input('concepto'),
            'total' => preg_replace('/\D/', '', $request->input('total')),
@@ -93,12 +95,14 @@ class ClientesController extends Controller
           );
                 Mail::send('emails.comprobante', $data, function($menssage){
                 $menssage->from('vieyrasite@hotmail.com', 'Studio Sánchez');
-                $menssage->to(Clientes::all()->last()->email)->subject('Comprobante de pago');
+                $menssage->to(Clientes::all()->last()->email)->cc('latinotanato@gmail.com')->subject('Comprobante de pago');
             }); 
 
+$pdf = PDF::loadView('emails.comprobante', $data);
+return $pdf->download('invoice.pdf');
           //realizar un mensaje de guardado 
-            return "Tu email ha sido enviado";
-          //return redirect('../inc/mensajes')->with('success', 'Cliente guardado');
+            //return "Tu email ha sido enviado";
+          return view('clientes.detalles')->with('pagos', $pago); 
 
     }
 

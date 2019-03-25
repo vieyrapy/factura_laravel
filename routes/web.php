@@ -20,7 +20,13 @@ Route::resource('clientes', 'ClientesController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/emails', 'Email@index')->name('comprobante');
+Route::get('/comprobante', 'Email@index')->name('comprobante');
 Route::get('/clientes/search', 'ClientesController@search')->name('index');
 
 
+Route::get('/recibo', function () {
+    return view('recibo');
+
+    $pdf = PDF::loadView('recibo');
+	return $pdf->download('factura.pdf');
+});
