@@ -76,7 +76,7 @@ class ClientesController extends Controller
 
        
         // Se obtiene el correo electronico 
-        //$email_last = Clientes::all()->last()->email;
+        //$email_last = Clientes::all()->last()->email; 
 
 
           // se realiza un array de los datos guaradados para enviara por email 
@@ -98,8 +98,7 @@ class ClientesController extends Controller
                 $menssage->to(Clientes::all()->last()->email)->cc('latinotanato@gmail.com')->subject('Comprobante de pago');
             }); 
 
-$pdf = PDF::loadView('emails.comprobante', $data);
-return $pdf->download('invoice.pdf');
+
           //realizar un mensaje de guardado 
             //return "Tu email ha sido enviado";
           return view('clientes.detalles')->with('pagos', $pago); 
@@ -116,15 +115,27 @@ return $pdf->download('invoice.pdf');
     public function show($id)
     {
         //Mostrar detalles de un cliente
-        //$cliente_nombre = Pago::with('cliente')->get();
-
-        //
+        $cliente_id = Pago::find($id)->clientes_id;
+        $cliente = Clientes::find($cliente_id);
         $pago = Pago::find($id);     
-        return view('clientes.detalles')->with('pagos', $pago); 
+
+        return view('clientes.detalles')->with('pagos', $pago)->with('clientes', $cliente);  
 
       
     }
 
+    public function pdf($id)
+    {
+        //Mostrar detalles de un cliente
+        $cliente_id = Pago::find($id)->clientes_id;
+        $cliente = Clientes::find($cliente_id);
+        $pago = Pago::find($id);     
+
+        return view('clientes.detalles-pdf')->with('pagos', $pago)->with('clientes', $cliente);  
+
+      
+    }
+    
     /**
      * Show the form for editing the specified resource.
      *

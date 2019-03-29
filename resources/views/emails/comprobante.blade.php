@@ -111,7 +111,7 @@
                                         </tr>
                                         <tr>
                                             <td style="font-family:'Lato-Regular',Lato,sans-serif;font-size:12px;font-weight:900;color:#4a4a4a">
-                                                SALDO RESTANTE
+                                                SALDO 
                                             </td>
                                         </tr>
                                     </tbody></table>

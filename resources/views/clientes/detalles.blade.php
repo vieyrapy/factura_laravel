@@ -1,115 +1,180 @@
 
+@extends('layouts.app')
 
+@section('content')
 
-                    <a href="../recibo">Crear PDF</a>
-                    <a href="../clientes" class="btn btn-default float-right">Volver</a>
+    <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#f0f0f0" align="center">
+    
+    <tbody>
+    <a href="../recibo" class="btn btn-default float-right">Crear PDF</a>
+    <a href="../clientes" class="btn btn-default float-right">Volver</a>
 
+      <tr width="100%" align="center">
+        <td width="100%" align="center">
+            <table cellspacing="0" cellpadding="0" width="600px">
+                <tbody><tr>
+                    <td style="height:61px" align="center">
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:#ffffff" align="left" valign="middle">
+                        <a href="#m_-6108734568478989486_">
+                            <img src="http://rocemi.com.py/wp-content/uploads/2019/03/sds-nav-emails.jpg" width="600px" border="0" alt="Studio Sanchez" align="center" class="CToWUd">
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:#ffffff;font-family:'Lato-Regular','Lato',Calibri,sans-serif!important" align="center" valign="middle">
+                        <table cellspacing="0" cellpadding="0" width="420px" bgcolor="#ffffff">
+    <tbody><tr>
+        <td style="height:60px" align="center"></td>
+    </tr>
+    <tr>
+        <td width="420px" style="color:#ff7800;font-size:60px;font-family:'Lato-Light',Lato,sans-serif;line-height:55px" align="center" valign="middle">
+         
+        </td>
+    </tr>
+    <tr>
+        <td style="height:40px" align="center"></td>
+    </tr>
+    <tr align="center">
+        <td style="color:#4a4a4a;font-size:18px;font-family:'Lato-Regular',Lato,sans-serif" align="center" width="351px" valign="middle">
+            <b>{{$clientes->nombre}}</b>, acontinuación se detalla el pago realizado por: <b>{{$pagos->concepto}}</b>.<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="height:45px" align="center"></td>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tbody><tr>
+                  
+                
+                    <td valign="top">
+                        <table>
+                            <tbody>
+                            <tr>
+                              
+                                <td valign="top">
+                                    <table width="100%" cellspacing="0" cellpadding="0">
+                                        <tbody><tr>
+                                            <td style="font-family:'Lato-Light',Lato,sans-serif;font-size:20px;color:#4a4a4a">
+                                                {{date_format($pagos->created_at, 'd/m/Y')}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#9b9b9b;font-size:12px;text-align:left;font-family:'Lato-Regular',Lato,sans-serif">
+                                                Fecha de pago
+                                            
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        <td height="9px"></td>
+                                        </tr>
+                                
+                                        <tr>
+                                            <td height="8px"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#003278;font-size:40px;font-family:'Lato-Regular',Lato,sans-serif;font-weight:900">
+                                                <b>Gs. {{number_format($pagos->entrega, 0, ',', '.')}}</b>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family:'Lato-Regular',Lato,sans-serif;font-size:12px;font-weight:900;color:#4a4a4a">
+                                                PAGO REALIZADO
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="9px"></td>
+                                        </tr>
+                                
+                                        <tr>
+                                            <td height="8px"></td>
+                                        </tr>
+                                   
+                                         <tr>
+                                            <td style="font-family:'Lato-Light',Lato,sans-serif;font-size:30px;color:#4a4a4a">
+                                                <b>Gs. {{number_format($pagos->total, 0, ',', '.')}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family:'Lato-Regular',Lato,sans-serif;font-size:12px;font-weight:900;color:#4a4a4a">
+                                                DEUDA TOTAL
+                                            </td>
+                                        </tr>
+                                       
+                                        <tr>
+                                            <td height="9px"></td>
+                                        </tr>
+                                
+                                        <tr>
+                                            <td height="8px"></td>
+                                        </tr>
+                                         <tr>
+                                            <td style="font-family:'Lato-Light',Lato,sans-serif;font-size:30px;color:#ff7800">
+                                                <b>Gs. {{number_format($pagos->saldo, 0, ',', '.')}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family:'Lato-Regular',Lato,sans-serif;font-size:12px;font-weight:900;color:#4a4a4a">
+                                                SALDO 
+                                            </td>
+                                        </tr>
+                                    
+                                        <tr>
+                                            <td style="font-family:'Lato-Regular',Lato,sans-serif;font-size:14px;font-weight:900;color:#4a4a4a">
+                                                <br>
+                                      <br>
+                                                TELEFONO: <b>{{$clientes->telefono}}</b> 
+                                                <br>
+                                                E-MAIL: <b>{{$clientes->email}}</b>
+                                            </td>
+                                        </tr>
+                                    </tbody></table>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+            </tbody></table>
+        </td>
+    </tr>
+    <tr>
+        <td style="height:69px" align="center"></td>
+    </tr>
+</tbody></table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:#f4f4f4;font-family:'Lato-Regular','Lato',Calibri,sans-serif!important" align="left" valign="middle" height="145px">
+                        <table>
+                            <tbody><tr>
+                                <td width="73px"></td>
+                                <td>
+                                    <img src="http://rocemi.com.py/wp-content/uploads/2019/03/sds.png" width="61px" border="0" alt="Studio Sanchez" align="center" class="CToWUd">
+                                </td>
+                                <td width="120px"></td>
+                                <td width="117px" style="color:#545353;font-size:12px" align="center">Si tenés alguna
+                                    duda,
+                                    escribinos a <b><a href="mailto:sanchezdigital1520@hotmail.com" style="color:#545353" target="_blank">sanchezdigital1520@hotmail.com</a></b>
+                                </td>
+                                <td width="48px"></td>
+                                <td><a href="https://www.facebook.com/studiosanchez" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/fb.png" width="8px" class="CToWUd"></a></td>
+                                <td width="32px"></td>
+                               
+                                <td><a href="https://www.instagram.com/studiosanchezpy/" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/inst.png" width="15px" class="CToWUd"></a></td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+                <tr><td align="center" style="font-family:'Lato-Regular','Lato',Calibri,sans-serif!important;color:#545353">Este es un correo electrónico automatizado del sistema. Por favor no responder a este email.</td></tr>
+            </tbody></table>
+        </td>
+    </tr>
+</tbody></table>
                
-                <style type="text/css">
-    body {
-  padding: 50px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-.receipt-main {
-  display: inline-block;
-  width: 100%;
-  padding: 15px;
-  font-size: 12px;
-  border: 1px solid #000;
-}
-
-.receipt-title {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-}
-  
-.receipt-label {
-  font-weight: 600;
-}
-
-.text-large {
-  font-size: 16px;
-}
-
-.receipt-section {
-  margin-top: 10px;
-}
-
-.receipt-footer {
-  text-align: center;
-  background: #ff0000;
-}
-
-.receipt-signature {
-  height: 80px;
-  margin: 50px 0;
-  padding: 0 50px;
-  background: #fff;
-  
-  .receipt-line {
-    margin-bottom: 10px;
-    border-bottom: 1px solid #000;
-  }
-  
-  p {
-    text-align: center;
-    margin: 0;
-  }
-}
-</style>
-
-<div class="receipt-main">
-  
-  <p class="receipt-title">Recibo</p>
-  
-  <div class="receipt-section pull-left">
-    <span class="receipt-label text-large">Número:</span>
-    <span class="text-large">{{$pagos->id}}</span>
-  </div>
-  
-  <div class="pull-right receipt-section">
-    <span class="text-large receipt-label">Gs:</span>
-    <span class="text-large">{{$pagos->entrega}}</span>
-  </div>
-  
-  <div class="clearfix"></div>
-  
-  <div class="receipt-section">
-    <span class="receipt-label">Total:</span>
-    <span>{{$pagos->total}}</span>
-  </div>
-  
-  <div class="receipt-section">
-    <span class="receipt-label">Saldo:</span>
-    <span>{{$pagos->saldo}}</span>
-  </div>
-  
-  <div class="receipt-section">
-    <p>El presente documento fue realizado en concepto de {{$pagos->concepto}} </p>
-  </div>
-  
-  <div class="receipt-section">
-    <p class="pull-right text-large">Encarnación, {{$pagos->created_at}}</p>
-  </div>
-  
-  <div class="clearfix"></div>
-  
-  <div class="receipt-signature col-xs-6">
-    <p class="receipt-line"></p>
-    <p>Studio Digital Sánchez</p>
-    <p>071 - 208 206</p>
-    <p>Mons. Wiessen Nº 856 e/ Avda. Irrazábal y Tte. Honorio González</p>
-    <p>Encarnación - Paraguay</p>
-  </div>
-
-
-</div>
-
-               
+@endsection

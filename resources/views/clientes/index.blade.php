@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-@if (auth()->user())
-<div class="container">
+
+<div class="container"> 
     <div class="row justify-content-center"> 
 
         <div class="col-sm">
@@ -11,7 +11,7 @@
                 <div class="cold-md-4">
                     {!! Form::open(['route'=> 'clientes.index', 'method'=>'GET', 'class'=>'navbar-form navbar.left pull-rigth', 'role'=>'search']) !!}
                     <div class="active-cyan-3 active-cyan-4 mb-4">
-                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Nombre: "Pablo" - Fecha: 2019-03-20  - Email - Teléfono', 'required']) !!}
+                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Buscar por: Nombre - Fecha: 2019-03-20  - Email - Teléfono', 'required']) !!}
 
                     </div>
                     <button type="submit" class="btn btn-primary">Buscar</button>
@@ -158,9 +158,7 @@
 
            
 </div>
-@else
-<h1>No tienes permiso </h1>
-@endif
+
 
 @endsection
 
