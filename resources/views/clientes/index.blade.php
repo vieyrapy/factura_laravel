@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@if (auth()->user())
 <div class="container">
     <div class="row justify-content-center"> 
 
@@ -157,8 +158,12 @@
 
            
 </div>
+@else
+<h1>No tienes permiso </h1>
+@endif
 
 @endsection
+
 
 
 <script language="JavaScript">
