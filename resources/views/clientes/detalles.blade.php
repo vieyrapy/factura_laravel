@@ -2,7 +2,8 @@
 @extends('layouts.app')
 
 @section('content')
-
+     @if (auth()->user())
+ 
     <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#f0f0f0" align="center">
     
     <tbody>
@@ -176,5 +177,8 @@
         </td>
     </tr>
 </tbody></table>
+      @else
+            <h1>No tienes permiso </h1>
+      @endif
                
 @endsection

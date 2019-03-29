@@ -73,13 +73,9 @@
         </nav>
 
         <main class="py-4">
-        @if (auth()->user())
-        
+
             @yield('content')
 
-        @else
-            <h1>No tienes permiso </h1>
-        @endif
 
         </main>
     </div>
