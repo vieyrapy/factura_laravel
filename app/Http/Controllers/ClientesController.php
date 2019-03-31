@@ -150,7 +150,7 @@ class ClientesController extends Controller
         );
         
             $pdf = PDF::loadView('clientes.pdf', $data ); 
-            return $pdf->download('factura.pdf');     
+            return $pdf->download($cliente->nombre.'_factura.pdf');     
 
     }
     
