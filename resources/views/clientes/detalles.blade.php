@@ -1,14 +1,16 @@
 
 @extends('layouts.app')
 
-@section('content')
-     @if (auth()->user())
+@section('content') 
+   
  
+
+                       
+
+
     <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#f0f0f0" align="center">
     
     <tbody>
-    <a href="../recibo" class="btn btn-default float-right">Crear PDF</a>
-    <a href="../clientes" class="btn btn-default float-right">Volver</a>
 
       <tr width="100%" align="center">
         <td width="100%" align="center">
@@ -28,17 +30,40 @@
                 <tr>
                     <td style="background-color:#ffffff;font-family:'Lato-Regular','Lato',Calibri,sans-serif!important" align="center" valign="middle">
                         <table cellspacing="0" cellpadding="0" width="420px" bgcolor="#ffffff">
-    <tbody><tr>
-        <td style="height:60px" align="center"></td>
-    </tr>
-    <tr>
-        <td width="420px" style="color:#ff7800;font-size:60px;font-family:'Lato-Light',Lato,sans-serif;line-height:55px" align="center" valign="middle">
-         
-        </td>
-    </tr>
-    <tr>
-        <td style="height:40px" align="center"></td>
-    </tr>
+    <tbody>
+
+                        <form method="POST" action="{{ route('pdf')}}" > 
+                            @csrf
+
+                            <div class="form-group row">
+                                
+                                <div class="col-md-6" hidden>
+                                    <input id="id_pago" type="text" class="form-control" name="id_pago" value="{{$pagos->id}}" required autofocus>
+                                
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-0" align="rigth">
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('Imprimir') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+        <tr>
+            <td style="height:60px" align="center"></td>
+        </tr>
+        <tr>
+            <td width="420px" style="color:#ff7800;font-size:60px;font-family:'Lato-Light',Lato,sans-serif;line-height:55px" align="center" valign="middle">
+             
+            </td>
+        </tr>
+        <tr>
+            <td style="height:40px" align="center"></td>
+        </tr>
+
     <tr align="center">
         <td style="color:#4a4a4a;font-size:18px;font-family:'Lato-Regular',Lato,sans-serif" align="center" width="351px" valign="middle">
             <b>{{$clientes->nombre}}</b>, acontinuación se detalla el pago realizado por: <b>{{$pagos->concepto}}</b>.<br><br>
@@ -133,6 +158,8 @@
                                                 TELEFONO: <b>{{$clientes->telefono}}</b> 
                                                 <br>
                                                 E-MAIL: <b>{{$clientes->email}}</b>
+                                                <br>
+                                                ID: <b>{{$pagos->id}}</b>
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -177,8 +204,6 @@
         </td>
     </tr>
 </tbody></table>
-      @else
-            <h1>No tienes permiso </h1>
-      @endif
+
                
 @endsection

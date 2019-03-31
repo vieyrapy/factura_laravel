@@ -6,10 +6,14 @@ use App\Clientes;
 use App\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\PDF;
-
+use PDF;
 class ClientesController extends Controller 
 {
+
+     public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -124,16 +128,30 @@ class ClientesController extends Controller
       
     }
 
-    public function pdf($id)
+    public function pdf(Request $request)
     {
-        //Mostrar detalles de un cliente
-        $cliente_id = Pago::find($id)->clientes_id;
-        $cliente = Clientes::find($cliente_id);
-        $pago = Pago::find($id);     
+        //Trae el id del form de crear PDF de clientes.detalle
+         $id = $request->input('id_pago');
 
-        return view('clientes.detalles-pdf')->with('pagos', $pago)->with('clientes', $cliente);  
+            //Mostrar detalles de un cliente
+            $cliente_id = Pago::find($id)->clientes_id;
+            $cliente = Clientes::find($cliente_id);
+            $pago = Pago::find($id);
 
-      
+       $data = array (
+            'id' => $pago->id,
+            'nombre' => $cliente->nombre,
+            'concepto' => $pago->concepto,
+            'total' => $pago->total,
+            'entrega' => $pago->entrega,
+            'saldo' =>  $pago->saldo,
+            'fecha' => $pago->created_at
+           
+        );
+        
+            $pdf = PDF::loadView('clientes.pdf', $data ); 
+            return $pdf->download('factura.pdf');     
+
     }
     
     /**
