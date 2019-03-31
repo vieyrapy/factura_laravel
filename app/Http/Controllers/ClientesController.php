@@ -61,72 +61,85 @@ class ClientesController extends Controller
         DB::beginTransaction();
         try{
     
-              //Crear un nuevo cliente en nuestra base de datos
-              $cliente = new Clientes;
-              $cliente->nombre = $request->input('nombre');  
-              $cliente->email = $request->input('email');
-              $cliente->telefono = $request->input('telefono');
-              $cliente->save();
+                  //Crear un nuevo cliente en nuestra base de datos
+                  $cliente = new Clientes;
+                  $cliente->nombre = $request->input('nombre');  
+                  $cliente->email = $request->input('email');
+                  $cliente->telefono = $request->input('telefono');
+                  $cliente->save();
 
-              //Se obtiene el ultimo id del cliente guardado para pasarle ese dato a clientes_id
-            $cliente_id = Clientes::all()->last()->id;
-           
+                  //Se obtiene el ultimo id del cliente guardado para pasarle ese dato a clientes_id
+                    $cliente_id = Clientes::all()->last()->id;
+               
 
-              $pago = new Pago;
-              $pago-> concepto  = $request->input('concepto');
-              $pago-> total = preg_replace('/\D/', '', $request->input('total'));
-              $pago-> entrega = preg_replace('/\D/', '', $request->input('entrega'));
-              $pago-> saldo = preg_replace('/\D/', '', $request->input('saldo'));
-              $pago-> clientes_id =  $cliente_id;
-              $pago->save();
-              DB::commit();
+                  $pago = new Pago;
+                  $pago-> concepto  = $request->input('concepto');
+                  $pago-> total = preg_replace('/\D/', '', $request->input('total'));
+                  $pago-> entrega = preg_replace('/\D/', '', $request->input('entrega'));
+                  $pago-> saldo = preg_replace('/\D/', '', $request->input('saldo'));
+                  $pago-> clientes_id =  $cliente_id;
+                  $pago->save();
+                  
 
+                DB::commit();
 
-        } catch(\Exception $e){
-                //if there is an error/exception in the above code before commit, it'll rollback
+            } catch(\Exception $e){
 
-        DB::rollBack();
-            return 'Se ha detectado un error y no se pudo guardar. Verifique su conexión a internet o consulte con el Administrador de Sistemas';
-        }
-       
+                //si hay un error / excepción en el código anterior antes de confirmar, se revertirá los datos en la BD
+                // pero el EMAIL IGUAL SERÁ ENVIADO
 
-       if(DB::rollBack()){
-
-       } else{
+                DB::rollBack();
+                    return 'EL EMAIL FUE ENVIADO pero se ha detectado un error y no se pudo guardar los cambios en la Base de Datos. Verifique su conexión a internet o consulte con el Administrador de Sistemas';
+                }
 
 
-       
-            // Se obtiene el correo electronico 
-            //$email_last = Clientes::all()->last()->email; 
 
-        
-          // se realiza un array de los datos guaradados para enviara por email 
-          $fecha_recibo = Pago::all()->last()->created_at;
-          $data = array(
-            // preg_replace('/\D/', '', ) se utiliza para retirar caracteres de un lista recibe tres datos el valor a quitar '/\D/' el valor nuevo "" y cual es valor que debemos analizar y hacer los cambios 
+        try{        
+                // Se obtiene el correo electronico 
+                //$email_last = Clientes::all()->last()->email; 
 
-           'nombre' => $request->input('nombre'),
-           'concepto' => $request->input('concepto'),
-           'total' => preg_replace('/\D/', '', $request->input('total')),
-           'entrega' => preg_replace('/\D/', '', $request->input('entrega')),
-            'saldo' => preg_replace('/\D/', '', $request->input('saldo')), 
-            'fecha' => $fecha_recibo
+            
+              // se realiza un array de los datos guaradados para enviara por email 
+              $fecha_recibo = Pago::all()->last()->created_at;
+              $data = array(
+                // preg_replace('/\D/', '', ) se utiliza para retirar caracteres de un lista recibe tres datos el valor a quitar '/\D/' el valor nuevo "" y cual es valor que debemos analizar y hacer los cambios 
 
+               'nombre' => $request->input('nombre'),
+               'concepto' => $request->input('concepto'),
+               'total' => preg_replace('/\D/', '', $request->input('total')),
+               'entrega' => preg_replace('/\D/', '', $request->input('entrega')),
+                'saldo' => preg_replace('/\D/', '', $request->input('saldo')), 
+                'fecha' => $fecha_recibo
+                );
 
-          );
-                
-                Mail::send('emails.comprobante', $data, function($menssage){
+                    
+                    Mail::send('emails.comprobante', $data, function($menssage){
 
-                $menssage->from('recibos@studiosanchez.rocemi.com.py', 'Studio Sánchez');
-                $menssage->to(Clientes::all()->last()->email)->cc('studiosanchezpy@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago');
-            }); 
+                    $menssage->from('recibos@studiosanchez.rocemi.com.py', 'Studio Sánchez');
+                    $menssage->to(Clientes::all()->last()->email)->cc('studiosanchezpy@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago');
+                    }); 
+            
+                    Mail::failures();
+                    
+            } catch(\Exception $e){
 
+                //si hay un error / excepción en el código anterior antes de confirmar, se revertirá los datos en la BD
+                // pero el EMAIL IGUAL SERÁ ENVIADO
 
-          //realizar un mensaje de guardado 
-            return redirect()->route('clientes.index');
-        
-        }
-      
+                    return 'No se pudo enviar el email';
+                }
+
+            try{  
+
+                  //redirige a la pagina index de cliente
+                    return redirect()->route('clientes.index');
+
+             } catch(\Exception $e){
+
+                //Redirige a inicio
+
+                    return view('welcome');
+                }
     }
 
 

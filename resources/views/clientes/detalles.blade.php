@@ -47,25 +47,37 @@
         <tr align="center">
             <td style="color:#4a4a4a;font-size:18px;font-family:'Lato-Regular',Lato,sans-serif" align="center" width="351px" valign="middle">
                 <b>{{$clientes->nombre}}</b>, acontinuación se detalla el pago realizado por: <b>{{$pagos->concepto}}</b>.<br><br>
+
+                <div class="row">
+                    <div class="col-sm-6">
                         <form method="POST" action="{{ route('pdf')}}"> 
                             @csrf
 
-                            <div class="form-group row">
+                            <div class="form-group row mb-0" >
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-outline-dark btn-lm">
+                                        {{ __('Descargar recibo') }}
+                                    </button>
+                                </div>
+                            </div>
+                             <div class="form-group row">
                                 
                                 <div class="col-md-6" hidden>
                                     <input id="id_pago" type="text" class="form-control" name="id_pago" value="{{$pagos->id}}" required autofocus>
                                 
                                 </div>
                             </div>
-
-                            <div class="form-group row mb-0" >
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-outline-dark btn-lg">
-                                        {{ __('Descargar recibo') }}
-                                    </button>
-                                </div>
-                            </div>
                         </form>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <a target="_blank" href="https://api.whatsapp.com/send?phone=595{{substr($clientes->telefono,1)}}&text=%0a%0a*{{$clientes->nombre}}*,%20gracias%20por%20tu%20preferencia.%0a%0a*COMPROBANTE%20DE%20PAGO%20Nº:*%20{{$pagos->id}}%0aEncarnación,%20{{date_format($pagos->created_at, 'd/m/Y')}}%0a%20*Entrega:%20Gs.*%20{{number_format($pagos->entrega, 0, ',', '.')}}%0a%20Total:%20Gs. {{number_format($pagos->total, 0, ',', '.')}}%0a%20Saldo:%20Gs. {{number_format($pagos->saldo, 0, ',', '.')}}%0a%20Concepto:%20{{$pagos->concepto}}.%0a%0a📸%20*Studio%20Sánchez*%0a☎%20071%20208206%20|%200982-359850%20"><button type="button" class="btn btn-outline-dark btn-lm" >Enviar Whatsapp!</button></a>
+                    </div>
+                </div>
+                      
+                     
+                           
+
             </td>
         </tr>
 
