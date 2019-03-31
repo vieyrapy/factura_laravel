@@ -7,6 +7,7 @@ use App\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;
+use DB;
 class ClientesController extends Controller 
 {
 
@@ -56,33 +57,49 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
-
+        //Transaccion y Rollback
+        DB::beginTransaction();
+        try{
     
-          //Crear un nuevo cliente en nuestra base de datos
-          $cliente = new Clientes;
-          $cliente->nombre = $request->input('nombre');  
-          $cliente->email = $request->input('email');
-          $cliente->telefono = $request->input('telefono');
-          $cliente->save();
+              //Crear un nuevo cliente en nuestra base de datos
+              $cliente = new Clientes;
+              $cliente->nombre = $request->input('nombre');  
+              $cliente->email = $request->input('email');
+              $cliente->telefono = $request->input('telefono');
+              $cliente->save();
 
-          //Se obtiene el ultimo id del cliente guardado 
-        $cliente_id = Clientes::all()->last()->id;
+              //Se obtiene el ultimo id del cliente guardado para pasarle ese dato a clientes_id
+            $cliente_id = Clientes::all()->last()->id;
+           
+
+              $pago = new Pago;
+              $pago-> concepto  = $request->input('concepto');
+              $pago-> total = preg_replace('/\D/', '', $request->input('total'));
+              $pago-> entrega = preg_replace('/\D/', '', $request->input('entrega'));
+              $pago-> saldo = preg_replace('/\D/', '', $request->input('saldo'));
+              $pago-> clientes_id =  $cliente_id;
+              $pago->save();
+              DB::commit();
+
+
+        } catch(\Exception $e){
+                //if there is an error/exception in the above code before commit, it'll rollback
+
+        DB::rollBack();
+            return 'Se ha detectado un error y no se pudo guardar. Verifique su conexión a internet o consulte con el Administrador de Sistemas';
+        }
        
 
-          $pago = new Pago;
-          $pago-> concepto  = $request->input('concepto');
-          $pago-> total = preg_replace('/\D/', '', $request->input('total'));
-          $pago-> entrega = preg_replace('/\D/', '', $request->input('entrega'));
-          $pago-> saldo = preg_replace('/\D/', '', $request->input('saldo'));
-          $pago-> clientes_id =  $cliente_id;
-          $pago->save();
+       if(DB::rollBack()){
+
+       } else{
 
 
        
-        // Se obtiene el correo electronico 
-        //$email_last = Clientes::all()->last()->email; 
+            // Se obtiene el correo electronico 
+            //$email_last = Clientes::all()->last()->email; 
 
-
+        
           // se realiza un array de los datos guaradados para enviara por email 
           $fecha_recibo = Pago::all()->last()->created_at;
           $data = array(
@@ -97,16 +114,19 @@ class ClientesController extends Controller
 
 
           );
+                
                 Mail::send('emails.comprobante', $data, function($menssage){
-                $menssage->from('vieyrasite@hotmail.com', 'Studio Sánchez');
-                $menssage->to(Clientes::all()->last()->email)->cc('latinotanato@gmail.com')->subject('Comprobante de pago');
+
+                $menssage->from('recibos@studiosanchez.rocemi.com.py', 'Studio Sánchez');
+                $menssage->to(Clientes::all()->last()->email)->cc('studiosanchezpy@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago');
             }); 
 
 
           //realizar un mensaje de guardado 
-            //return "Tu email ha sido enviado";
-          return view('clientes.detalles')->with('pagos', $pago); 
-
+            return redirect()->route('clientes.index');
+        
+        }
+      
     }
 
 

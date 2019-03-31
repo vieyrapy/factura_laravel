@@ -4,10 +4,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>AppWeb Sánchez </title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 
         <!-- Styles -->
         <style>
@@ -68,12 +70,13 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/clientes') }}">Nuevo recibo</a>
+                        <a href="{{ route('register') }}">Registrar nuevo usuario</a>
+                        <!--<a href="{{ url('/clientes') }}">Nuevo recibo</a>-->
                     @else
-                        <a href="{{ route('login') }}">Entrar</a>
+                        <!--<a href="{{ route('login') }}">Entrar</a>-->
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Registrarse</a>
+                            <!-- <a href="{{ route('register') }}">Registrarse</a>-->
                         @endif
                     @endauth
                 </div>
@@ -82,10 +85,14 @@
             <div class="content">
                 <div class="title m-b-md">
                     Studio Sánchez
+                    <br>
+                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/clientes') }}'">Crear nuevo recibo ahora!</button>
+
                 </div>
+                
               
                 <div class="links">
-                      APP CREADO POR <a href="https://www.facebook.com/vieyrapy/">vieyrapy</a>
+                      APPWEB CREADO POR <a href="https://www.facebook.com/vieyrapy/">vieyrapy</a>
                 </div>
             <!--
                 <div class="links">
