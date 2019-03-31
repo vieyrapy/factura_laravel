@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
- 
+
+<br>
+<br>
+<br>
+<br>
 
 <div class="container"> 
     <div class="row justify-content-center"> 
@@ -65,9 +69,9 @@
                              
 
                 <!--<h2>Comprobante de Pago</h2>-->
-                        <form method="POST" action="{{ route('clientes.store') }}" name="f">
+                        <form method="POST" action="{{ route('clientes.store') }}" name="f"> 
                             @csrf
-
+                            <br>
                             <div class="form-group row">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }}</label>
 

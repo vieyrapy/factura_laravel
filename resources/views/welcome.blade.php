@@ -68,7 +68,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Inicio</a>
+                        <a href="{{ url('/clientes') }}">Nuevo recibo</a>
                     @else
                         <a href="{{ route('login') }}">Entrar</a>
 
@@ -82,6 +82,10 @@
             <div class="content">
                 <div class="title m-b-md">
                     Studio Sánchez
+                </div>
+              
+                <div class="links">
+                      APP CREADO POR <a href="https://www.facebook.com/vieyrapy/">vieyrapy</a>
                 </div>
             <!--
                 <div class="links">
