@@ -228,13 +228,13 @@ if(largo > 3 && crtr == true)
                                     var b = b.replace(/,/g, "");
                                   
                                    
-                                    //Si a es mayor a b y son iguales realizar la resta y activar botton sino 
-                                    if(b>=a )
+                                    //Si la diferencia entre a y b es mayor a 0
+                                    if((b-a)>0)
 
                                             //Bloquear botton
                                             document.f.saldo.value = a - b,
                                             document.getElementById('enviar').disabled=true,
-                                            alert("Valores incorrectos"),
+                                            alert("Favor introducir datos correctamente"),
                                             location.reload();
                                             
                                     else
