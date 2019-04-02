@@ -1,11 +1,15 @@
 
-
-
-  
-               
- <style type="text/css">
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recibo de Dinero</title>
+  <meta charset="utf-8">
+</head>
+<body>
+<style type="text/css">
     body {
     padding: 50px;
+    font-family: serif;
 }
 
 * {
@@ -70,7 +74,7 @@ img {
 
 <div class="receipt-main">
   
-  <p class="receipt-title">Recibo</p> 
+  <p class="receipt-title">Recibo de Dinero</p> 
 
    <img src="http://studiosanchez.rocemi.com.py/images/qr_code.png" width="100" height="100">
 
@@ -122,3 +126,10 @@ img {
 </div>
 
                
+
+</body>
+</html>
+
+  
+               
+ 

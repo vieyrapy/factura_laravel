@@ -5,7 +5,6 @@
 <br>
 <br>
 <br>
-<br>
 
 <div class="container"> 
     <div class="row justify-content-center"> 
@@ -16,22 +15,20 @@
                 <div class="cold-md-4">
                     {!! Form::open(['route'=> 'clientes.index', 'method'=>'GET', 'class'=>'navbar-form navbar.left pull-rigth', 'role'=>'search']) !!}
                     <div class="active-cyan-3 active-cyan-4 mb-4">
-                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Buscar por: Nombre - Fecha: 2019-03-20  - Email - Teléfono', 'required']) !!}
+                        {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Buscar...', 'title'=>'Realiza busqueda por: Nombre, Fecha: 2019-03-20, Email, Teléfonor', 'required']) !!}
 
                     </div>
                     <button type="submit" class="btn btn-outline-primary">Buscar</button>
                     {!! Form::close() !!}
                 
-
-                  
-                    
+                   <br>
                 </div>
 
 
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="20px"> ID</th>
+                        <th width="20px">Nº</th>
                         <th>Fecha</th>
                         <th>Nombre</th>
                         <th>Debe</th>
@@ -42,7 +39,7 @@
                     @foreach($clientes as $cliente)
                          @foreach($cliente->pagos as $pagos)
                          <tr>
-                             <td></td>
+                             <td>{{$pagos->id}}</td>
                              <td>{{date_format($cliente->created_at, 'd/m/Y')}}</td>
                              <td><a href="clientes/{{$pagos->id}}">{{$cliente->nombre}}</a></td>
                              <td><a href="clientes/{{$pagos->id}}">{{number_format($pagos->saldo, 0, ',', '.')}}</a></td>
@@ -55,7 +52,7 @@
                 </tbody>
             </table>
                {!! $clientes->render() !!}  
-               
+
         </div>
     
        
@@ -139,14 +136,14 @@
 
                                     <div class="col-md-6">
 
-                                        <input id="saldo" type="text" class="form-control" name="saldo" value="{{ old('saldo') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus readonly="readonly">
+                                        <input id="saldo" type="text" min="1" pattern="^[0-9]+" class="form-control" name="saldo" value="{{ old('saldo') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus readonly="readonly">
                                     
                                     </div>
                                 </div>
 
                                 <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-outline-dark btn-lm">
+                                    <button type="submit" class="btn btn-outline-dark btn-lm" id="enviar">
                                         {{ __('Guardar y enviar') }}
                                     </button>
 
@@ -164,13 +161,6 @@
 
            
 </div>
-
-
-     
-
-
-@endsection
-
 
 
 <script language="JavaScript">
@@ -236,8 +226,26 @@ if(largo > 3 && crtr == true)
 
                                     var a = a.replace(/,/g, "");
                                     var b = b.replace(/,/g, "");
-                                    document.f.saldo.value = a - b;
+                                  
+                                   
+                                    //Si a es mayor a b y son iguales realizar la resta y activar botton sino 
+                                    if(b>=a )
+
+                                            //Bloquear botton
+                                            document.f.saldo.value = a - b,
+                                            document.getElementById('enviar').disabled=true,
+                                            alert("Valores incorrectos"),
+                                            location.reload();
+                                            
+                                    else
+                                        
+                                            document.f.saldo.value = a - b;
 
                                      } catch (e) {
                                   }
-                                }</script>
+                                }</script> 
+
+
+@endsection
+
+
