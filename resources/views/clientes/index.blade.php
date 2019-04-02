@@ -19,7 +19,7 @@
                         {!! Form::text('name', null, ['class'=> 'form-control', 'placeholder'=>'Buscar por: Nombre - Fecha: 2019-03-20  - Email - Teléfono', 'required']) !!}
 
                     </div>
-                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
                     {!! Form::close() !!}
                 
 
@@ -55,6 +55,7 @@
                 </tbody>
             </table>
                {!! $clientes->render() !!}  
+               
         </div>
     
        
@@ -145,7 +146,7 @@
 
                                 <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-outline-dark btn-lm">
                                         {{ __('Guardar y enviar') }}
                                     </button>
 

@@ -18,7 +18,7 @@
                 <tr>
                     <td style="background-color:#ffffff" align="left" valign="middle">
                         <a href="#m_-6108734568478989486_">
-                            <img src="http://rocemi.com.py/wp-content/uploads/2019/03/sds-nav-emails.jpg" width="600px" border="0" alt="Studio Sanchez" align="center" class="CToWUd">
+                            <img src="http://rocemi.com.py/wp-content/uploads/2019/03/sds-nav-emails.jpg" width="600px" border="0" alt="Studio Sanchez" align="center" >
                         </a>
 
                     </td>
@@ -203,7 +203,7 @@
                             <tbody><tr>
                                 <td width="73px"></td>
                                 <td>
-                                    <img src="http://rocemi.com.py/wp-content/uploads/2019/03/sds.png" width="61px" border="0" alt="Studio Sanchez" align="center" class="CToWUd">
+                                    <img src="http://rocemi.com.py/wp-content/uploads/2019/03/sds.png" width="61px" border="0" alt="Studio Sanchez" align="center" >
                                 </td>
                                 <td width="120px"></td>
                                 <td width="117px" style="color:#545353;font-size:12px" align="center">Si tenés alguna
@@ -211,10 +211,10 @@
                                     escribinos a <b><a href="mailto:sanchezdigital1520@hotmail.com" style="color:#545353" target="_blank">sanchezdigital1520@hotmail.com</a></b>
                                 </td>
                                 <td width="48px"></td>
-                                <td><a href="https://www.facebook.com/studiosanchez" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/fb.png" width="8px" class="CToWUd"></a></td>
+                                <td><a href="https://www.facebook.com/studiosanchez" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/fb.png" width="8px" ></a></td>
                                 <td width="32px"></td>
                                
-                                <td><a href="https://www.instagram.com/studiosanchezpy/" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/inst.png" width="15px" class="CToWUd"></a></td>
+                                <td><a href="https://www.instagram.com/studiosanchezpy/" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/inst.png" width="15px" ></a></td>
                             </tr>
                         </tbody></table>
                     </td>

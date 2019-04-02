@@ -116,10 +116,10 @@ class ClientesController extends Controller
                     Mail::send('emails.comprobante', $data, function($menssage){
 
                     $menssage->from('recibos@studiosanchez.rocemi.com.py', 'Studio Sánchez');
-                    $menssage->to(Clientes::all()->last()->email)->cc('studiosanchezpy@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago');
+                    $menssage->to(Clientes::all()->last()->email)->cc('studiosanchezpy@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago_ID_'.Pago::all()->last()->id);
                     }); 
             
-                    Mail::failures();
+                    //Mail::failures();
                     
             } catch(\Exception $e){
 
