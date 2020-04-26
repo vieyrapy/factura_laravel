@@ -26,4 +26,8 @@ Route::get('/clientes/search', 'ClientesController@search')->name('index');
 Route::get('/stop', 'StopController@index')->name('stop');
 Route::post('/clientes/pdf', 'ClientesController@pdf')->name('pdf');
 
+Route::get('/movimientos', function(){
+    return view('movimientos.movimientos');
+});
+
 

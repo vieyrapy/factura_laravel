@@ -98,6 +98,7 @@
                     Studio Sánchez
                     <br>
                     <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/clientes') }}'">Crear nuevo recibo ahora!</button>
+                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/movimientos') }}'">Registra tus gastos e ingresos!</button>
 
                 </div>
                 
