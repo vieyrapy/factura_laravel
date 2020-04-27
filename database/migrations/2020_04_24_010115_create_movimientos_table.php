@@ -21,6 +21,7 @@ class CreateMovimientosTable extends Migration
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->string('concepto');
             $table->string('tipo_movimiento');
+            $table->integer('monto');
             $table->timestamps();
         });
     }

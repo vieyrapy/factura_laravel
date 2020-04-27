@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Route::resource('pagos', 'PagoController');
 Route::resource('clientes', 'ClientesController');
+Route::resource('movimiento', 'MovimientoController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -26,8 +27,6 @@ Route::get('/clientes/search', 'ClientesController@search')->name('index');
 Route::get('/stop', 'StopController@index')->name('stop');
 Route::post('/clientes/pdf', 'ClientesController@pdf')->name('pdf');
 
-Route::get('/movimientos', function(){
-    return view('movimientos.movimientos');
-});
+Route::get('/movimientos', 'MovimientosController@index');
 
 

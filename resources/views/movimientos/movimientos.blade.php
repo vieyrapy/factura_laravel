@@ -47,11 +47,16 @@
                 <th>Tipo de movimiento</th>
             </thead>
             <tbody>
-                <!--foreach()
+                @foreach($movimiento as $m)
                     <tr>
-                        <td></td>
+                        <td>{{$m -> fecha}}</td>
+                        <td>{{$m -> entidad}}</td>
+                        <td>{{$m -> nombreCategoria}}</td>
+                        <td>{{$m -> concepto}}</td>
+                        <td>{{$m -> monto}}</td>
+                        <td>{{$m -> tipo_movimiento}}</td>
                     </tr>
-                endforeach -->
+                @endforeach
             </tbody>
         </table>
 
@@ -65,12 +70,27 @@
                         </button>
                     </div>
                     
-                    <form method="POST" action="#"> 
+                    <form method="POST" action="{{ route('movimiento.store') }}"> 
                         <div class="modal-body">
+
+                        <div class="form-group row">
+                                <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha</label>
+                                <div class="col-md-6">
+                                    <input id="fecha" type="text" class="form-control" required autofocus>        
+                                </div>
+                            </div>
+
                             <div class="form-group row">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                                 <div class="col-md-6">
                                     <input id="nombre" type="text" class="form-control" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
+                                <div class="col-md-6">
+                                    <input id="categoria" type="text" class="form-control" required autofocus>        
                                 </div>
                             </div>
 
@@ -94,13 +114,13 @@
                             <div class="form-group row">
                                 <label for="monto" class="col-md-4 col-form-label text-md-right">Monto</label>
                                 <div class="col-md-6">
-                                    <input id="monto" type="text" min="1" pattern="^[0-9]+" class="form-control" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus>  
+                                    <input id="monto" type="text" min="1" pattern="^[0-9]+" class="form-control" required autofocus>  
                                 </div>
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary">Guardar</button>
+                            <button type="submit" class="btn btn-primary" value="submit">Guardar</button>
                         </div>
                     </form>
                 </div>
