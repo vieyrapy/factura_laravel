@@ -71,50 +71,51 @@
                     </div>
                     
                     <form method="POST" action="{{ route('movimiento.store') }}"> 
+                        @csrf
                         <div class="modal-body">
 
                         <div class="form-group row">
                                 <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha</label>
                                 <div class="col-md-6">
-                                    <input id="fecha" type="text" class="form-control" required autofocus>        
+                                    <input id="fecha" type="date" class="form-control" name="fecha" required autofocus>        
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                                 <div class="col-md-6">
-                                    <input id="nombre" type="text" class="form-control" required autofocus>
+                                    <input id="nombre" type="text" class="form-control" name="nombre" required autofocus>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
                                 <div class="col-md-6">
-                                    <input id="categoria" type="text" class="form-control" required autofocus>        
+                                    <input id="categoria" type="text" class="form-control" name="categoria" required autofocus>        
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="concepto" class="col-md-4 col-form-label text-md-right">Concepto</label>
                                 <div class="col-md-6">
-                                    <input id="concepto" type="text" class="form-control" required autofocus>        
+                                    <input id="concepto" type="text" class="form-control" name="concepto" required autofocus>        
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-md-4 col-form-label text-md-right">Tipo de movimiento</label>
                                     <div class="col-3 align-self-center text-center">
-                                        <input type="radio" id="ingreso" name="tipo" value="1"><label for="ingreso">&nbsp Ingreso</label>
+                                        <input type="radio" id="ingreso" name="tipo" value="Ingreso"><label for="ingreso">&nbsp Ingreso</label>
                                     </div>
                                     <div class="col-3 align-self-center text-center">
-                                        <input type="radio" id="egreso" name="tipo" value="2"><label for="egreso">&nbsp Egreso</label>
+                                        <input type="radio" id="egreso" name="tipo" value="Egreso"><label for="egreso">&nbsp Egreso</label>
                                     </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="monto" class="col-md-4 col-form-label text-md-right">Monto</label>
                                 <div class="col-md-6">
-                                    <input id="monto" type="text" min="1" pattern="^[0-9]+" class="form-control" required autofocus>  
+                                    <input id="monto" type="text" min="1" pattern="^[0-9]+" class="form-control" name="monto" required autofocus>  
                                 </div>
                             </div>
                         </div>
