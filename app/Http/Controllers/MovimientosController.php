@@ -12,9 +12,9 @@ class MovimientosController extends Controller
     public function index(){
         $movimiento = Movimiento::
                         join('categorias', 'categorias.id', '=', 'movimientos.categoria_id')
-                        ->select('movimientos.fecha', 'movimientos.entidad', 'categorias.nombreCategoria',
-                        'movimientos.concepto', 'movimientos.monto', 'movimientos.tipo_movimiento')
-                        ->get();;
+                        ->select(DB::raw('DATE_FORMAT(movimientos.fecha, "%d-%m-%Y") as fecha, movimientos.entidad,
+                         categorias.nombreCategoria, movimientos.concepto, movimientos.monto, movimientos.tipo_movimiento'))
+                        ->get();
         return view('movimientos.movimientos', compact('movimiento'));
     }
 
