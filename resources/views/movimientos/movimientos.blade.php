@@ -88,7 +88,11 @@
                             <div class="form-group row">
                                 <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
                                 <div class="col-md-6">
-                                    <input id="categoria" type="text" class="form-control" name="categoria" required autofocus>        
+                                    <select name="categoria" id="categoria" class="form-control" required>
+                                        @foreach($categoria as $c)
+                                            <option value="{{$c->id}}">{{$c->nombreCategoria}}</option>
+                                        @endforeach
+                                    </select>  
                                 </div>
                             </div>
 
