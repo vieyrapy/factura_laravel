@@ -17,22 +17,20 @@
             </select>
         </div>
         <div class="col-6 d-inline-block float-right">
-            <label id="desde" class="d-none">Desde:</label >
-            <input type="date" name="date" class="d-none">
-            <input type="month" name="month" class="d-none">
-            <select name="year" class="d-none">
-                @for($i = date('Y'); $i >= 1940; $i--)
-                    <option value="{{$i}}">{{$i}}</option>
-                @endfor
-            </select>
-            <label class="d-none ml-2" id="hasta">Hasta:</label>
-            <input type="date" class="d-none" name="date">
-            <input type="month" class="d-none" name="month">
-            <select name="year" class="d-none" name="year">
-                @for($i = date('Y'); $i >= 1940; $i--)
-                    <option value="{{$i}}">{{$i}}</option>
-                @endfor
-            </select>
+            <form class="form-inline">
+
+                <label id="desde" class="d-none">Desde:</label >
+                {!! Form::date('date_ini', null, ['class'=> 'form-control d-none date w-25']) !!}
+                {!! Form::month('month_ini', null, ['class'=> 'form-control d-none month w-25']) !!}
+                {!! Form::select('year_ini', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25']) !!}
+            
+                <label class="d-none" id="hasta">Hasta:</label>
+                {!! Form::date('date_fin', null, ['class'=> 'form-control d-none date w-25']) !!}
+                {!! Form::month('month_fin', null, ['class'=> 'form-control d-none month w-25']) !!}
+                {!! Form::select('year_fin', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25']) !!}
+
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
         </div>
     </div>
 
@@ -59,7 +57,6 @@
                 @endforeach
             </tbody>
         </table>
-
         <div class="modal fade" id="nuevoMov" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -171,41 +168,49 @@
         let ver = opcion.value,
         desde = $('#desde')[0],
         hasta = $('#hasta')[0],
-        date = $("[name='date']"),
-        month = $("[name='month']"),
-        year = $("[name='year']");
-        desde.classList.remove('d-none');
-        hasta.classList.remove('d-none');
-        console.log(date);
+        date = $(".date"),
+        month = $(".month"),
+        year = $(".year");
+        desde.className = 'd-inline-block';
+        hasta.className = 'd-inline-block';
         switch(ver){
             case '1':
                 for(i = 0; i <= 1; i++){
-                    date[i].classList.remove('d-none');
-                    month[i].className = 'd-none';
-                    year[i].className = 'd-none';
+                    date[i].classList.replace('d-none', 'd-inline-block');
+                    month[i].classList.replace('d-inline-block', 'd-none');
+                    year[i].classList.replace('d-inline-block', 'd-none');
+                    month[i].value = "";
+                    year[i].value = "";
                 }
                 break;
             case '2':
                 for(i = 0; i <= 1; i++){
-                    month[i].classList.remove('d-none');
-                    date[i].className = 'd-none';
-                    year[i].className = 'd-none';
+                    month[i].classList.replace('d-none', 'd-inline-block');
+                    date[i].classList.replace('d-inline-block', 'd-none');
+                    year[i].classList.replace('d-inline-block', 'd-none');
+                    date[i].value = "";
+                    year[i].value = "";
                 }
                 break;
             case '3':
                 for(i = 0; i <= 1; i++){
-                    year[i].classList.remove('d-none');
-                    month[i].className = 'd-none';
-                    date[i].className = 'd-none';
+                    year[i].classList.replace('d-none', 'd-inline-block');
+                    month[i].classList.replace('d-inline-block', 'd-none');
+                    date[i].classList.replace('d-inline-block', 'd-none');
+                    month[i].value = "";
+                    date[i].value = "";
                 }
                 break;
             default:
                 desde.className = 'd-none';
-                hasta[0].className = 'd-none';
+                hasta.className = 'd-none';
                 for(i = 0; i <= 1; i++){
-                    date[i].className = 'd-none';
-                    month[i].className = 'd-none';
-                    year[i].className = 'd-none';
+                    date[i].classList.replace('d-inline-block', 'd-none');
+                    month[i].classList.replace('d-inline-block', 'd-none');
+                    year[i].classList.replace('d-inline-block', 'd-none');
+                    month[i].value = "";
+                    year[i].value = "";
+                    date[i].value = "";
                 }
                 break;
         }
