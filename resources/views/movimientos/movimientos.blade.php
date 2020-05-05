@@ -71,7 +71,7 @@
                         @csrf
                         <div class="modal-body">
 
-                        <div class="form-group row">
+                            <div class="form-group row">
                                 <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha</label>
                                 <div class="col-md-6">
                                     <input id="fecha" type="date" class="form-control" name="fecha" required autofocus>        
@@ -139,30 +139,31 @@
                         </button>
                     </div>
                     
-                    <form method="POST" action="#"> 
+                    <form method="POST" action="{{ route('categoria.store') }}"> 
+                        @csrf
                         <div class="modal-body">
-                            <div class="form-group row">
+
+                        <div class="form-group row">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                                 <div class="col-md-6">
-                                    <input id="nombre" type="text" class="form-control" required autofocus>
+                                    <input id="nombre" name="nombre" type="text" class="form-control" required autofocus>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="descripcion" class="col-md-4 col-form-label text-md-right">Descripción</label>
                                 <div class="col-md-6">
-                                    <input id="concepto" type="text" class="form-control" required autofocus>        
+                                    <input id="descripcion" name="descripcion" type="text" class="form-control" required autofocus>        
                                 </div>
                             </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary">Guardar</button>
+                            <button type="submit" class="btn btn-primary" value="submit">Guardar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>       
 </div>
 
 
