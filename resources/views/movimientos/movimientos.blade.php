@@ -63,8 +63,8 @@
                 <th>Nombre</th>
                 <th>Categoria</th>
                 <th>Concepto</th>
-                <th>Monto</th>
-                <th>Tipo de movimiento</th>
+                <th>Ingreso</th>
+                <th>Egreso</th>
             </thead>
             <tbody>
                 @foreach($movimiento as $m)
@@ -73,8 +73,8 @@
                         <td>{{$m -> entidad}}</td>
                         <td>{{$m -> categoria -> nombreCategoria}}</td>
                         <td>{{$m -> concepto}}</td>
-                        <td>{{number_format($m -> monto)}}</td>
-                        <td>{{$m -> tipo_movimiento}}</td>
+                        <td>{{number_format($m -> ingreso)}}</td>
+                        <td>{{number_format($m -> egreso)}}</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -12,11 +12,8 @@ use PDF;
 class MovimientosController extends Controller
 {
     public function index(Request $request){
-        
         $movimiento = $this->filtros($request);
-
         $categoria = Categoria::all();
-
         return view('movimientos.movimientos', compact('movimiento', 'categoria'));
         }
 
@@ -54,6 +51,7 @@ class MovimientosController extends Controller
                                 ->month_fin($month_fin)
                                 ->year_ini($year_ini)
                                 ->year_fin($year_fin)
+                                ->selectRaw("fecha, entidad, categoria_id, concepto, (CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, (CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->with('categoria')
                                 ->get();
 
