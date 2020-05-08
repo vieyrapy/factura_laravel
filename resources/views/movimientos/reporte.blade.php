@@ -1,0 +1,42 @@
+<style>
+    h1, p{
+        text-align: center;
+    }
+    table{
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    th, td{
+        border: 1px solid black;
+    }
+</style>
+
+<h1>Reporte de Movimientos</h1> 
+<p>Filtros: Desde {{$filtros -> get('date_ini')}}{{$filtros -> get('month_ini')}}{{$filtros -> get('year_ini')}} 
+    Hasta: {{$filtros -> get('date_fin')}}{{$filtros -> get('month_fin')}}{{$filtros -> get('year_fin')}}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <th>Concepto</th>
+            <th>Monto</th>
+            <th>Tipo de movimiento</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($movimiento as $m)
+            <tr>
+                <td>{{$m -> fecha}}</td>
+                <td>{{$m -> entidad}}</td>
+                <td>{{$m -> categoria -> nombreCategoria}}</td>
+                <td>{{$m -> concepto}}</td>
+                <td>{{$m -> monto}}</td>
+                <td>{{$m -> tipo_movimiento}}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>

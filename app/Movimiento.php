@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movimiento extends Model
 {
+
+	public function categoria(){
+        return $this->belongsTo('App\Categoria');
+	}
+	
     public function scopeDate_ini($query, $date_ini) {
     	if ($date_ini != "") {
     		return $query->whereDate('fecha','>=',$date_ini);

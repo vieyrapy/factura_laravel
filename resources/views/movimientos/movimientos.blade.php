@@ -5,7 +5,29 @@
 <div class="container"> 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov">+ Nuevo Movimiento</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoCat">+ Nueva Categoría</button>
-    <button type="button" class="btn btn-primary">Imprimir reporte</button>
+    <form method="POST" class="d-inline-block" action="{{ route('reporte') }}"> 
+        @csrf
+        <div hidden>
+            <input id="date_ini" type="text" name="date_ini" value="{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}">
+        </div>
+        <div hidden>
+            <input id="date_fin" type="text" name="date_fin" value="{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}">
+        </div>
+        <div hidden>
+            <input id="month_ini" type="text" name="month_ini" value="{{ isset($_GET['month_ini']) ? $_GET['month_ini'] : '' }}">
+        </div>
+        <div hidden>
+            <input id="month_fin" type="text" name="month_fin" value="{{ isset($_GET['month_fin']) ? $_GET['month_fin'] : '' }}">
+        </div>
+        <div hidden>
+            <input id="year_ini" type="text" name="year_ini" value="{{ isset($_GET['year_ini']) ? $_GET['year_ini'] : '' }}">
+        </div>
+        <div hidden>
+            <input id="year_fin" type="text" name="year_fin" value="{{ isset($_GET['year_fin']) ? $_GET['year_fin'] : '' }}">
+        </div>           
+
+        <button type="submit" class="btn btn-primary" value="submit">Generar PDF</button>
+    </form>
 
     <div class="m-3">
         <div class="col-6 d-inline-block">
@@ -49,7 +71,7 @@
                     <tr>
                         <td>{{$m -> fecha}}</td>
                         <td>{{$m -> entidad}}</td>
-                        <td>{{$m -> nombreCategoria}}</td>
+                        <td>{{$m -> categoria -> nombreCategoria}}</td>
                         <td>{{$m -> concepto}}</td>
                         <td>{{$m -> monto}}</td>
                         <td>{{$m -> tipo_movimiento}}</td>
