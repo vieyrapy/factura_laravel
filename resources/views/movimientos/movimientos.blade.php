@@ -69,11 +69,11 @@
             <tbody>
                 @foreach($movimiento as $m)
                     <tr>
-                        <td>{{$m -> fecha}}</td>
+                        <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
                         <td>{{$m -> entidad}}</td>
                         <td>{{$m -> categoria -> nombreCategoria}}</td>
                         <td>{{$m -> concepto}}</td>
-                        <td>{{$m -> monto}}</td>
+                        <td>{{number_format($m -> monto)}}</td>
                         <td>{{$m -> tipo_movimiento}}</td>
                     </tr>
                 @endforeach

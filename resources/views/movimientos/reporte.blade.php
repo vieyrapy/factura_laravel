@@ -13,8 +13,8 @@
 </style>
 
 <h1>Reporte de Movimientos</h1> 
-<p>Filtros: Desde {{$filtros -> get('date_ini')}}{{$filtros -> get('month_ini')}}{{$filtros -> get('year_ini')}} 
-    Hasta: {{$filtros -> get('date_fin')}}{{$filtros -> get('month_fin')}}{{$filtros -> get('year_fin')}}</p>
+<p>Filtros: Desde {{null != $filtros -> get('date_ini') ? date_format(new DateTime($filtros -> get('date_ini')), 'd/m/Y') : ""}}{{$filtros -> get('month_ini')}}{{$filtros -> get('year_ini')}} 
+    Hasta: {{null != $filtros -> get('date_ini') ? date_format(new DateTime($filtros -> get('date_ini')), 'd/m/Y') : ""}}{{$filtros -> get('month_fin')}}{{$filtros -> get('year_fin')}}</p>
 
 <table>
     <thead>
@@ -30,11 +30,11 @@
     <tbody>
         @foreach($movimiento as $m)
             <tr>
-                <td>{{$m -> fecha}}</td>
+                <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
                 <td>{{$m -> entidad}}</td>
                 <td>{{$m -> categoria -> nombreCategoria}}</td>
                 <td>{{$m -> concepto}}</td>
-                <td>{{$m -> monto}}</td>
+                <td>{{number_format($m -> monto)}}</td>
                 <td>{{$m -> tipo_movimiento}}</td>
             </tr>
         @endforeach
