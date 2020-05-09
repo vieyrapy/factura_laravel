@@ -14,7 +14,8 @@ class MovimientosController extends Controller
     public function index(Request $request){
         $movimiento = $this->filtros($request);
         $categoria = Categoria::all();
-        return view('movimientos.movimientos', compact('movimiento', 'categoria'));
+        $totales = $this->totales($movimiento);
+        return view('movimientos.movimientos', compact('movimiento', 'categoria', 'totales'));
         }
 
     public function store(Request $request){
@@ -33,7 +34,8 @@ class MovimientosController extends Controller
 
     public function pdf(Request $request){
             $movimiento = $this->filtros($request);
-            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request] ); 
+            $totales = $this->totales($movimiento);
+            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales] ); 
             return $pdf->download('reporte.pdf');   
     }
 
@@ -51,10 +53,22 @@ class MovimientosController extends Controller
                                 ->month_fin($month_fin)
                                 ->year_ini($year_ini)
                                 ->year_fin($year_fin)
-                                ->selectRaw("fecha, entidad, categoria_id, concepto, (CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, (CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
+                                ->selectRaw("fecha, entidad, categoria_id, concepto, 
+                                (CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, (CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->with('categoria')
                                 ->get();
 
         return $movimiento;
+    }
+
+    private function totales($movimiento){
+        $total_ingreso = 0;
+        $total_egreso = 0;
+        foreach($movimiento as $m){
+            $total_ingreso += $m -> ingreso;
+            $total_egreso += $m -> egreso;
+        }
+
+        return [$total_ingreso, $total_egreso];
     }
 }
