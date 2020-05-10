@@ -147,7 +147,7 @@
                             <div class="form-group row">
                                 <label for="monto" class="col-md-4 col-form-label text-md-right">Monto</label>
                                 <div class="col-md-6">
-                                    <input id="monto" type="text" min="1" pattern="^[0-9]+" class="form-control" name="monto" required autofocus>  
+                                    <input id="monto" type="text" min="1" class="form-control" name="monto" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus>  
                                 </div>
                             </div>
                         </div>

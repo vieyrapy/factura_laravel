@@ -26,7 +26,7 @@ class MovimientosController extends Controller
         $movimiento->categoria_id = $request->categoria;
         $movimiento->concepto = $request->concepto;
         $movimiento->tipo_movimiento = $request->tipo;
-        $movimiento->monto = $request->monto;
+        $movimiento->monto = preg_replace('/\D/', '', $request->monto);
         $movimiento->save();
         DB::commit();
         return redirect('movimientos');
