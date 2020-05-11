@@ -12,11 +12,12 @@ use PDF;
 class MovimientosController extends Controller
 {
     public function index(Request $request){
-        $movimiento = $this->filtros($request);
+        $movimiento = $request->get('filtro') ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
         $categoria = Categoria::all();
         $totales = $this->totales($movimiento);
-        return view('movimientos.movimientos', compact('movimiento', 'categoria', 'totales'));
-        }
+        $filtro = $request->get('filtro') ? $request->get('filtro') : 1;
+        return view('movimientos.movimientos', compact('movimiento', 'categoria', 'totales', 'filtro'));
+    }
 
     public function store(Request $request){
         DB::beginTransaction();
@@ -47,16 +48,17 @@ class MovimientosController extends Controller
         $year_ini = $request->get('year_ini');
         $year_fin = $request->get('year_fin');
     
-        $movimiento = Movimiento::date_ini($date_ini)
+        $movimiento = Movimiento::selectRaw("fecha, entidad, categoria_id, concepto, DATE_FORMAT(fecha,'%M %Y') AS month, YEAR(fecha) AS year,
+                                            SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, 
+                                            SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
+                                ->date_ini($date_ini)
                                 ->date_fin($date_fin)
                                 ->month_ini($month_ini)
                                 ->month_fin($month_fin)
                                 ->year_ini($year_ini)
                                 ->year_fin($year_fin)
-                                ->selectRaw("fecha, entidad, categoria_id, concepto, 
-                                (CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, (CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->with('categoria')
-                                ->get();
+                                ->orderBy('fecha');
 
         return $movimiento;
     }

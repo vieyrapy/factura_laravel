@@ -30,8 +30,9 @@
     </form>
 
     <div class="m-3">
+    <form class="form-inline">
         <div class="col-6 d-inline-block">
-            <select class="custom-select" onchange="filtros(this)">
+            <select name="filtro" class="custom-select" onchange="filtros(this)">
                 <option selected>Filtrar por...</option>
                 <option value="1">Fechas</option>
                 <option value="2">Meses</option>
@@ -39,7 +40,7 @@
             </select>
         </div>
         <div class="col-6 d-inline-block float-right">
-            <form class="form-inline">
+            
 
                 <label id="desde" class="d-none">Desde:</label >
                 {!! Form::date('date_ini', null, ['class'=> 'form-control d-none date w-25']) !!}
@@ -52,41 +53,99 @@
                 {!! Form::select('year_fin', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25']) !!}
 
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-            </form>
+           
         </div>
+        </form>
     </div>
 
     <div class="row justify-content-center">
         <table class="table table-hover thead-light text-center">
-            <thead>
-                <th>Fecha</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Concepto</th>
-                <th>Ingreso</th>
-                <th>Egreso</th>
-            </thead>
-            <tbody>
-                @foreach($movimiento as $m)
-                    <tr>
-                        <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
-                        <td>{{$m -> entidad}}</td>
-                        <td>{{$m -> categoria -> nombreCategoria}}</td>
-                        <td>{{$m -> concepto}}</td>
-                        <td>{{number_format($m -> ingreso)}}</td>
-                        <td>{{number_format($m -> egreso)}}</td>
-                    </tr>
-                @endforeach
-                <tr>
-                    <td colspan="4">Totales: </td>
-                    <td>{{number_format($totales[0])}}</td>
-                    <td>{{number_format($totales[1])}}</td>
-                </tr>
-                <tr>
-                    <td colspan="4">Total final: </td>
-                    <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
-                </tr>
-            </tbody>
+            @switch($filtro)
+                @case(1)
+                    <thead>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Concepto</th>
+                        <th>Ingreso</th>
+                        <th>Egreso</th>
+                    </thead>
+                    <tbody>
+                        @foreach($movimiento as $m)
+                            <tr>
+                                <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
+                                <td>{{$m -> entidad}}</td>
+                                <td>{{$m -> categoria -> nombreCategoria}}</td>
+                                <td>{{$m -> concepto}}</td>
+                                <td>{{number_format($m -> ingreso)}}</td>
+                                <td>{{number_format($m -> egreso)}}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="4">Totales: </td>
+                            <td>{{number_format($totales[0])}}</td>
+                            <td>{{number_format($totales[1])}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">Total final: </td>
+                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
+                        </tr>
+                    </tbody>
+                @break
+                @case(2)
+                    <thead>
+                        <th>Mes</th>
+                        <th>Categoria</th>
+                        <th>Ingreso</th>
+                        <th>Egreso</th>
+                    </thead>
+                    <tbody>
+                        @foreach($movimiento as $m)
+                            <tr>
+                                <td>{{date_format(new DateTime($m -> month), 'm-Y')}}</td>
+                                <td>{{$m -> categoria -> nombreCategoria}}</td>
+                                <td>{{number_format($m -> ingreso)}}</td>
+                                <td>{{number_format($m -> egreso)}}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="2">Totales: </td>
+                            <td>{{number_format($totales[0])}}</td>
+                            <td>{{number_format($totales[1])}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Total final: </td>
+                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
+                        </tr>
+                    </tbody>
+                @break
+                @case(3)
+                <thead>
+                        <th>Año</th>
+                        <th>Categoria</th>
+                        <th>Ingreso</th>
+                        <th>Egreso</th>
+                    </thead>
+                    <tbody>
+                        @foreach($movimiento as $m)
+                            <tr>
+                                <td>{{$m -> year}}</td>
+                                <td>{{$m -> categoria -> nombreCategoria}}</td>
+                                <td>{{number_format($m -> ingreso)}}</td>
+                                <td>{{number_format($m -> egreso)}}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="2">Totales: </td>
+                            <td>{{number_format($totales[0])}}</td>
+                            <td>{{number_format($totales[1])}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Total final: </td>
+                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
+                        </tr>
+                    </tbody>
+            @endswitch
         </table>
         <div class="modal fade" id="nuevoMov" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
