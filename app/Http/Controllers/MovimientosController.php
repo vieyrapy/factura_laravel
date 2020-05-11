@@ -34,9 +34,10 @@ class MovimientosController extends Controller
     }
 
     public function pdf(Request $request){
-            $movimiento = $this->filtros($request);
+            $movimiento = $request->get('filtro') ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
             $totales = $this->totales($movimiento);
-            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales] ); 
+            $filtro = $request->get('filtro');
+            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro] ); 
             return $pdf->download('reporte.pdf');   
     }
 

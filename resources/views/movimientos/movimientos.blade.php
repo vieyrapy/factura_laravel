@@ -8,6 +8,9 @@
     <form method="POST" class="d-inline-block" action="{{ route('reporte') }}"> 
         @csrf
         <div hidden>
+            <input id="filtro" type="text" name="filtro" value="{{ isset($_GET['filtro']) ? $_GET['filtro'] : '1' }}">
+        </div>   
+        <div hidden>
             <input id="date_ini" type="text" name="date_ini" value="{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}">
         </div>
         <div hidden>
