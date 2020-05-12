@@ -46,16 +46,16 @@
             
 
                 <label id="desde" class="d-none">Desde:</label >
-                {!! Form::date('date_ini', null, ['class'=> 'form-control d-none date w-25']) !!}
-                {!! Form::month('month_ini', null, ['class'=> 'form-control d-none month w-25']) !!}
-                {!! Form::select('year_ini', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25']) !!}
+                {!! Form::date('date_ini', null, ['class'=> 'form-control d-none date w-25', 'onchange' => 'habilitar()']) !!}
+                {!! Form::month('month_ini', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
+                {!! Form::select('year_ini', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
             
                 <label class="d-none" id="hasta">Hasta:</label>
-                {!! Form::date('date_fin', null, ['class'=> 'form-control d-none date w-25']) !!}
-                {!! Form::month('month_fin', null, ['class'=> 'form-control d-none month w-25']) !!}
-                {!! Form::select('year_fin', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25']) !!}
+                {!! Form::date('date_fin', null, ['class'=> 'form-control d-none date w-25', 'onchange' => 'habilitar()']) !!}
+                {!! Form::month('month_fin', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
+                {!! Form::select('year_fin', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
 
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                <button id="filtrar" class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>Buscar</button>
            
         </div>
         </form>
@@ -312,6 +312,11 @@
                 }
                 break;
         }
+        $('#filtrar')[0].disabled=true;
+    }
+
+    function habilitar(){
+        $('#filtrar')[0].disabled=false;
     }
 //Código para colocar 
 //los indicadores de miles mientras se escribe
