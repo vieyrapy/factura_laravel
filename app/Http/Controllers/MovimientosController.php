@@ -11,6 +11,10 @@ use PDF;
 
 class MovimientosController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     public function index(Request $request){
         $movimiento = $request->get('filtro') ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
         $categoria = Categoria::all();
