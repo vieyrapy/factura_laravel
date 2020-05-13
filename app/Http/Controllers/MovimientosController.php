@@ -25,7 +25,11 @@ class MovimientosController extends Controller
 
     public function store(Request $request){
         DB::beginTransaction();
-        $movimiento = new Movimiento();
+        if($request -> id){
+            $movimiento = Movimiento::find($request->id);
+        } else{
+            $movimiento = new Movimiento();
+        }
         $movimiento->fecha = $request->fecha;
         $movimiento->entidad = $request->nombre;
         $movimiento->categoria_id = $request->categoria;
@@ -34,6 +38,12 @@ class MovimientosController extends Controller
         $movimiento->monto = preg_replace('/\D/', '', $request->monto);
         $movimiento->save();
         DB::commit();
+        return redirect('movimientos');
+    }
+
+    public function destroy($id){
+        $movimiento = Movimiento::find($id);
+        $movimiento -> delete();
         return redirect('movimientos');
     }
 
@@ -53,7 +63,8 @@ class MovimientosController extends Controller
         $year_ini = $request->get('year_ini');
         $year_fin = $request->get('year_fin');
     
-        $movimiento = Movimiento::selectRaw("fecha, entidad, categoria_id, concepto, DATE_FORMAT(fecha,'%M %Y') AS month, YEAR(fecha) AS year,
+        $movimiento = Movimiento::selectRaw("id, fecha, entidad, categoria_id, concepto, monto, tipo_movimiento, 
+                                            DATE_FORMAT(fecha,'%M %Y') AS month, YEAR(fecha) AS year,
                                             SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, 
                                             SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->date_ini($date_ini)

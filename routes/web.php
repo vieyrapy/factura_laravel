@@ -30,5 +30,6 @@ Route::post('/clientes/pdf', 'ClientesController@pdf')->name('pdf');
 Route::post('/movimientos/pdf', 'MovimientosController@pdf')->name('reporte');
 
 Route::get('/movimientos', 'MovimientosController@index');
+Route::delete('movimientos/{id}', 'MovimientosController@destroy')->name('movimientos.destroy');
 
 

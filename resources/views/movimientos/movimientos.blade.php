@@ -82,6 +82,8 @@
                                 <td>{{$m -> concepto}}</td>
                                 <td>{{number_format($m -> ingreso)}}</td>
                                 <td>{{number_format($m -> egreso)}}</td>
+                                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov" onclick="modificar({{$m}})">Modificar</button> 
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eliminar" onclick="confirmarEliminar({{$m->id}})">Eliminar</button></td>
                             </tr>
                         @endforeach
                         <tr>
@@ -154,15 +156,19 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Nuevo Movimiento</h5>
+                        <h5 class="modal-title movimiento">Nuevo Movimiento</h5>
                         <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     
-                    <form method="POST" action="{{ route('movimiento.store') }}"> 
+                    <form id="mov" method="POST" action="{{ route('movimiento.store') }}"> 
                         @csrf
                         <div class="modal-body">
+
+                            <div hidden>
+                                <input id="id" type="number" name="id">
+                            </div> 
 
                             <div class="form-group row">
                                 <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha</label>
@@ -257,10 +263,46 @@
                 </div>
             </div>
         </div>
-</div>
+    </div>
+    <div id="eliminar" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form action="" id="eliminarForm" method="post">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h5>Eliminar Movimiento</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                        <p class="text-center">Desea realmente eliminar este registro?</p>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" name="" class="btn btn-danger" data-dismiss="modal" onclick="eliminar()">Eliminar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
 <script language="JavaScript">
+
+function confirmarEliminar(id)
+     {
+         var id = id;
+         var url = '{{ route("movimientos.destroy", ":id") }}';
+         url = url.replace(':id', id);
+         $("#eliminarForm").attr('action', url);
+     }
+
+     function eliminar()
+     {
+         $("#eliminarForm").submit();
+     }
 
     function filtros(opcion){
         let ver = opcion.value,
@@ -321,6 +363,27 @@
 
     function fecha(){
         $('#fecha')[0].setAttribute('max', new Date().toISOString().split('T')[0]);
+        $('.movimiento')[0].innerHTML = 'Nuevo Movimiento';
+        $('#fecha')[0].value = new Date();
+        $('#nombre')[0].value = '';
+        $('#categoria')[0].value = 1;
+        $('#concepto')[0].value = '';
+        $("[name = 'tipo']")[0].checked = false;
+        $("[name = 'tipo']")[1].checked = false;
+        $('#monto')[0].value = '';
+    }
+
+    function modificar(objeto){
+        $('#fecha')[0].setAttribute('max', new Date().toISOString().split('T')[0]);
+        $('.movimiento')[0].innerHTML = 'Editar Movimiento';
+        $('#id')[0].value = objeto.id;
+        $('#fecha')[0].value = objeto.fecha;
+        $('#nombre')[0].value = objeto.entidad;
+        $('#categoria')[0].value = objeto.categoria_id;
+        $('#concepto')[0].value = objeto.concepto;
+        $("[value = '" + objeto.tipo_movimiento + "']")[0].checked = true;
+        $('#monto')[0].value = objeto.monto;
+        puntitos($('#monto')[0],$('#monto')[0].value.charAt($('#monto')[0].value.length-1));
     }
 //Código para colocar 
 //los indicadores de miles mientras se escribe
