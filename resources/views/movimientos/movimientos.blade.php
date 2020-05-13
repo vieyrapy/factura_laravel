@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container"> 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov">+ Nuevo Movimiento</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov" onclick="fecha()">+ Nuevo Movimiento</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoCat">+ Nueva Categoría</button>
     <form method="POST" class="d-inline-block" action="{{ route('reporte') }}"> 
         @csrf
@@ -317,6 +317,10 @@
 
     function habilitar(){
         $('#filtrar')[0].disabled=false;
+    }
+
+    function fecha(){
+        $('#fecha')[0].setAttribute('max', new Date().toISOString().split('T')[0]);
     }
 //Código para colocar 
 //los indicadores de miles mientras se escribe
