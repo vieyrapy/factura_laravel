@@ -37,7 +37,7 @@ class Movimiento extends Model
     public function scopeMonth_fin($query, $month_fin) {
     	if ($month_fin != "") {
             $datos = explode("-", $month_fin);
-			return $query->whereYear('fecha','<=',$datos[0])->whereMonth('fecha','<=',$$datos[1])
+			return $query->whereYear('fecha','<=',$datos[0])->whereMonth('fecha','<=',$datos[1])
 						->groupBy([DB::raw("DATE_FORMAT(fecha,'%M %Y')"), "categoria_id"]);
     	}
     }
