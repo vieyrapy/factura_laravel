@@ -52,7 +52,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'prefix_indexes' => true,
-            'strict' => false,
+            'strict' => true,
             //'engine' => null, // Esta se comenta y se reemplaza por lo de abajo porque genera error en el tamaño a la hora de crear las migraciones 
             'engine' => 'innodb row_format=dynamic',
             'options' => extension_loaded('pdo_mysql') ? array_filter([

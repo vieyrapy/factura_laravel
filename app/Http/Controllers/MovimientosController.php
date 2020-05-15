@@ -16,7 +16,7 @@ class MovimientosController extends Controller
     }
 
     public function index(Request $request){
-        $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
+        $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy(['id'])->get();
         $categoria = Categoria::all();
         $totales = $this->totales($movimiento);
         $filtro = $request->get('filtro');
@@ -48,7 +48,7 @@ class MovimientosController extends Controller
     }
 
     public function pdf(Request $request){
-            $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
+            $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy(['id'])->get();
             $totales = $this->totales($movimiento);
             $filtro = $request->get('filtro');
             $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro] ); 
@@ -64,16 +64,17 @@ class MovimientosController extends Controller
         $year_fin = $request->get('year_fin');
         $cat_filtro = $request->get('cat_filtro');
     
-        $movimiento = Movimiento::selectRaw("id, fecha, entidad, categoria_id, concepto, monto, tipo_movimiento, 
-                                            DATE_FORMAT(fecha,'%M %Y') AS month, YEAR(fecha) AS year,
+        $movimiento = Movimiento::selectRaw("MAX(id) AS id, MAX(fecha) AS fecha, 
+                                            MAX(entidad) AS entidad, MAX(categoria_id) AS categoria_id, 
+                                            MAX(concepto) AS concepto, MAX(monto) AS monto, MAX(tipo_movimiento) AS tipo_movimiento,
                                             SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, 
                                             SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->date_ini($date_ini)
                                 ->date_fin($date_fin)
                                 ->month_ini($month_ini)
-                                ->month_fin($month_fin)
+                                ->month_fin($month_fin, $month_ini)
                                 ->year_ini($year_ini)
-                                ->year_fin($year_fin)
+                                ->year_fin($year_fin, $year_ini)
                                 ->cat_filtro($cat_filtro)
                                 ->with('categoria')
                                 ->orderBy('fecha');
