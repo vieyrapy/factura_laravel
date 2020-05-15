@@ -54,5 +54,11 @@ class Movimiento extends Model
 			return $query->whereYear('fecha','<=',$year_fin + 1940)
 						->groupBy([DB::raw("YEAR(fecha)"), "categoria_id"]);
     	}
+	}
+	
+	public function scopeCat_filtro($query, $cat_filtro) {
+    	if ($cat_filtro > 0) {
+			return $query->where('categoria_id','=',$cat_filtro);
+    	}
     }
 }

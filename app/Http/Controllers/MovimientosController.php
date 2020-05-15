@@ -16,10 +16,10 @@ class MovimientosController extends Controller
     }
 
     public function index(Request $request){
-        $movimiento = $request->get('filtro') ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
+        $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
         $categoria = Categoria::all();
         $totales = $this->totales($movimiento);
-        $filtro = $request->get('filtro') ? $request->get('filtro') : 1;
+        $filtro = $request->get('filtro');
         return view('movimientos.movimientos', compact('movimiento', 'categoria', 'totales', 'filtro'));
     }
 
@@ -48,7 +48,7 @@ class MovimientosController extends Controller
     }
 
     public function pdf(Request $request){
-            $movimiento = $request->get('filtro') != 1 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
+            $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy('id')->get();
             $totales = $this->totales($movimiento);
             $filtro = $request->get('filtro');
             $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro] ); 
@@ -62,6 +62,7 @@ class MovimientosController extends Controller
         $month_fin = $request->get('month_fin');
         $year_ini = $request->get('year_ini');
         $year_fin = $request->get('year_fin');
+        $cat_filtro = $request->get('cat_filtro');
     
         $movimiento = Movimiento::selectRaw("id, fecha, entidad, categoria_id, concepto, monto, tipo_movimiento, 
                                             DATE_FORMAT(fecha,'%M %Y') AS month, YEAR(fecha) AS year,
@@ -73,6 +74,7 @@ class MovimientosController extends Controller
                                 ->month_fin($month_fin)
                                 ->year_ini($year_ini)
                                 ->year_fin($year_fin)
+                                ->cat_filtro($cat_filtro)
                                 ->with('categoria')
                                 ->orderBy('fecha');
 

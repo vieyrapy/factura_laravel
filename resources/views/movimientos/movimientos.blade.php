@@ -8,6 +8,9 @@
     <form method="POST" class="d-inline-block" action="{{ route('reporte') }}"> 
         @csrf
         <div hidden>
+            <input id="cat_filtro" type="text" name="cat_filtro" value="{{ isset($_GET['cat_filtro']) ? $_GET['cat_filtro'] : '1' }}">
+        </div> 
+        <div hidden>
             <input id="filtro" type="text" name="filtro" value="{{ isset($_GET['filtro']) ? $_GET['filtro'] : '1' }}">
         </div>   
         <div hidden>
@@ -35,8 +38,14 @@
     <div class="m-3">
     <form class="form-inline">
         <div class="col-6 d-inline-block">
-            <select name="filtro" class="custom-select" onchange="filtros(this)">
-                <option selected>Filtrar por...</option>
+            <select name="cat_filtro" class="custom-select w-50" onchange="habilitarCat(this.value)">
+                <option selected>Filtrar Categorias</option>
+                @foreach($categoria as $c)
+                    <option value="{{$c -> id}}">{{$c -> nombreCategoria}}</option>
+                @endforeach
+            </select>
+            <select name="filtro" class="custom-select" style="width:49%" onchange="filtros(this)">
+                <option selected>Filtrar por tiempo</option>
                 <option value="1">Fechas</option>
                 <option value="2">Meses</option>
                 <option value="3">Años</option>
@@ -48,12 +57,12 @@
                 <label id="desde" class="d-none">Desde:</label >
                 {!! Form::date('date_ini', null, ['class'=> 'form-control d-none date w-25', 'onchange' => 'habilitar()']) !!}
                 {!! Form::month('month_ini', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
-                {!! Form::select('year_ini', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
+                {!! Form::select('year_ini', array('' => '...') + range(date('Y'),1940), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
             
                 <label class="d-none" id="hasta">Hasta:</label>
                 {!! Form::date('date_fin', null, ['class'=> 'form-control d-none date w-25', 'onchange' => 'habilitar()']) !!}
                 {!! Form::month('month_fin', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
-                {!! Form::select('year_fin', array('' => '...') + range(1940,date('Y')), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
+                {!! Form::select('year_fin', array('' => '...') + range(date('Y'),1940), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
 
                 <button id="filtrar" class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>Buscar</button>
            
@@ -64,39 +73,6 @@
     <div class="row justify-content-center">
         <table class="table table-hover thead-light text-center">
             @switch($filtro)
-                @case(1)
-                    <thead>
-                        <th>Fecha</th>
-                        <th>Nombre</th>
-                        <th>Categoria</th>
-                        <th>Concepto</th>
-                        <th>Ingreso</th>
-                        <th>Egreso</th>
-                    </thead>
-                    <tbody>
-                        @foreach($movimiento as $m)
-                            <tr>
-                                <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
-                                <td>{{$m -> entidad}}</td>
-                                <td>{{$m -> categoria -> nombreCategoria}}</td>
-                                <td>{{$m -> concepto}}</td>
-                                <td>{{number_format($m -> ingreso)}}</td>
-                                <td>{{number_format($m -> egreso)}}</td>
-                                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov" onclick="modificar({{$m}})">Modificar</button> 
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eliminar" onclick="confirmarEliminar({{$m->id}})">Eliminar</button></td>
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="4">Totales: </td>
-                            <td>{{number_format($totales[0])}}</td>
-                            <td>{{number_format($totales[1])}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">Total final: </td>
-                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
-                        </tr>
-                    </tbody>
-                @break
                 @case(2)
                     <thead>
                         <th>Mes</th>
@@ -150,6 +126,41 @@
                             <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
                         </tr>
                     </tbody>
+                    @break
+                    @default
+                    <thead>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Concepto</th>
+                        <th>Ingreso</th>
+                        <th>Egreso</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        @foreach($movimiento as $m)
+                            <tr>
+                                <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
+                                <td>{{$m -> entidad}}</td>
+                                <td>{{$m -> categoria -> nombreCategoria}}</td>
+                                <td>{{$m -> concepto}}</td>
+                                <td>{{number_format($m -> ingreso)}}</td>
+                                <td>{{number_format($m -> egreso)}}</td>
+                                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov" onclick="modificar({{$m}})">Modificar</button> 
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eliminar" onclick="confirmarEliminar({{$m->id}})">Eliminar</button></td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="4">Totales: </td>
+                            <td>{{number_format($totales[0])}}</td>
+                            <td>{{number_format($totales[1])}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">Total final: </td>
+                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
+                        </tr>
+                    </tbody>
+                    @break
             @endswitch
         </table>
         <div class="modal fade" id="nuevoMov" tabindex="-1" aria-hidden="true">
@@ -354,11 +365,17 @@ function confirmarEliminar(id)
                 }
                 break;
         }
-        $('#filtrar')[0].disabled=true;
+        if($('#cat_filtro').value > 0){
+            $('#filtrar')[0].disabled=true;
+        }
     }
 
     function habilitar(){
         $('#filtrar')[0].disabled=false;
+    }
+
+    function habilitarCat(valor){
+        valor > 0 ? $('#filtrar')[0].disabled=false : $('#filtrar')[0].disabled=true;
     }
 
     function fecha(){
