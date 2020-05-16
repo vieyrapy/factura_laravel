@@ -16,7 +16,7 @@ class MovimientosController extends Controller
     }
 
     public function index(Request $request){
-        $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy(['id'])->get();
+        $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->paginate(10) : $this->filtros($request)->groupBy(['id'])->paginate(10);
         $categoria = Categoria::all();
         $totales = $this->totales($movimiento);
         $filtro = $request->get('filtro');
@@ -48,10 +48,11 @@ class MovimientosController extends Controller
     }
 
     public function pdf(Request $request){
-            $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->get() : $this->filtros($request)->groupBy(['id'])->get();
+            $movimiento = $this->filtros($request)->get();
             $totales = $this->totales($movimiento);
             $filtro = $request->get('filtro');
-            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro] ); 
+            $cat_filtro = $request -> get("cat_filtro") > 0 ? Categoria::find($request -> get("cat_filtro"))->nombreCategoria : "";
+            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro, 'cat_filtro' => $cat_filtro] ); 
             return $pdf->download('reporte.pdf');   
     }
 

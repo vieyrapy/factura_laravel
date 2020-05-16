@@ -71,6 +71,7 @@
     </div>
 
     <div class="row justify-content-center">
+    {!! $movimiento->render() !!}
         <table class="table table-hover thead-light text-center">
             @switch($filtro)
                 @case(2)

@@ -13,9 +13,9 @@
 </style>
 
 <h1>Reporte de Movimientos</h1> 
-<p>Filtros: Desde {{null != $filtros -> get('date_ini') ? date_format(new DateTime($filtros -> get('date_ini')), 'd/m/Y') : ""}}{{$filtros -> get('month_ini')}}{{$filtros -> get('year_ini')}} 
-    Hasta: {{null != $filtros -> get('date_ini') ? date_format(new DateTime($filtros -> get('date_ini')), 'd/m/Y') : ""}}{{$filtros -> get('month_fin')}}{{$filtros -> get('year_fin')}}</p>
-<p>Categoria: {{0 < $filtros -> get('cat_filtro') ? $filtros -> get('cat_filtro') : ''}}</P>
+<p>Filtros: Desde {{null != $filtros -> get('date_ini') ? date_format(new DateTime($filtros -> get('date_ini')), 'd/m/Y') : ""}}{{$filtros -> get('month_ini')}}{{date("Y") - ($filtros -> get('year_ini'))}} 
+    Hasta: {{null != $filtros -> get('date_fin') ? date_format(new DateTime($filtros -> get('date_fin')), 'd/m/Y') : ""}}{{$filtros -> get('month_fin')}}{{date("Y") - ($filtros -> get('year_fin'))}}</p>
+<p>Categoria: {{$cat_filtro}}</P>
 
     <table>
             @switch($filtro)

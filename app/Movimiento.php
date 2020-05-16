@@ -31,7 +31,7 @@ class Movimiento extends Model
             $datos = explode("-", $month_ini);
 			return $query->selectRaw("DATE_FORMAT(fecha,'%M %Y') AS month")
 						->whereYear('fecha', '>= ', $datos[0])->whereMonth('fecha', '>= ', $datos[1])
-						->groupBy(["month", "categoria_id"]);
+						->groupBy([DB::raw("DATE_FORMAT(fecha,'%M %Y')"), "categoria_id"]);
     	}
     }
 
@@ -41,7 +41,7 @@ class Movimiento extends Model
 			$query->whereYear('fecha','<=',$datos[0])->whereMonth('fecha','<=',$datos[1]);
 			if($month_ini == ""){
 				$query->selectRaw("DATE_FORMAT(fecha,'%M %Y') AS month")
-						->groupBy(["month", "categoria_id"]);
+						->groupBy([DB::raw("DATE_FORMAT(fecha,'%M %Y')"), "categoria_id"]);
 			}
 			return $query;
     	}
@@ -51,7 +51,7 @@ class Movimiento extends Model
     	if ($year_ini != "") {
 			return $query->selectRaw("YEAR(fecha) AS year")
 						->whereYear('fecha', '>= ', date("Y") + $year_ini)
-						->groupBy(["year", "categoria_id"]);
+						->groupBy([DB::raw("YEAR(fecha)"), "categoria_id"]);
     	}
     }
 
@@ -60,7 +60,7 @@ class Movimiento extends Model
 			$query->whereYear('fecha', '<=', date("Y") + $year_fin);
 			if($year_ini == ""){
 				$query->selectRaw("YEAR(fecha) AS year")
-						->groupBy(["year", "categoria_id"]);
+						->groupBy([DB::raw("YEAR(fecha)"), "categoria_id"]);
 			}
     	}
 	}
