@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
  
 use App\Clientes;
 use App\Pago;
+use App\Movimiento;
+use App\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;
@@ -59,6 +61,7 @@ class ClientesController extends Controller
     {
         //Transaccion y Rollback
         DB::beginTransaction();
+        
         try{
     
                   //Crear un nuevo cliente en nuestra base de datos
@@ -69,16 +72,31 @@ class ClientesController extends Controller
                   $cliente->save();
 
                   //Se obtiene el ultimo id del cliente guardado para pasarle ese dato a clientes_id
-                    $cliente_id = Clientes::all()->last()->id;
+                  $cliente_id = Clientes::all()->last()->id;
                
-
                   $pago = new Pago;
-                  $pago-> concepto  = $request->input('concepto');
-                  $pago-> total = preg_replace('/\D/', '', $request->input('total'));
-                  $pago-> entrega = preg_replace('/\D/', '', $request->input('entrega'));
-                  $pago-> saldo = preg_replace('/\D/', '', $request->input('saldo'));
-                  $pago-> clientes_id =  $cliente_id;
+                  $pago->concepto  = $request->input('concepto');
+                  $pago->total = preg_replace('/\D/', '', $request->input('total'));
+                  $pago->entrega = preg_replace('/\D/', '', $request->input('entrega'));
+                  $pago->saldo = preg_replace('/\D/', '', $request->input('saldo'));
+                  $pago->clientes_id =  $cliente_id;
                   $pago->save();
+
+                  if(!($categoria_id = Categoria::where('nombreCategoria', 'Recibo'))){
+                    $categoria = new Categoria;
+                    $categoria->nombreCategoria = 'Recibo';
+                    $categoria->save();
+                    $categoria_id = Categoria::where('nombreCategoria', 'Recibo');
+                }
+
+                  $movimiento = new Movimiento;
+                  $movimiento->fecha = date("Y-m-d");
+                  $movimiento->entidad = $request -> input('nombre');
+                  $movimiento->categoria_id = $categoria_id->first()->id;
+                  $movimiento->concepto = $request->input('concepto');
+                  $movimiento->tipo_movimiento = 'Ingreso';
+                  $movimiento->monto = preg_replace('/\D/', '', $request->input('entrega'));
+                  $movimiento->save();
                   
 
                 DB::commit();
