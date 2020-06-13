@@ -74,7 +74,7 @@
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="nombre" type="text" class="form-control" name="nombre" value="{{ old('nombre') }}" required autofocus>
+                                    <input id="nombre" type="text" autocomplete="off" class="form-control" name="nombre" value="{{ old('nombre') }}" required autofocus>
                                 
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Email') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="text" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+                                    <input id="email" type="text" autocomplete="off" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
                                 
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Telefono') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="telefono" type="text" class="form-control" name="telefono" value="{{ old('telefono') }}" required autofocus>
+                                    <input id="telefono" type="text" autocomplete="off" class="form-control" name="telefono" value="{{ old('telefono') }}" required autofocus>
                                 
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                                     <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Concepto') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="concepto" type="text" class="form-control" name="concepto" value="{{ old('concepto') }}" required autofocus>
+                                        <input id="concepto" type="text" autocomplete="off" class="form-control" name="concepto" value="{{ old('concepto') }}" required autofocus>
                                     
                                     </div>
                                 </div>
@@ -115,7 +115,7 @@
                                     <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Total') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="total" type="text" class="form-control" name="total" value="{{ old('total') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" onchange="cal()" required autofocus>
+                                        <input id="total" type="text" class="form-control" autocomplete="off" name="total" value="{{ old('total') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" onchange="cal()" required autofocus>
                                     
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                                     <label for="nombre" class="col-md-4 col-form-label text-md-right">{{ __('Entrega') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="entrega" type="text" class="form-control" name="entrega" value="{{ old('entrega') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" onchange="cal()"  required autofocus>
+                                        <input id="entrega" type="text" class="form-control" autocomplete="off" name="entrega" value="{{ old('entrega') }}" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" onchange="cal()"  required autofocus>
                                     
                                     </div>
                                 </div>

@@ -8,7 +8,7 @@
     <form method="POST" class="d-inline-block" action="{{ route('reporte') }}"> 
         @csrf
         <div hidden>
-            <input id="cat_filtro" type="text" name="cat_filtro" value="{{ isset($_GET['cat_filtro']) ? $_GET['cat_filtro'] : '1' }}">
+            <input id="cat_filtro" type="text" name="cat_filtro" value="{{ isset($_GET['cat_filtro']) ? $_GET['cat_filtro'] : '' }}">
         </div> 
         <div hidden>
             <input id="filtro" type="text" name="filtro" value="{{ isset($_GET['filtro']) ? $_GET['filtro'] : '1' }}">
@@ -185,14 +185,14 @@
                             <div class="form-group row">
                                 <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha</label>
                                 <div class="col-md-6">
-                                    <input id="fecha" type="date" class="form-control" name="fecha" required autofocus>        
+                                    <input autocomplete="off" id="fecha" type="date" class="form-control" name="fecha" required autofocus>        
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                                 <div class="col-md-6">
-                                    <input id="nombre" type="text" class="form-control" name="nombre" required autofocus>
+                                    <input id="nombre" autocomplete="off" type="text" class="form-control" name="nombre" required autofocus>
                                 </div>
                             </div>
 
@@ -210,7 +210,7 @@
                             <div class="form-group row">
                                 <label for="concepto" class="col-md-4 col-form-label text-md-right">Concepto</label>
                                 <div class="col-md-6">
-                                    <input id="concepto" type="text" class="form-control" name="concepto" required autofocus>        
+                                    <input id="concepto" type="text" autocomplete="off" class="form-control" name="concepto" required autofocus>        
                                 </div>
                             </div>
 
@@ -227,7 +227,7 @@
                             <div class="form-group row">
                                 <label for="monto" class="col-md-4 col-form-label text-md-right">Monto</label>
                                 <div class="col-md-6">
-                                    <input id="monto" type="text" min="1" class="form-control" name="monto" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus>  
+                                    <input id="monto" type="text" min="1" autocomplete="off" class="form-control" name="monto" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))" required autofocus>  
                                 </div>
                             </div>
                         </div>
@@ -257,14 +257,14 @@
                         <div class="form-group row">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                                 <div class="col-md-6">
-                                    <input id="nombre" name="nombre" type="text" class="form-control" required autofocus>
+                                    <input id="nombre" name="nombre" type="text" autocomplete="off" class="form-control" required autofocus>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="descripcion" class="col-md-4 col-form-label text-md-right">Descripción</label>
                                 <div class="col-md-6">
-                                    <input id="descripcion" name="descripcion" type="text" class="form-control" required autofocus>        
+                                    <input id="descripcion" name="descripcion" autocomplete="off" type="text" class="form-control" required autofocus>        
                                 </div>
                             </div>
 
