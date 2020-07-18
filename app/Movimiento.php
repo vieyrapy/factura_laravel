@@ -29,9 +29,9 @@ class Movimiento extends Model
     public function scopeMonth_ini($query, $month_ini) {
     	if ($month_ini != "") {
             $datos = explode("-", $month_ini);
-			return $query->selectRaw("DATE_FORMAT(fecha,'%M %Y') AS month")
+			return $query->selectRaw("DATE_FORMAT(fecha,'%m-%Y') AS fecha")
 						->whereYear('fecha', '>= ', $datos[0])->whereMonth('fecha', '>= ', $datos[1])
-						->groupBy([DB::raw("DATE_FORMAT(fecha,'%M %Y')"), "categoria_id"]);
+						->groupBy([DB::raw("DATE_FORMAT(fecha,'%m-%Y')"), "categoria_id"]);
     	}
     }
 
@@ -40,8 +40,8 @@ class Movimiento extends Model
             $datos = explode("-", $month_fin);
 			$query->whereYear('fecha','<=',$datos[0])->whereMonth('fecha','<=',$datos[1]);
 			if($month_ini == ""){
-				$query->selectRaw("DATE_FORMAT(fecha,'%M %Y') AS month")
-						->groupBy([DB::raw("DATE_FORMAT(fecha,'%M %Y')"), "categoria_id"]);
+				$query->selectRaw("DATE_FORMAT(fecha,'%m-%Y') AS fecha")
+						->groupBy([DB::raw("DATE_FORMAT(fecha,'%m-%Y')"), "categoria_id"]);
 			}
 			return $query;
     	}
@@ -49,17 +49,17 @@ class Movimiento extends Model
 
     public function scopeYear_ini($query, $year_ini) {
     	if ($year_ini != "") {
-			return $query->selectRaw("YEAR(fecha) AS year")
-						->whereYear('fecha', '>= ', date("Y") + $year_ini)
+			return $query->selectRaw("YEAR(fecha) AS fecha")
+						->whereYear('fecha', '>= ', date("Y") - $year_ini)
 						->groupBy([DB::raw("YEAR(fecha)"), "categoria_id"]);
     	}
     }
 
     public function scopeYear_fin($query, $year_fin, $year_ini) {
     	if ($year_fin != "") {
-			$query->whereYear('fecha', '<=', date("Y") + $year_fin);
+			$query->whereYear('fecha', '<=', date("Y") - $year_fin);
 			if($year_ini == ""){
-				$query->selectRaw("YEAR(fecha) AS year")
+				$query->selectRaw("YEAR(fecha) AS fecha")
 						->groupBy([DB::raw("YEAR(fecha)"), "categoria_id"]);
 			}
     	}

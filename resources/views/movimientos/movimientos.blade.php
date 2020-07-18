@@ -45,22 +45,21 @@
                 @endforeach
             </select>
             <select name="filtro" class="custom-select" style="width:49%" onchange="filtros(this)">
-                <option selected>Filtrar por tiempo</option>
-                <option value="1">Fechas</option>
-                <option value="2">Meses</option>
-                <option value="3">Años</option>
+                <option value="1" selected>Filtrar según Fechas</option>
+                <option value="2">Filtrar según Meses</option>
+                <option value="3">Filtrar según Años</option>
             </select>
         </div>
         <div class="col-6 d-inline-block float-right">
             
 
-                <label id="desde" class="d-none">Desde:</label >
-                {!! Form::date('date_ini', null, ['class'=> 'form-control d-none date w-25', 'onchange' => 'habilitar()']) !!}
+                <label class="d-inline-block">Desde:</label >
+                {!! Form::date('date_ini', null, ['class'=> 'form-control d-inline-block date w-25', 'onchange' => 'habilitar()']) !!}
                 {!! Form::month('month_ini', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
                 {!! Form::select('year_ini', array('' => '...') + range(date('Y'),1940), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
             
-                <label class="d-none" id="hasta">Hasta:</label>
-                {!! Form::date('date_fin', null, ['class'=> 'form-control d-none date w-25', 'onchange' => 'habilitar()']) !!}
+                <label class="d-inline-block">Hasta:</label>
+                {!! Form::date('date_fin', null, ['class'=> 'form-control d-inline-block date w-25', 'onchange' => 'habilitar()']) !!}
                 {!! Form::month('month_fin', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
                 {!! Form::select('year_fin', array('' => '...') + range(date('Y'),1940), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
 
@@ -73,67 +72,13 @@
     <div class="row justify-content-center">
     {!! $movimiento->render() !!}
         <table class="table table-hover thead-light text-center">
-            @switch($filtro)
-                @case(2)
-                    <thead>
-                        <th>Mes</th>
-                        <th>Categoria</th>
-                        <th>Ingreso</th>
-                        <th>Egreso</th>
-                    </thead>
-                    <tbody>
-                        @foreach($movimiento as $m)
-                            <tr>
-                                <td>{{date_format(new DateTime($m -> month), 'm-Y')}}</td>
-                                <td>{{$m -> categoria -> nombreCategoria}}</td>
-                                <td>{{number_format($m -> ingreso)}}</td>
-                                <td>{{number_format($m -> egreso)}}</td>
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="2">Totales: </td>
-                            <td>{{number_format($totales[0])}}</td>
-                            <td>{{number_format($totales[1])}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Total final: </td>
-                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
-                        </tr>
-                    </tbody>
-                @break
-                @case(3)
-                <thead>
-                        <th>Año</th>
-                        <th>Categoria</th>
-                        <th>Ingreso</th>
-                        <th>Egreso</th>
-                    </thead>
-                    <tbody>
-                        @foreach($movimiento as $m)
-                            <tr>
-                                <td>{{$m -> year}}</td>
-                                <td>{{$m -> categoria -> nombreCategoria}}</td>
-                                <td>{{number_format($m -> ingreso)}}</td>
-                                <td>{{number_format($m -> egreso)}}</td>
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="2">Totales: </td>
-                            <td>{{number_format($totales[0])}}</td>
-                            <td>{{number_format($totales[1])}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Total final: </td>
-                            <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
-                        </tr>
-                    </tbody>
-                    @break
-                    @default
                     <thead>
                         <th>Fecha</th>
-                        <th>Nombre</th>
                         <th>Categoria</th>
+                        @if($filtro == 1)
+                        <th>Nombre</th>
                         <th>Concepto</th>
+                        @endif
                         <th>Ingreso</th>
                         <th>Egreso</th>
                         <th>Acciones</th>
@@ -141,10 +86,12 @@
                     <tbody>
                         @foreach($movimiento as $m)
                             <tr>
-                                <td>{{date_format(new DateTime($m -> fecha), 'd/m/Y')}}</td>
-                                <td>{{$m -> entidad}}</td>
+                                <td>{{$m -> fecha}}</td>
                                 <td>{{$m -> categoria -> nombreCategoria}}</td>
+                                @if(!($filtro > 1))
+                                <td>{{$m -> entidad}}</td>
                                 <td>{{$m -> concepto}}</td>
+                                @endif
                                 <td>{{number_format($m -> ingreso)}}</td>
                                 <td>{{number_format($m -> egreso)}}</td>
                                 <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov" onclick="modificar({{$m}})">Modificar</button> 
@@ -152,17 +99,15 @@
                             </tr>
                         @endforeach
                         <tr>
-                            <td colspan="4">Totales: </td>
+                            <td colspan="{{!($filtro > 1) ? 4 : 3}}">Totales: </td>
                             <td>{{number_format($totales[0])}}</td>
                             <td>{{number_format($totales[1])}}</td>
                         </tr>
                         <tr>
-                            <td colspan="4">Total final: </td>
+                            <td colspan="{{!($filtro > 1) ? 4 : 3}}">Total final: </td>
                             <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
                         </tr>
                     </tbody>
-                    @break
-            @endswitch
         </table>
         <div class="modal fade" id="nuevoMov" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -318,13 +263,9 @@ function confirmarEliminar(id)
 
     function filtros(opcion){
         let ver = opcion.value,
-        desde = $('#desde')[0],
-        hasta = $('#hasta')[0],
         date = $(".date"),
         month = $(".month"),
         year = $(".year");
-        desde.className = 'd-inline-block';
-        hasta.className = 'd-inline-block';
         switch(ver){
             case '1':
                 for(i = 0; i <= 1; i++){
@@ -350,18 +291,6 @@ function confirmarEliminar(id)
                     month[i].classList.replace('d-inline-block', 'd-none');
                     date[i].classList.replace('d-inline-block', 'd-none');
                     month[i].value = "";
-                    date[i].value = "";
-                }
-                break;
-            default:
-                desde.className = 'd-none';
-                hasta.className = 'd-none';
-                for(i = 0; i <= 1; i++){
-                    date[i].classList.replace('d-inline-block', 'd-none');
-                    month[i].classList.replace('d-inline-block', 'd-none');
-                    year[i].classList.replace('d-inline-block', 'd-none');
-                    month[i].value = "";
-                    year[i].value = "";
                     date[i].value = "";
                 }
                 break;
