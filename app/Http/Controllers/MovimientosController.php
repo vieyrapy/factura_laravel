@@ -16,7 +16,7 @@ class MovimientosController extends Controller
     }
 
     public function index(Request $request){
-        $movimiento = $request->get('filtro') > 0 ? $this->filtros($request)->paginate(10) : $this->filtros($request)->groupBy(['id'])->paginate(10);
+        $movimiento = $request->get('filtro') > 1 ? $this->filtros($request)->paginate(10) : $this->filtros($request)->groupBy(['id'])->paginate(10);
         $categoria = Categoria::all();
         $totales = $this->totales($movimiento);
         $filtro = $request->get('filtro');
