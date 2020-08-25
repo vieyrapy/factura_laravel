@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Movimiento;
 use App\Categoria;
 use DB;
@@ -16,9 +15,10 @@ class MovimientosController extends Controller
     }
 
     public function index(Request $request){
-        $movimiento = $request->get('filtro') > 1 ? $this->filtros($request)->paginate(10) : $this->filtros($request)->groupBy(['id'])->paginate(10);
-        $categoria = Categoria::all();
+        $movimiento = $request->get('filtro') > 1 ? $this->filtros($request) : $this->filtros($request)->groupBy(['id']);
+        $categoria = Categoria::pluck('nombreCategoria', 'id')->all();
         $totales = $this->totales($movimiento);
+        $movimiento = $movimiento->paginate(10);
         $filtro = $request->get('filtro');
         return view('movimientos.movimientos', compact('movimiento', 'categoria', 'totales', 'filtro'));
     }
@@ -48,21 +48,18 @@ class MovimientosController extends Controller
     }
 
     public function pdf(Request $request){
-            $movimiento = $this->filtros($request)->get();
+            $movimiento = $request->get('filtro') > 1 ? $this->filtros($request) : $this->filtros($request)->groupBy(['id']);
             $totales = $this->totales($movimiento);
+            $movimiento = $movimiento -> get();
             $filtro = $request->get('filtro');
-            $cat_filtro = $request -> get("cat_filtro") > 0 ? Categoria::find($request -> get("cat_filtro"))->nombreCategoria : "";
+            $cat_filtro = $request -> get("cat_filtro") != "" ? Categoria::find($request -> get("cat_filtro"))->nombreCategoria : "";
             $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro, 'cat_filtro' => $cat_filtro] ); 
             return $pdf->download('reporte.pdf');   
     }
 
     private function filtros($request){
-        $date_ini = $request->get('date_ini');
-        $date_fin = $request->get('date_fin');
-        $month_ini = $request->get('month_ini');
-        $month_fin = $request->get('month_fin');
-        $year_ini = $request->get('year_ini');
-        $year_fin = $request->get('year_fin');
+        $date_ini = $request->get('date_ini') == "" ? false : $request->get('date_ini');
+        $date_fin = $request->get('date_fin') == "" ? false : $request->get('date_fin');
         $cat_filtro = $request->get('cat_filtro');
     
         $movimiento = Movimiento::selectRaw("MAX(id) AS id, MAX(fecha) AS fecha, 
@@ -70,12 +67,7 @@ class MovimientosController extends Controller
                                             MAX(concepto) AS concepto, MAX(monto) AS monto, MAX(tipo_movimiento) AS tipo_movimiento,
                                             SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, 
                                             SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
-                                ->date_ini($date_ini)
-                                ->date_fin($date_fin)
-                                ->month_ini($month_ini)
-                                ->month_fin($month_fin, $month_ini)
-                                ->year_ini($year_ini)
-                                ->year_fin($year_fin, $year_ini)
+                                ->date($date_ini, $date_fin)
                                 ->cat_filtro($cat_filtro)
                                 ->with('categoria')
                                 ->orderBy('fecha');
@@ -84,6 +76,7 @@ class MovimientosController extends Controller
     }
 
     private function totales($movimiento){
+        $movimiento = $movimiento->get();
         $total_ingreso = 0;
         $total_egreso = 0;
         foreach($movimiento as $m){

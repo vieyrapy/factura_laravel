@@ -19,69 +19,47 @@
         <div hidden>
             <input id="date_fin" type="text" name="date_fin" value="{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}">
         </div>
-        <div hidden>
-            <input id="month_ini" type="text" name="month_ini" value="{{ isset($_GET['month_ini']) ? $_GET['month_ini'] : '' }}">
-        </div>
-        <div hidden>
-            <input id="month_fin" type="text" name="month_fin" value="{{ isset($_GET['month_fin']) ? $_GET['month_fin'] : '' }}">
-        </div>
-        <div hidden>
-            <input id="year_ini" type="text" name="year_ini" value="{{ isset($_GET['year_ini']) ? $_GET['year_ini'] : '' }}">
-        </div>
-        <div hidden>
-            <input id="year_fin" type="text" name="year_fin" value="{{ isset($_GET['year_fin']) ? $_GET['year_fin'] : '' }}">
-        </div>           
 
         <button type="submit" class="btn btn-primary" value="submit">Generar PDF</button>
     </form>
 
     <div class="m-3">
-    <form class="form-inline">
-        <div class="col-6 d-inline-block">
-            <select name="cat_filtro" class="custom-select w-50" onchange="habilitarCat(this.value)">
-                <option selected>Filtrar Categorias</option>
-                @foreach($categoria as $c)
-                    <option value="{{$c -> id}}">{{$c -> nombreCategoria}}</option>
-                @endforeach
-            </select>
-            <select name="filtro" class="custom-select" style="width:49%" onchange="filtros(this)">
-                <option value="1" selected>Filtrar según Fechas</option>
-                <option value="2">Filtrar según Meses</option>
-                <option value="3">Filtrar según Años</option>
-            </select>
+    {!! Form::model(Request::all(), ['class' => 'form-inline', 'method' => 'get']) !!}
+        <div class="col-6 d-inline-block row">
+            {!! Form::select('cat_filtro', $categoria, null, ['placeholder' => 'Filtrar por categoria', 'class' => 'custom-select w-50', 'onchange' => 'habilitarCat(this.value)']) !!}
+            {!! Form::select('filtro', array('1' => 'Filtrar según Fechas', '2' => 'Filtrar según Meses', '3' => 'Filtrar según Años'), null, ['class' => 'custom-select filtro', 'onchange' => 'filtros(this.value)']) !!}
+            
         </div>
         <div class="col-6 d-inline-block float-right">
             
 
                 <label class="d-inline-block">Desde:</label >
-                {!! Form::date('date_ini', null, ['class'=> 'form-control d-inline-block date w-25', 'onchange' => 'habilitar()']) !!}
-                {!! Form::month('month_ini', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
-                {!! Form::select('year_ini', array('' => '...') + range(date('Y'),1940), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
+                <span>{!! Form::date('date_ini', null, ['class'=> 'form-control d-inline-block date w-25', 'onchange' => 'habilitar()']) !!}</span>
             
                 <label class="d-inline-block">Hasta:</label>
-                {!! Form::date('date_fin', null, ['class'=> 'form-control d-inline-block date w-25', 'onchange' => 'habilitar()']) !!}
-                {!! Form::month('month_fin', null, ['class'=> 'form-control d-none month w-25', 'onchange' => 'habilitar()']) !!}
-                {!! Form::select('year_fin', array('' => '...') + range(date('Y'),1940), null, ['class'=> 'form-control d-none year w-25', 'onchange' => 'habilitar()']) !!}
+                <span>{!! Form::date('date_fin', null, ['class'=> 'form-control d-inline-block date w-25', 'onchange' => 'habilitar()']) !!}</span>
 
                 <button id="filtrar" class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>Buscar</button>
            
         </div>
-        </form>
+        {!! Form::close() !!}
     </div>
 
     <div class="row justify-content-center">
-    {!! $movimiento->render() !!}
+    {!! $movimiento->appends(Request::all())->render() !!}
         <table class="table table-hover thead-light text-center">
                     <thead>
                         <th>Fecha</th>
                         <th>Categoria</th>
-                        @if($filtro == 1)
+                        @if(!($filtro > 1))
                         <th>Nombre</th>
                         <th>Concepto</th>
                         @endif
                         <th>Ingreso</th>
                         <th>Egreso</th>
+                        @if(!($filtro > 1))
                         <th>Acciones</th>
+                        @endif
                     </thead>
                     <tbody>
                         @foreach($movimiento as $m)
@@ -94,17 +72,19 @@
                                 @endif
                                 <td>{{number_format($m -> ingreso)}}</td>
                                 <td>{{number_format($m -> egreso)}}</td>
+                                @if(!($filtro > 1))
                                 <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevoMov" onclick="modificar({{$m}})">Modificar</button> 
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eliminar" onclick="confirmarEliminar({{$m->id}})">Eliminar</button></td>
+                                @endif
                             </tr>
                         @endforeach
                         <tr>
-                            <td colspan="{{!($filtro > 1) ? 4 : 3}}">Totales: </td>
+                            <td colspan="{{!($filtro > 1) ? 4 : 2}}">Totales: </td>
                             <td>{{number_format($totales[0])}}</td>
                             <td>{{number_format($totales[1])}}</td>
                         </tr>
                         <tr>
-                            <td colspan="{{!($filtro > 1) ? 4 : 3}}">Total final: </td>
+                            <td colspan="{{!($filtro > 1) ? 4 : 2}}">Total final: </td>
                             <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
                         </tr>
                     </tbody>
@@ -145,8 +125,8 @@
                                 <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
                                 <div class="col-md-6">
                                     <select name="categoria" id="categoria" class="form-control" required>
-                                        @foreach($categoria as $c)
-                                            <option value="{{$c->id}}">{{$c->nombreCategoria}}</option>
+                                        @foreach( $categoria as $key => $value )
+                                            <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>  
                                 </div>
@@ -247,7 +227,6 @@
 
 
 <script language="JavaScript">
-
 function confirmarEliminar(id)
      {
          var id = id;
@@ -262,41 +241,36 @@ function confirmarEliminar(id)
      }
 
     function filtros(opcion){
-        let ver = opcion.value,
-        date = $(".date"),
-        month = $(".month"),
-        year = $(".year");
-        switch(ver){
+        let spans = document.getElementsByTagName("span");
+        
+        switch(opcion){
             case '1':
-                for(i = 0; i <= 1; i++){
-                    date[i].classList.replace('d-none', 'd-inline-block');
-                    month[i].classList.replace('d-inline-block', 'd-none');
-                    year[i].classList.replace('d-inline-block', 'd-none');
-                    month[i].value = "";
-                    year[i].value = "";
-                }
+                spans[2].innerHTML = "<input type='date' name='date_ini' value='{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
+                spans[3].innerHTML = "<input type='date' name='date_fin' value='{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
                 break;
             case '2':
-                for(i = 0; i <= 1; i++){
-                    month[i].classList.replace('d-none', 'd-inline-block');
-                    date[i].classList.replace('d-inline-block', 'd-none');
-                    year[i].classList.replace('d-inline-block', 'd-none');
-                    date[i].value = "";
-                    year[i].value = "";
-                }
+                spans[2].innerHTML = "<input type='month' name='date_ini' value='{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
+                spans[3].innerHTML = "<input type='month' name='date_fin' value='{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
                 break;
             case '3':
-                for(i = 0; i <= 1; i++){
-                    year[i].classList.replace('d-none', 'd-inline-block');
-                    month[i].classList.replace('d-inline-block', 'd-none');
-                    date[i].classList.replace('d-inline-block', 'd-none');
-                    month[i].value = "";
-                    date[i].value = "";
+                let date1 = "<select name='date_ini' value='{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'>";
+                var d = new Date();
+                var n = d.getFullYear();
+                for(var i = n; i >= 1900; i--) {
+                    date1 += "<option" + (i == "{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}" ? " selected" : "") + ">" + i + "</option>";
                 }
+                date1 += "</select>";
+                date2 = "<select name='date_fin' value='{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'>";
+                for(var i = n; i >= 1900; i--) {
+                    date2 += "<option" + (i == "{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}" ? " selected" : "") + ">" + i + "</option>";
+                }
+                date2 += "</select>";
+                spans[2].innerHTML = date1;
+                spans[3].innerHTML = date2;
                 break;
         }
-        if($('#cat_filtro').value > 0){
-            $('#filtrar')[0].disabled=true;
+        if(document.getElementById("cat_filtro").value > 0){
+            document.getElementById("filtrar").disabled=true;
         }
     }
 
@@ -312,6 +286,7 @@ function confirmarEliminar(id)
         $('#fecha')[0].setAttribute('max', new Date().toISOString().split('T')[0]);
         $('.movimiento')[0].innerHTML = 'Nuevo Movimiento';
         $('#fecha')[0].value = new Date();
+        console.log(new Date());
         $('#nombre')[0].value = '';
         $('#categoria')[0].value = 1;
         $('#concepto')[0].value = '';
@@ -323,6 +298,7 @@ function confirmarEliminar(id)
     function modificar(objeto){
         $('#fecha')[0].setAttribute('max', new Date().toISOString().split('T')[0]);
         $('.movimiento')[0].innerHTML = 'Editar Movimiento';
+        console.log(objeto.concepto);
         $('#id')[0].value = objeto.id;
         $('#fecha')[0].value = objeto.fecha;
         $('#nombre')[0].value = objeto.entidad;
@@ -375,6 +351,9 @@ function confirmarEliminar(id)
             donde.value = cad2;
         }
     }
+    
+    filtro = document.getElementById("filtro").value;
+    filtros(filtro);
 </script>
 @endsection
 

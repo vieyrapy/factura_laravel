@@ -13,9 +13,9 @@
 </style>
 
 <h1>Reporte de Movimientos</h1> 
-<p>Filtros: Desde: {{null != $filtros -> get('date_ini') ? $filtros -> get('date_ini') : ""}}{{$filtros -> get('month_ini')}}{{null != $filtros -> get('year_ini') ? date("Y") - ($filtros -> get('year_ini')) : ""}} 
-    Hasta: {{null != $filtros -> get('date_fin') ? $filtros -> get('date_fin') : ""}}{{$filtros -> get('month_fin')}}{{null != $filtros -> get('year_fin') ? date("Y") - ($filtros -> get('year_fin')) : ""}}</p>
-<p>Categoria: {{$cat_filtro}}</P>
+<p>Filtros: {{null != $filtros -> get('date_ini') ? "Desde: " . $filtros -> get('date_ini') : ""}}
+            {{null != $filtros -> get('date_fin') ? "Hasta: " . $filtros -> get('date_fin') : ""}}</p>
+<p>{{null != $cat_filtro ? "Categoria:" . $cat_filtro : ""}}</P>
 
     <table>
                     <thead>
@@ -44,12 +44,12 @@
                             </tr>
                         @endforeach
                         <tr>
-                            <td colspan="{{!($filtro > 1) ? 4 : 3}}">Totales: </td>
+                            <td colspan="{{!($filtro > 1) ? 4 : 2}}">Totales: </td>
                             <td>{{number_format($totales[0])}}</td>
                             <td>{{number_format($totales[1])}}</td>
                         </tr>
                         <tr>
-                            <td colspan="{{!($filtro > 1) ? 4 : 3}}">Total final: </td>
+                            <td colspan="{{!($filtro > 1) ? 4 : 2}}">Total final: </td>
                             <td colspan="2">{{number_format($totales[0] - $totales[1])}}</td>
                         </tr>
                     </tbody>
