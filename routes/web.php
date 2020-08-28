@@ -19,6 +19,8 @@ Route::resource('pagos', 'PagoController');
 Route::resource('clientes', 'ClientesController');
 Route::resource('movimiento', 'MovimientosController');
 Route::resource('categoria', 'CategoriasController');
+Route::resource('categorias_producto', 'CategoriasProductoController');
+Route::resource('productos', 'ProductosController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -32,4 +34,5 @@ Route::post('/movimientos/pdf', 'MovimientosController@pdf')->name('reporte');
 Route::get('/movimientos', 'MovimientosController@index');
 Route::delete('movimientos/{id}', 'MovimientosController@destroy')->name('movimientos.destroy');
 
-
+Route::get('/productos', 'ProductosController@index');
+Route::delete('productos/{id}', 'ProductosController@destroy')->name('productos.destroy');
