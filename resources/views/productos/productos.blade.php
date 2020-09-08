@@ -182,48 +182,6 @@ function confirmarEliminar(id)
          $("#eliminarForm").submit();
      }
 
-    function filtros(opcion){
-        let spans = document.getElementsByTagName("span");
-
-        switch(opcion){
-            case '1':
-                spans[2].innerHTML = "<input type='date' name='date_ini' value='{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
-                spans[3].innerHTML = "<input type='date' name='date_fin' value='{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
-                break;
-            case '2':
-                spans[2].innerHTML = "<input type='month' name='date_ini' value='{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
-                spans[3].innerHTML = "<input type='month' name='date_fin' value='{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'/>";
-                break;
-            case '3':
-                let date1 = "<select name='date_ini' value='{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'>";
-                var d = new Date();
-                var n = d.getFullYear();
-                for(var i = n; i >= 1900; i--) {
-                    date1 += "<option" + (i == "{{ isset($_GET['date_ini']) ? $_GET['date_ini'] : '' }}" ? " selected" : "") + ">" + i + "</option>";
-                }
-                date1 += "</select>";
-                date2 = "<select name='date_fin' value='{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}' class='form-control d-inline-block date w-25' onchange='habilitar()'>";
-                for(var i = n; i >= 1900; i--) {
-                    date2 += "<option" + (i == "{{ isset($_GET['date_fin']) ? $_GET['date_fin'] : '' }}" ? " selected" : "") + ">" + i + "</option>";
-                }
-                date2 += "</select>";
-                spans[2].innerHTML = date1;
-                spans[3].innerHTML = date2;
-                break;
-        }
-        if(document.getElementById("cat_filtro").value > 0){
-            document.getElementById("filtrar").disabled=true;
-        }
-    }
-
-    function habilitar(){
-        $('#filtrar')[0].disabled=false;
-    }
-
-    function habilitarCat(valor){
-        valor > 0 ? $('#filtrar')[0].disabled=false : $('#filtrar')[0].disabled=true;
-    }
-
     function nuevo(){
         $('.producto')[0].innerHTML = 'Nuevo Producto';
         $('#id')[0].value = '';
