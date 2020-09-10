@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('clientes', function(Request $request){
-    return Clientes::name($request->get('name'))->orderBy('id', 'DESC')->paginate(10);
+    return Clientes::name($request->get('name'))->orderBy('id', 'DESC')->get();
 });
 
 Route::post('clientes', function(Request $request){
