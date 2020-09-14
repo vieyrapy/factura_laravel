@@ -15,11 +15,10 @@ class CreateVentasTable extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('fecha');
             $table->string('condicion_venta');
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes');
-            $table->string('nro_factura');
+            $table->string('nro_factura')->nullable();
             $table->integer('total');
             $table->integer('total_iva');
             $table->timestamps();

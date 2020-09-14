@@ -29,6 +29,7 @@ class ProductosController extends Controller
         $producto->nombre = $request->producto;
         $producto->descripcion = $request->descripcion;
         $producto->categoria_producto_id = $request->categoria;
+        $producto->iva = $request->iva;
         $producto->stock_actual = $request->stock_actual;
         $producto->stock_minimo = $request->stock_minimo;
         $producto->precio_venta = preg_replace('/\D/', '', $request->precio_venta);

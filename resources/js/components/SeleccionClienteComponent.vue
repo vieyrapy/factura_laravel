@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="cliente" tabindex="-1" aria-hidden="true">
+    <div class="modal" id="cliente" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -13,13 +13,14 @@
                         <button class="btn btn-primary" data-toggle="modal" data-target="#nuevoCliente">+ Crear nuevo cliente</button>
                         <nuevo-cliente-component></nuevo-cliente-component>
 
-                        <select v-model="clienteSeleccionado" class="form-control mt-4">
-                            <option v-for="cliente in clientes" v-bind:key="cliente.id">{{cliente.nombre}}</option>
+                        <select v-model="$global.cliente" class="form-control mt-4">
+                            <option v-for="cliente in clientes" v-bind:key="cliente.id" :value="cliente">{{cliente.nombre}}</option>
                         </select>
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-primary mx-auto" :disabled="clienteSeleccionado == ''">Seleccionar cliente</button>
+                        <button class="btn btn-primary mx-auto" :disabled="$global.cliente == {}" data-toggle="modal" data-target="#nuevaVenta">Seleccionar cliente</button>
+                        <nueva-venta-component></nueva-venta-component>
                     </div>
             </div>
         </div>
@@ -30,14 +31,11 @@
     export default {
         data: () => {
             return {
-                clientes: [],
-                clienteSeleccionado: ''
+                clientes: []
             }
         },
         mounted() {
-            axios.get('/api/clientes').then(resultado => {
-                this.clientes = resultado.data;
-            });
+            axios.get('/api/clientes').then(resultado => this.clientes = resultado.data);
         },
         methods: {
         }

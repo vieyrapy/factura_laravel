@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use App\Clientes;
+use App\DetalleVenta;
+use App\Producto;
+use App\Venta;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,7 @@ Route::post('clientes', function(Request $request){
     $cliente->telefono = $request->input('telefono');
     $cliente->direccion = $request->input('direccion');
     $cliente->save();
+    return $cliente;
 });
 
 Route::put('clientes/{id}', function(Request $request, $id){
@@ -45,4 +49,28 @@ Route::put('clientes/{id}', function(Request $request, $id){
 Route::delete('clientes/{id}', function($id){
     $cliente = Clientes::findOrFail($id);
     $cliente->delete();
+});
+
+Route::get('productos', function(){
+    return Producto::with('categoria_producto')->get();
+});
+
+Route::post('ventas', function(Request $request){
+    $venta = new Venta();
+    $venta->condicion_venta = $request->condicion;
+    $venta->cliente_id = $request->cliente;
+    $venta->total = $request->total;
+    $venta->total_iva = $request->total_iva;
+    $venta->save();
+    foreach($request->detalles as $detalle){
+        $detalle_venta = new DetalleVenta();
+        $detalle_venta->venta_id = Venta::latest('id')->first()->id;
+        $detalle_venta->producto_id = $detalle['producto'];
+        $detalle_venta->cantidad = $detalle['cantidad'];
+        $detalle_venta->valor_venta = $detalle['precio_total'];
+        $detalle_venta->save();
+        $producto = Producto::find($detalle['producto']);
+        $producto->stock_actual -= $detalle['cantidad'];
+        $producto->save();
+    }
 });

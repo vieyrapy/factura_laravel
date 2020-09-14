@@ -21,6 +21,7 @@ class CreateProductosTable extends Migration
             $table->integer('stock_minimo');
             $table->integer('precio_venta');
             $table->integer('precio_compra');
+            $table->float('iva');
             $table->unsignedBigInteger('categoria_producto_id');
             $table->foreign('categoria_producto_id')->references('id')->on('categoria_productos');
             $table->timestamps();

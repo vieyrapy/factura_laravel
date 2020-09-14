@@ -95,6 +95,19 @@
                             </div>
 
                             <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">IVA</label>
+                                <div class="col-3 align-self-center text-center">
+                                    <input type="radio" id="iva10" name="iva" value="0.090909" ><label for="iva10">IVA 10</label>
+                                </div>
+                                <div class="col-3 align-self-center text-center">
+                                    <input type="radio" id="iva5" name="iva" value="0.0476"><label for="iva5">IVA 5</label>
+                                </div>
+                                <div class="col-3 align-self-center text-center">
+                                    <input type="radio" id="exenta" name="iva" value="0"><label for="exenta">Exenta</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
                                 <div class="col-md-6">
                                     <select name="categoria" id="categoria" class="form-control" required>

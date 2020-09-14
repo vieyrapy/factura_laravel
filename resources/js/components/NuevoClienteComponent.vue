@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="nuevoCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal" id="nuevoCliente" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -14,7 +14,7 @@
                         <div class="form-group row">
                             <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                             <div class="col-md-6">
-                                <input v-model="formulario.nombre" name="nombre" type="text" autocomplete="off" class="form-control" required autofocus>
+                                <input v-model="formulario.nombre" name="nombre" type="text" autocomplete="off" class="form-control" required autofocus >
                             </div>
                         </div>
 
@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">Nombre</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
                             <div class="col-md-6">
                                 <input v-model="formulario.email" name="email" type="email" autocomplete="off" class="form-control" required autofocus>
                             </div>
@@ -49,7 +49,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button @click="guardar()" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                        <!-- v-if="window.location.split('/') == 'ventas'" -->
+                        <button @click="guardar()" class="btn btn-primary" data-toggle="modal" data-target="#nuevaVenta">Guardar</button>
                     </div>
             </div>
         </div>
@@ -71,7 +72,8 @@
         },
         methods: {
             guardar(){
-                axios.post('/api/clientes', this.formulario).then(console.log('Cliente guardado'));
+                axios.post('/api/clientes', this.formulario).then(resultado => this.$global.cliente = resultado.data);
+                $('#nuevoCliente').modal('hide');
             }
         }
     }
