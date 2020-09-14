@@ -11,6 +11,13 @@
 
                     <div class="modal-body">
 
+                        <p v-if="errors.length">
+                            <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
+                            <ul>
+                            <li v-for="error in errors" :key="error">{{ error }}</li>
+                            </ul>
+                        </p>
+
                         <div class="form-group row">
                             <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
                             <div class="col-md-6">
@@ -67,11 +74,16 @@
                     email: "",
                     telefono: "",
                     direccion: ""
-                }
+                },
+                errors: []
             }
         },
         methods: {
             guardar(){
+                if(formulario.nombre == "" || formulario.ruc == ""){
+                    errors.push('Aún hay campos que deben ser completados');
+                    return;
+                }
                 axios.post('/api/clientes', this.formulario).then(resultado => this.$global.cliente = resultado.data);
                 $('#nuevoCliente').modal('hide');
             }

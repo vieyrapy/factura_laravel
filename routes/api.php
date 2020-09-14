@@ -24,7 +24,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('clientes', function(Request $request){
     return Clientes::name($request->get('name'))->orderBy('id', 'DESC')->get();
 });
-
 Route::post('clientes', function(Request $request){
     $cliente = new Clientes;
     $cliente->nombre = $request->input('nombre');
@@ -35,7 +34,6 @@ Route::post('clientes', function(Request $request){
     $cliente->save();
     return $cliente;
 });
-
 Route::put('clientes/{id}', function(Request $request, $id){
     $cliente = Clientes::findOrFail($id);
     $cliente->nombre = $request->input('nombre');
@@ -45,7 +43,6 @@ Route::put('clientes/{id}', function(Request $request, $id){
     $cliente->direccion = $request->input('direccion');
     $cliente->save();
 });
-
 Route::delete('clientes/{id}', function($id){
     $cliente = Clientes::findOrFail($id);
     $cliente->delete();
@@ -55,6 +52,24 @@ Route::get('productos', function(){
     return Producto::with('categoria_producto')->get();
 });
 
+Route::get('ventas', function(Request $request){
+    $ventas = Venta::select(['nro_factura', 'created_at', 'condicion_venta', 'cliente_id', 'total'])
+        ->with(['cliente' => function($cliente){
+            $cliente->select(['id', 'nombre']);
+        }])
+        ->paginate(10);
+    return [
+        'pagination' => [
+            'total' => $ventas->total(),
+            'current_page' => $ventas->currentPage(),
+            'per_page' => $ventas->perPage(),
+            'last_page' => $ventas->lastPage(),
+            'from' => $ventas->firstItem(),
+            'to' => $ventas->lastItem()
+        ],
+        'ventas' => $ventas
+    ];
+});
 Route::post('ventas', function(Request $request){
     $venta = new Venta();
     $venta->condicion_venta = $request->condicion;

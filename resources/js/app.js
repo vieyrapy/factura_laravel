@@ -30,7 +30,8 @@ shared.install = () => {
 Vue.use(shared);
 Vue.component('nuevo-cliente-component', require('./components/NuevoClienteComponent.vue').default);
 Vue.component('seleccion-cliente-component', require('./components/SeleccionClienteComponent.vue').default);
-Vue.component('nueva-venta-component', require('./components/NuevaVenta.vue').default);
+Vue.component('nueva-venta-component', require('./components/NuevaVentaComponent.vue').default);
+Vue.component('tabla-ventas-component', require('./components/TablaVentasComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

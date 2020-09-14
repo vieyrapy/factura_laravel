@@ -36,3 +36,7 @@ Route::delete('movimientos/{id}', 'MovimientosController@destroy')->name('movimi
 
 Route::get('/productos', 'ProductosController@index');
 Route::delete('productos/{id}', 'ProductosController@destroy')->name('productos.destroy');
+
+Route::get('/ventas', function(){
+    return view('ventas.ventas');
+});
