@@ -17,9 +17,10 @@ class CreateClientesTable extends Migration
             $table->bigIncrements('id');
             $table->string('nombre');
             $table->string('ruc');
-            $table->string('email');
-            $table->string('telefono');
-            $table->string('direccion');
+            $table->string('email')->nullable();
+            $table->string('telefono')->nullable();
+            $table->string('direccion')->nullable();
+            $table->boolean('eliminado')->default(false);
             $table->timestamps();
         });
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\CategoriaProducto;
 use Illuminate\Http\Request;
 use App\Clientes;
 use App\DetalleVenta;
@@ -21,26 +22,27 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//APIs relacionadas a clientes
 Route::get('clientes', function(Request $request){
     return Clientes::name($request->get('name'))->orderBy('id', 'DESC')->get();
 });
 Route::post('clientes', function(Request $request){
     $cliente = new Clientes;
-    $cliente->nombre = $request->input('nombre');
-    $cliente->ruc = $request->input('ruc');
-    $cliente->email = $request->input('email');
-    $cliente->telefono = $request->input('telefono');
-    $cliente->direccion = $request->input('direccion');
+    $cliente->nombre = $request->nombre;
+    $cliente->ruc = $request->ruc;
+    $cliente->email = $request->email;
+    $cliente->telefono = $request->telefono;
+    $cliente->direccion = $request->direccion;
     $cliente->save();
     return $cliente;
 });
 Route::put('clientes/{id}', function(Request $request, $id){
     $cliente = Clientes::findOrFail($id);
-    $cliente->nombre = $request->input('nombre');
-    $cliente->ruc = $request->input('ruc');
-    $cliente->email = $request->input('email');
-    $cliente->telefono = $request->input('telefono');
-    $cliente->direccion = $request->input('direccion');
+    $cliente->nombre = $request->nombre;
+    $cliente->ruc = $request->ruc;
+    $cliente->email = $request->email;
+    $cliente->telefono = $request->telefono;
+    $cliente->direccion = $request->direccion;
     $cliente->save();
 });
 Route::delete('clientes/{id}', function($id){
@@ -48,10 +50,59 @@ Route::delete('clientes/{id}', function($id){
     $cliente->delete();
 });
 
-Route::get('productos', function(){
-    return Producto::with('categoria_producto')->get();
+//APIs relacionadas a productos
+Route::get('categorias/productos', function(){
+    return CategoriaProducto::all();
+});
+Route::get('productos', function(Request $request){
+    $productos = Producto::select(['id', 'nombre', 'descripcion', 'stock_actual', 'stock_minimo', 'precio_venta', 'precio_compra', 'iva', 'categoria_producto_id'])
+        ->where('eliminado', '=', 0)
+        ->paginate(10);
+    return [
+        'pagination' => [
+            'total' => $productos->total(),
+            'current_page' => $productos->currentPage(),
+            'per_page' => $productos->perPage(),
+            'last_page' => $productos->lastPage(),
+            'from' => $productos->firstItem(),
+            'to' => $productos->lastItem()
+        ],
+        'productos' => $productos
+    ];
+});
+Route::get('productos/seleccion', function(Request $request){
+    return Producto::select(['id', 'nombre', 'stock_actual', 'precio_venta', 'iva'])->where('eliminado', '=', 0)->get();
+});
+Route::post('productos', function(Request $request){
+    $producto = new Producto;
+    $producto->nombre = $request->nombre;
+    $producto->descripcion = $request->descripcion;
+    $producto->stock_actual = $request->stock_actual;
+    $producto->stock_minimo = $request->stock_minimo;
+    $producto->precio_compra = $request->precio_compra;
+    $producto->precio_venta = $request->precio_venta;
+    $producto->iva = $request->iva;
+    $producto->categoria_producto_id = $request->categoria_producto_id;
+    $producto->save();
+});
+Route::put('productos/{id}', function(Request $request, $id){
+    $producto = Producto::findOrFail($id);
+    if($request->nombre){ //Actualiza si llega el nombre
+        $producto->nombre = $request->nombre;
+        $producto->descripcion = $request->descripcion;
+        $producto->stock_actual = $request->stock_actual;
+        $producto->stock_minimo = $request->stock_minimo;
+        $producto->precio_compra = $request->precio_compra;
+        $producto->precio_venta = $request->precio_venta;
+        $producto->iva = $request->iva;
+        $producto->categoria_producto_id = $request->categoria_producto_id;
+    } else{ //Si no hay nombre, reconoce que se quiere marcar como eliminado
+        $producto->eliminado = $request->eliminado;
+    }
+    $producto->save();
 });
 
+//APIs relacionadas a ventas
 Route::get('ventas', function(Request $request){
     $ventas = Venta::select(['nro_factura', 'created_at', 'condicion_venta', 'cliente_id', 'total'])
         ->with(['cliente' => function($cliente){

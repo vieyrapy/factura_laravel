@@ -109,7 +109,7 @@
             }
         },
         mounted() {
-            axios.get('/api/productos').then(resultado => this.productos = resultado.data);
+            axios.get('/api/productos/seleccion').then(resultado => this.productos = resultado.data);
 
         },
         methods: {
@@ -143,6 +143,7 @@
                     this.formulario.total_iva += detalle.iva_total;
                 }
                 axios.post('/api/ventas', this.formulario).then(console.log('Venta generada'));
+                this.$emit('venta-creada');
                 $("#nuevaVenta").modal('hide');
                 $("#cliente").modal('hide');
                 this.formulario = {

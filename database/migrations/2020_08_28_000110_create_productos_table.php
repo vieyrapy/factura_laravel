@@ -16,7 +16,7 @@ class CreateProductosTable extends Migration
         Schema::create('productos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
-            $table->string('descripcion');
+            $table->string('descripcion')->nullable();
             $table->integer('stock_actual');
             $table->integer('stock_minimo');
             $table->integer('precio_venta');
@@ -24,6 +24,7 @@ class CreateProductosTable extends Migration
             $table->float('iva');
             $table->unsignedBigInteger('categoria_producto_id');
             $table->foreign('categoria_producto_id')->references('id')->on('categoria_productos');
+            $table->boolean('eliminado')->default(false);
             $table->timestamps();
         });
     }

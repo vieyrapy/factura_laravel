@@ -11,7 +11,6 @@
 
                     <div class="modal-body">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#nuevoCliente">+ Crear nuevo cliente</button>
-                        <nuevo-cliente-component></nuevo-cliente-component>
 
                         <select v-model="$global.cliente" class="form-control mt-4">
                             <option v-for="cliente in clientes" v-bind:key="cliente.id" :value="cliente">{{cliente.nombre}}</option>
@@ -20,7 +19,6 @@
 
                     <div class="modal-footer">
                         <button class="btn btn-primary mx-auto" :disabled="$global.cliente == {}" data-toggle="modal" data-target="#nuevaVenta">Seleccionar cliente</button>
-                        <nueva-venta-component></nueva-venta-component>
                     </div>
             </div>
         </div>

@@ -1,21 +1,26 @@
 <template>
 <div class="col sm">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cliente">+ Nueva Venta</button>
+    <button type="button" class="btn btn-primary" @click="editar()">+ Nuevo Venta</button>
     <table class="table table-hover thead-light text-center">
                     <thead>
-                        <th>Nro de Factura</th>
-                        <th>Fecha</th>
-                        <th>Condición de Venta</th>
-                        <th>Cliente</th>
-                        <th>Total</th>
+                        <th>Producto</th>
+                        <th>Stock actual</th>
+                        <th>Precio de venta</th>
+                        <th>Precio de compra</th>
+                        <th>Acciones</th>
                     </thead>
                     <tbody>
-                       <tr v-for="venta in ventas" :key="venta.id">
-                           <td>{{venta.nro_factura}}</td>
-                           <td>{{venta.created_at}}</td>
-                           <td>{{venta.condicion_venta}}</td>
-                           <td>{{venta.cliente.nombre}}</td>
-                           <td>{{venta.total}}</td>
+                       <tr v-for="producto in productos" :key="producto.id">
+                           <td>{{producto.nombre}}</td>
+                           <td>{{producto.stock_actual}}</td>
+                           <td>{{producto.precio_venta}}</td>
+                           <td>{{producto.precio_compra}}</td>
+                           <td>
+                                <button type="button" class="btn btn-primary" @click="editar(producto)" >Modificar</button>
+                                <nuevo-producto-component :formulario="productoEditar" @creado-producto="getProductos(pagination.current_page)"></nuevo-producto-component>
+                                <button type="button" class="btn btn-primary" @click="eliminar(producto.id)">Eliminar</button>
+                                <eliminar-component api="productos" :registro="productoEliminar" @eliminado-producto="getProductos(pagination.current_page)"></eliminar-component>
+                            </td>
                        </tr>
                     </tbody>
         </table>
@@ -23,7 +28,7 @@
             <ul class="pagination">
                 <li class="page-item" v-if="pagination.current_page > 1">
                     <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page - 1)">
-                        <span>Atras</span>
+                        <span>Anterior</span>
                     </a>
                 </li>
                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[ page == isActivated ? 'active' : '']">
@@ -38,9 +43,6 @@
                 </li>
             </ul>
         </nav>
-        <seleccion-cliente-component></seleccion-cliente-component>
-        <nuevo-cliente-component></nuevo-cliente-component>
-        <nueva-venta-component @venta-creada="getVentas(pagination.current_page)"></nueva-venta-component>
     </div>
 </template>
 
@@ -48,7 +50,9 @@
     export default {
         data: () => {
             return {
-                ventas: [],
+                productos: [],
+                productoEditar: {},
+                productoEliminar: 0,
                 pagination: {
                     'total': 0,
                     'current_page': 0,
@@ -60,7 +64,7 @@
             }
         },
         mounted() {
-            this.getVentas(1);
+            this.getProductos(1);
         },
         computed: {
             isActivated() {
@@ -87,18 +91,39 @@
                     from++;
                 }
                 return pagesArray;
+            },
+            productoVacio(){
+                return {
+                    id: null,
+                    nombre: null,
+                    descripcion: null,
+                    stock_actual: null,
+                    stock_minimo: null,
+                    precio_compra: null,
+                    precio_venta: null,
+                    categoria_producto_id: null,
+                    iva: "0.09"
+                }
             }
         },
         methods: {
-            getVentas(page) {
-                axios.get('/api/ventas?page=' + page).then(resultado => {
-                    this.ventas = resultado.data.ventas.data;
+            getProductos(page) {
+                axios.get('/api/productos?page=' + page).then(resultado => {
+                    this.productos = resultado.data.productos.data;
                     this.pagination = resultado.data.pagination;
                 });
             },
             changePage(page){
                 this.pagination.current_page = page;
-                this.getVentas(page);
+                this.getProductos(page);
+            },
+            editar(producto = this.productoVacio){
+                this.productoEditar = Object.assign({}, producto);
+                $('#nuevoProducto').modal('show');
+            },
+            eliminar(id){
+                this.productoEliminar = id;
+                $('#eliminar').modal('show');
             }
         }
     }

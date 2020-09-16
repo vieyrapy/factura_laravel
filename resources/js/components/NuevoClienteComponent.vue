@@ -80,7 +80,7 @@
         },
         methods: {
             guardar(){
-                if(formulario.nombre == "" || formulario.ruc == ""){
+                if(this.formulario.nombre == "" || this.formulario.ruc == ""){
                     errors.push('Aún hay campos que deben ser completados');
                     return;
                 }

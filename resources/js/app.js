@@ -31,7 +31,10 @@ Vue.use(shared);
 Vue.component('nuevo-cliente-component', require('./components/NuevoClienteComponent.vue').default);
 Vue.component('seleccion-cliente-component', require('./components/SeleccionClienteComponent.vue').default);
 Vue.component('nueva-venta-component', require('./components/NuevaVentaComponent.vue').default);
+Vue.component('nuevo-producto-component', require('./components/NuevoProductoComponent.vue').default);
 Vue.component('tabla-ventas-component', require('./components/TablaVentasComponent.vue').default);
+Vue.component('tabla-productos-component', require('./components/TablaProductosComponent.vue').default);
+Vue.component('eliminar-component', require('./components/EliminarComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
