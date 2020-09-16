@@ -1858,7 +1858,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         total: 0,
         total_iva: 0
       },
-      productos: {},
       errors: []
     };
   },
@@ -1866,7 +1865,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var _this = this;
 
     axios.get('/api/productos/seleccion').then(function (resultado) {
-      return _this.productos = resultado.data;
+      return _this.$global.productos = resultado.data;
     });
   },
   methods: {
@@ -2042,6 +2041,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/clientes', this.formulario).then(function (resultado) {
         return _this.$global.cliente = resultado.data;
       });
+      axios.get('/api/clientes').then(function (resultado) {
+        return _this.$$global.clientes = resultado.data;
+      });
       $('#nuevoCliente').modal('hide');
     }
   }
@@ -2178,6 +2180,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     guardar: function guardar() {
+      var _this2 = this;
+
       if (!(this.formulario.nombre || this.formulario.stock_actual || this.formulario.stock_minimo || this.formulario.precio_compra || this.formulario.precio_venta || this.formulario.categoria_producto_id)) {
         errors.push('Aún hay campos que deben ser completados');
         return;
@@ -2190,6 +2194,9 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/api/productos', this.formulario);
       }
 
+      axios.get('/api/productos/seleccion').then(function (resultado) {
+        return _this2.$global.productos = resultado.data;
+      });
       $('#nuevoProducto').modal('hide');
       this.$emit('creado-producto');
     }
@@ -2244,7 +2251,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/clientes').then(function (resultado) {
-      return _this.clientes = resultado.data;
+      return _this.$global.clientes = resultado.data;
     });
   },
   methods: {}
@@ -38462,7 +38469,7 @@ var render = function() {
                               }
                             }
                           },
-                          _vm._l(_vm.productos, function(producto) {
+                          _vm._l(_vm.$global.productos, function(producto) {
                             return _c(
                               "option",
                               {
@@ -39550,7 +39557,7 @@ var render = function() {
                   }
                 }
               },
-              _vm._l(_vm.clientes, function(cliente) {
+              _vm._l(_vm.$global.clientes, function(cliente) {
                 return _c(
                   "option",
                   { key: cliente.id, domProps: { value: cliente } },
@@ -39622,173 +39629,178 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col sm" }, [
-    _c(
-      "button",
-      {
-        staticClass: "btn btn-primary",
-        attrs: { type: "button" },
-        on: {
-          click: function($event) {
-            return _vm.editar()
+  return _c(
+    "div",
+    { staticClass: "col sm" },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              return _vm.editar()
+            }
           }
-        }
-      },
-      [_vm._v("+ Nuevo Venta")]
-    ),
-    _vm._v(" "),
-    _c("table", { staticClass: "table table-hover thead-light text-center" }, [
-      _vm._m(0),
+        },
+        [_vm._v("+ Nuevo Venta")]
+      ),
       _vm._v(" "),
       _c(
-        "tbody",
-        _vm._l(_vm.productos, function(producto) {
-          return _c("tr", { key: producto.id }, [
-            _c("td", [_vm._v(_vm._s(producto.nombre))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(producto.stock_actual))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(producto.precio_venta))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(producto.precio_compra))]),
-            _vm._v(" "),
-            _c(
-              "td",
-              [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.editar(producto)
-                      }
-                    }
-                  },
-                  [_vm._v("Modificar")]
-                ),
-                _vm._v(" "),
-                _c("nuevo-producto-component", {
-                  attrs: { formulario: _vm.productoEditar },
-                  on: {
-                    "creado-producto": function($event) {
-                      return _vm.getProductos(_vm.pagination.current_page)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.eliminar(producto.id)
-                      }
-                    }
-                  },
-                  [_vm._v("Eliminar")]
-                ),
-                _vm._v(" "),
-                _c("eliminar-component", {
-                  attrs: { api: "productos", registro: _vm.productoEliminar },
-                  on: {
-                    "eliminado-producto": function($event) {
-                      return _vm.getProductos(_vm.pagination.current_page)
-                    }
-                  }
-                })
-              ],
-              1
-            )
-          ])
-        }),
-        0
-      )
-    ]),
-    _vm._v(" "),
-    _c("nav", [
-      _c(
-        "ul",
-        { staticClass: "pagination" },
+        "table",
+        { staticClass: "table table-hover thead-light text-center" },
         [
-          _vm.pagination.current_page > 1
-            ? _c("li", { staticClass: "page-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.changePage(_vm.pagination.current_page - 1)
-                      }
-                    }
-                  },
-                  [_c("span", [_vm._v("Anterior")])]
-                )
-              ])
-            : _vm._e(),
+          _vm._m(0),
           _vm._v(" "),
-          _vm._l(_vm.pagesNumber, function(page) {
-            return _c(
-              "li",
-              {
-                key: page,
-                staticClass: "page-item",
-                class: [page == _vm.isActivated ? "active" : ""]
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.changePage(page)
+          _c(
+            "tbody",
+            _vm._l(_vm.productos, function(producto) {
+              return _c("tr", { key: producto.id }, [
+                _c("td", [_vm._v(_vm._s(producto.nombre))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.stock_actual))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.precio_venta))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(producto.precio_compra))]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.editar(producto)
+                        }
                       }
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(page) +
-                        "\n                    "
-                    )
-                  ]
-                )
-              ]
-            )
-          }),
-          _vm._v(" "),
-          _vm.pagination.current_page < _vm.pagination.last_page
-            ? _c("li", { staticClass: "page-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.changePage(_vm.pagination.current_page + 1)
+                    },
+                    [_vm._v("Modificar")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.eliminar(producto.id)
+                        }
                       }
-                    }
-                  },
-                  [_c("span", [_vm._v("Siguiente")])]
-                )
+                    },
+                    [_vm._v("Eliminar")]
+                  )
+                ])
               ])
-            : _vm._e()
-        ],
-        2
-      )
-    ])
-  ])
+            }),
+            0
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("nav", [
+        _c(
+          "ul",
+          { staticClass: "pagination" },
+          [
+            _vm.pagination.current_page > 1
+              ? _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.changePage(_vm.pagination.current_page - 1)
+                        }
+                      }
+                    },
+                    [_c("span", [_vm._v("Anterior")])]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.pagesNumber, function(page) {
+              return _c(
+                "li",
+                {
+                  key: page,
+                  staticClass: "page-item",
+                  class: [page == _vm.isActivated ? "active" : ""]
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.changePage(page)
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(page) +
+                          "\n                    "
+                      )
+                    ]
+                  )
+                ]
+              )
+            }),
+            _vm._v(" "),
+            _vm.pagination.current_page < _vm.pagination.last_page
+              ? _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.changePage(_vm.pagination.current_page + 1)
+                        }
+                      }
+                    },
+                    [_c("span", [_vm._v("Siguiente")])]
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("nuevo-producto-component", {
+        attrs: { formulario: _vm.productoEditar },
+        on: {
+          "creado-producto": function($event) {
+            return _vm.getProductos(_vm.pagination.current_page)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("eliminar-component", {
+        attrs: { api: "productos", registro: _vm.productoEliminar },
+        on: {
+          "eliminado-producto": function($event) {
+            return _vm.getProductos(_vm.pagination.current_page)
+          }
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -52180,7 +52192,9 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 var shared = new Vue({
   data: {
-    cliente: {}
+    cliente: {},
+    productos: [],
+    clientes: []
   }
 });
 

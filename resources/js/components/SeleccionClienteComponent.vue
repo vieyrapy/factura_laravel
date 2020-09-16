@@ -13,7 +13,7 @@
                         <button class="btn btn-primary" data-toggle="modal" data-target="#nuevoCliente">+ Crear nuevo cliente</button>
 
                         <select v-model="$global.cliente" class="form-control mt-4">
-                            <option v-for="cliente in clientes" v-bind:key="cliente.id" :value="cliente">{{cliente.nombre}}</option>
+                            <option v-for="cliente in $global.clientes" v-bind:key="cliente.id" :value="cliente">{{cliente.nombre}}</option>
                         </select>
                     </div>
 
@@ -33,7 +33,7 @@
             }
         },
         mounted() {
-            axios.get('/api/clientes').then(resultado => this.clientes = resultado.data);
+            axios.get('/api/clientes').then(resultado => this.$global.clientes = resultado.data);
         },
         methods: {
         }

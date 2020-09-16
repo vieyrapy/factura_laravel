@@ -20,13 +20,19 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-var shared = new Vue({data:{ cliente: {}}})
+let shared = new Vue({
+    data:{
+        cliente: {},
+        productos: [],
+        clientes: []
+    }
+});
 
 shared.install = () => {
     Object.defineProperty(Vue.prototype, "$global", {
         get () { return shared }
     })
-}
+};
 Vue.use(shared);
 Vue.component('nuevo-cliente-component', require('./components/NuevoClienteComponent.vue').default);
 Vue.component('seleccion-cliente-component', require('./components/SeleccionClienteComponent.vue').default);

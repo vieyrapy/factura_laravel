@@ -1,11 +1,15 @@
 <?php
 
+use App\Categoria;
 use App\CategoriaProducto;
 use Illuminate\Http\Request;
 use App\Clientes;
 use App\DetalleVenta;
+use App\Movimiento;
+use App\Pago;
 use App\Producto;
 use App\Venta;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +132,7 @@ Route::post('ventas', function(Request $request){
     $venta->total = $request->total;
     $venta->total_iva = $request->total_iva;
     $venta->save();
+    $detalles_venta = [];
     foreach($request->detalles as $detalle){
         $detalle_venta = new DetalleVenta();
         $detalle_venta->venta_id = Venta::latest('id')->first()->id;
@@ -138,5 +143,22 @@ Route::post('ventas', function(Request $request){
         $producto = Producto::find($detalle['producto']);
         $producto->stock_actual -= $detalle['cantidad'];
         $producto->save();
+        $detalle_venta->producto_id = $producto->nombre;
+        array_push($detalles_venta, $detalle_venta);
     }
+
+    $fecha_venta = Venta::all()->last()->created_at;
+    $data = array(
+            'nombre' => Clientes::find($request->cliente)->nombre,
+            'detalles' => $detalles_venta,
+            'total' => $request->total,
+            'fecha' => $fecha_venta
+            );
+
+    Mail::send('emails.comprobante-venta', $data, function($menssage){
+        $menssage->from('guillermekleeman@gmail.com', 'Studio Sánchez');
+        $menssage->to(Clientes::all()->last()->email)->cc('guillermekleeman@gmail.com')
+                ->subject(Clientes::all()->last()->nombre.'_Comprobante de venta_ID_'.Pago::all()->last()->id);
+    });
 });
+?>

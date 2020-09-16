@@ -17,9 +17,7 @@
                            <td>{{producto.precio_compra}}</td>
                            <td>
                                 <button type="button" class="btn btn-primary" @click="editar(producto)" >Modificar</button>
-                                <nuevo-producto-component :formulario="productoEditar" @creado-producto="getProductos(pagination.current_page)"></nuevo-producto-component>
                                 <button type="button" class="btn btn-primary" @click="eliminar(producto.id)">Eliminar</button>
-                                <eliminar-component api="productos" :registro="productoEliminar" @eliminado-producto="getProductos(pagination.current_page)"></eliminar-component>
                             </td>
                        </tr>
                     </tbody>
@@ -43,6 +41,8 @@
                 </li>
             </ul>
         </nav>
+        <nuevo-producto-component :formulario="productoEditar" @creado-producto="getProductos(pagination.current_page)"></nuevo-producto-component>
+        <eliminar-component api="productos" :registro="productoEliminar" @eliminado-producto="getProductos(pagination.current_page)"></eliminar-component>
     </div>
 </template>
 

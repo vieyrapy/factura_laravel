@@ -59,7 +59,7 @@
                                     <tr v-for="(detalle, index) in formulario.detalles" :key="detalle.id">
                                         <td>
                                             <select v-model="formulario.detalles[index].producto" class="form-control mt-4">
-                                                <option v-for="producto in productos" :key="producto.id" :value="producto">{{producto.nombre}}</option>
+                                                <option v-for="producto in $global.productos" :key="producto.id" :value="producto">{{producto.nombre}}</option>
                                             </select>
                                         </td>
                                          <td>
@@ -104,12 +104,11 @@
                     total: 0,
                     total_iva: 0
                 },
-                productos: {},
                 errors: []
             }
         },
         mounted() {
-            axios.get('/api/productos/seleccion').then(resultado => this.productos = resultado.data);
+            axios.get('/api/productos/seleccion').then(resultado => this.$global.productos = resultado.data);
 
         },
         methods: {

@@ -126,6 +126,7 @@
                 } else{
                     axios.post('/api/productos', this.formulario);
                 }
+                axios.get('/api/productos/seleccion').then(resultado => this.$global.productos = resultado.data);
                 $('#nuevoProducto').modal('hide');
                 this.$emit('creado-producto');
             }
