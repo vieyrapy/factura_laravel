@@ -72,9 +72,9 @@
                                             </tr>
                                         @foreach($detalles as $detalle)
                                             <tr>
-                                                <td style="font-size:18px;font-family:'Lato-Light',Lato,sans-serif;width: 33%">{{$detalle->producto_id}}</td>
-                                                <td style="font-size:18px;font-family:'Lato-Light',Lato,sans-serif;width: 33%">{{number_format($detalle->cantidad, 0, ',', '.')}}</td>
-                                                <td style="font-size:18px;font-family:'Lato-Light',Lato,sans-serif;width: 33%">{{number_format($detalle->valor_venta, 0, ',', '.')}}</td>
+                                                <td style="font-size:18px;font-family:'Lato-Light',Lato,sans-serif;width: 33%">{{$detalle['producto_id']}}</td>
+                                                <td style="font-size:18px;font-family:'Lato-Light',Lato,sans-serif;width: 33%">{{number_format($detalle['cantidad'], 0, ',', '.')}}</td>
+                                                <td style="font-size:18px;font-family:'Lato-Light',Lato,sans-serif;width: 33%">{{number_format($detalle['valor_venta'], 0, ',', '.')}}</td>
                                             </tr>
                                         @endforeach
                                         </table>

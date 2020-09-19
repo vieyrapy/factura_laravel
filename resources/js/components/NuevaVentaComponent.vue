@@ -128,6 +128,8 @@
             facturar(){
                 this.errors = [];
                 this.formulario.cliente = this.$global.cliente.id;
+
+                //Comprobar posibles errores y definir totales
                 for(const detalle of this.formulario.detalles){
                     if(!detalle.producto){
                         this.errors.push('No deben permanecer detalles en blanco');
@@ -141,8 +143,20 @@
                     this.formulario.total += detalle.precio_total;
                     this.formulario.total_iva += detalle.iva_total;
                 }
-                axios.post('/api/ventas', this.formulario).then(console.log('Venta generada'));
-                this.$emit('venta-creada');
+
+                //Guardar venta, luego imprimirla y después enviar correo
+                axios.post('/api/ventas', this.formulario).then(resultado => {
+                    this.$emit('venta-creada');
+                    axios.post('/impresion', resultado.data, {responseType: 'arraybuffer'}).then(response => {
+                        let blob = new Blob([response.data], { type: 'application/pdf' });
+                        let link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'factura.pdf';
+                        link.click();
+                    });
+                    axios.post('/api/mail', resultado.data).then('Correo enviado');
+                });
+
                 $("#nuevaVenta").modal('hide');
                 $("#cliente").modal('hide');
                 this.formulario = {

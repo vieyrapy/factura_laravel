@@ -1888,8 +1888,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       detalle.iva_total = detalle.precio_total * detalle.producto.iva;
     },
     facturar: function facturar() {
+      var _this2 = this;
+
       this.errors = [];
-      this.formulario.cliente = this.$global.cliente.id;
+      this.formulario.cliente = this.$global.cliente.id; //Comprobar posibles errores y definir totales
 
       var _iterator = _createForOfIteratorHelper(this.formulario.detalles),
           _step;
@@ -1911,15 +1913,29 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           detalle.producto = detalle.producto.id;
           this.formulario.total += detalle.precio_total;
           this.formulario.total_iva += detalle.iva_total;
-        }
+        } //Guardar venta, luego imprimirla y después enviar correo
+
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
       }
 
-      axios.post('/api/ventas', this.formulario).then(console.log('Venta generada'));
-      this.$emit('venta-creada');
+      axios.post('/api/ventas', this.formulario).then(function (resultado) {
+        _this2.$emit('venta-creada');
+
+        axios.post('/impresion', resultado.data, {
+          responseType: 'arraybuffer'
+        }).then(function (response) {
+          var blob = new Blob([response.data], {
+            type: 'application/pdf'
+          });
+          var link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'factura.pdf';
+          link.click();
+        }); // axios.post('/api/mail', resultado.data).then('Correo enviado');
+      });
       $("#nuevaVenta").modal('hide');
       $("#cliente").modal('hide');
       this.formulario = {

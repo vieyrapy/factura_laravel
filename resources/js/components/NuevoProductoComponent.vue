@@ -59,10 +59,10 @@
                             <div class="form-group row">
                                 <label class="col-md-4 col-form-label text-md-right">IVA</label>
                                 <div class="col-3 align-self-center text-center">
-                                    <input type="radio" id="iva10" name="iva" value="0.09" v-model="formulario.iva" ><label for="iva10">IVA 10</label>
+                                    <input type="radio" id="iva10" name="iva" value="11" v-model="formulario.iva" ><label for="iva10">IVA 10</label>
                                 </div>
                                 <div class="col-3 align-self-center text-center">
-                                    <input type="radio" id="iva5" name="iva" value="0.04" v-model="formulario.iva"><label for="iva5">IVA 5</label>
+                                    <input type="radio" id="iva5" name="iva" value="21" v-model="formulario.iva"><label for="iva5">IVA 5</label>
                                 </div>
                                 <div class="col-3 align-self-center text-center">
                                     <input type="radio" id="exenta" name="iva" value="0" v-model="formulario.iva"><label for="exenta">Exenta</label>
@@ -100,7 +100,7 @@
                     precio_compra: null,
                     precio_venta: null,
                     categoria_producto_id: null,
-                    iva: "0.09"
+                    iva: "11"
                 }
             }
         },

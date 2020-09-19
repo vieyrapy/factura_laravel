@@ -102,7 +102,7 @@
                     precio_compra: null,
                     precio_venta: null,
                     categoria_producto_id: null,
-                    iva: "0.09"
+                    iva: "11"
                 }
             }
         },

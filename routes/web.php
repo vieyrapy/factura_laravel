@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,3 +39,5 @@ Route::delete('productos/{id}', 'ProductosController@destroy')->name('productos.
 Route::get('/ventas', function(){
     return view('ventas.ventas');
 });
+
+Route::post('/impresion', 'PdfController@pdf_recibo');

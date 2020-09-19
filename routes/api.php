@@ -133,9 +133,11 @@ Route::post('ventas', function(Request $request){
     $venta->total_iva = $request->total_iva;
     $venta->save();
     $detalles_venta = [];
+    $iva10 = 0;
+    $iva5 = 0;
     foreach($request->detalles as $detalle){
         $detalle_venta = new DetalleVenta();
-        $detalle_venta->venta_id = Venta::latest('id')->first()->id;
+        $detalle_venta->venta_id = $venta->id;
         $detalle_venta->producto_id = $detalle['producto'];
         $detalle_venta->cantidad = $detalle['cantidad'];
         $detalle_venta->valor_venta = $detalle['precio_total'];
@@ -143,18 +145,36 @@ Route::post('ventas', function(Request $request){
         $producto = Producto::find($detalle['producto']);
         $producto->stock_actual -= $detalle['cantidad'];
         $producto->save();
-        $detalle_venta->producto_id = $producto->nombre;
+        $detalle_venta->producto = $producto;
+        if($producto->iva == 0.04){
+            $iva5 += $detalle_venta->valor_venta / 21;
+        }else if($producto->iva == 0.09){
+            $iva10 += $detalle_venta->valor_venta / 11;
+        }
         array_push($detalles_venta, $detalle_venta);
     }
 
-    $fecha_venta = Venta::all()->last()->created_at;
+    $fecha_venta = $venta->created_at;
+    $cliente = Clientes::find($request->cliente);
     $data = array(
-            'nombre' => Clientes::find($request->cliente)->nombre,
-            'detalles' => $detalles_venta,
-            'total' => $request->total,
-            'fecha' => $fecha_venta
-            );
+        'nombre' => $cliente->nombre,
+        'detalles' => $detalles_venta,
+        'total' => $request->total,
+        'fecha' => $fecha_venta,
+        'condicion' => $request->condicion,
+        'ruc' => $cliente->ruc,
+        'total_iva' => $request->total_iva,
+        'telefono' => $cliente->telefono,
+        'direccion' => $cliente->direccion,
+        'iva5' => $iva5,
+        'iva10' => $iva10
+    );
+    return $data;
+});
 
+Route::post('mail', function(Request $request){
+    $data = $request->all();
+    $data['fecha'] = new DateTime($data['fecha']);
     Mail::send('emails.comprobante-venta', $data, function($menssage){
         $menssage->from('guillermekleeman@gmail.com', 'Studio Sánchez');
         $menssage->to(Clientes::all()->last()->email)->cc('guillermekleeman@gmail.com')
