@@ -1934,7 +1934,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           link.href = window.URL.createObjectURL(blob);
           link.download = 'factura.pdf';
           link.click();
-        }); // axios.post('/api/mail', resultado.data).then('Correo enviado');
+        });
+        axios.post('/api/mail', resultado.data).then('Correo enviado');
       });
       $("#nuevaVenta").modal('hide');
       $("#cliente").modal('hide');
@@ -2177,7 +2178,7 @@ __webpack_require__.r(__webpack_exports__);
         precio_compra: null,
         precio_venta: null,
         categoria_producto_id: null,
-        iva: "0.09"
+        iva: "11"
       }
     }
   },
@@ -2391,7 +2392,7 @@ __webpack_require__.r(__webpack_exports__);
         precio_compra: null,
         precio_venta: null,
         categoria_producto_id: null,
-        iva: "0.09"
+        iva: "11"
       };
     }
   },
@@ -39334,12 +39335,12 @@ var render = function() {
                       type: "radio",
                       id: "iva10",
                       name: "iva",
-                      value: "0.09"
+                      value: "11"
                     },
-                    domProps: { checked: _vm._q(_vm.formulario.iva, "0.09") },
+                    domProps: { checked: _vm._q(_vm.formulario.iva, "11") },
                     on: {
                       change: function($event) {
-                        return _vm.$set(_vm.formulario, "iva", "0.09")
+                        return _vm.$set(_vm.formulario, "iva", "11")
                       }
                     }
                   }),
@@ -39364,12 +39365,12 @@ var render = function() {
                       type: "radio",
                       id: "iva5",
                       name: "iva",
-                      value: "0.04"
+                      value: "21"
                     },
-                    domProps: { checked: _vm._q(_vm.formulario.iva, "0.04") },
+                    domProps: { checked: _vm._q(_vm.formulario.iva, "21") },
                     on: {
                       change: function($event) {
-                        return _vm.$set(_vm.formulario, "iva", "0.04")
+                        return _vm.$set(_vm.formulario, "iva", "21")
                       }
                     }
                   }),
