@@ -1,6 +1,7 @@
 <template>
 <div class="col sm">
-    <button type="button" class="btn btn-primary" @click="editar()">+ Nuevo Venta</button>
+    <button type="button" class="btn btn-primary" @click="editar()">+ Nuevo Producto</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuevaCategoriaProducto">+ Nueva Categoria</button>
     <table class="table table-hover thead-light text-center">
                     <thead>
                         <th>Producto</th>
@@ -43,6 +44,7 @@
         </nav>
         <nuevo-producto-component :formulario="productoEditar" @creado-producto="getProductos(pagination.current_page)"></nuevo-producto-component>
         <eliminar-component api="productos" :registro="productoEliminar" @eliminado-producto="getProductos(pagination.current_page)"></eliminar-component>
+        <nueva-categoria-producto-component></nueva-categoria-producto-component>
     </div>
 </template>
 

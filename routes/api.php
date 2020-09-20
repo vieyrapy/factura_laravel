@@ -58,6 +58,11 @@ Route::delete('clientes/{id}', function($id){
 Route::get('categorias/productos', function(){
     return CategoriaProducto::all();
 });
+Route::post('categoria-producto', function(Request $request){
+    $categoria = new CategoriaProducto();
+    $categoria->nombre = $request->categoria;
+    $categoria->save();
+});
 Route::get('productos', function(Request $request){
     $productos = Producto::select(['id', 'nombre', 'descripcion', 'stock_actual', 'stock_minimo', 'precio_venta', 'precio_compra', 'iva', 'categoria_producto_id'])
         ->where('eliminado', '=', 0)
