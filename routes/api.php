@@ -156,6 +156,7 @@ Route::post('ventas', function(Request $request){
 
     $fecha_venta = $venta->created_at;
     $cliente = Clientes::find($request->cliente);
+    $formatterES = new NumberFormatter("es", NumberFormatter::SPELLOUT);
     $data = array(
         'nombre' => $cliente->nombre,
         'detalles' => $detalles_venta,
@@ -167,7 +168,8 @@ Route::post('ventas', function(Request $request){
         'telefono' => $cliente->telefono,
         'direccion' => $cliente->direccion,
         'iva5' => $iva5,
-        'iva10' => $iva10
+        'iva10' => $iva10,
+        'total_letras' => $formatterES->format($request->total)
     );
     return $data;
 });

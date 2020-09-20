@@ -28,6 +28,10 @@
         top: 6cm;
         left: 4cm;
     }
+    .total-letras {
+        top: 13cm;
+        left: 5cm;
+    }
     .total {
         top: 13cm;
         left: 16cm;
@@ -81,6 +85,7 @@
     <p class="ruc">{{$ruc}}</p>
     <p class="telefono">{{$telefono}}</p>
     <p class="direccion">{{$direccion}}</p>
+    <p class="total-letras">{{$total_letras}}</p>
     <p class="total">{{$total}}</p>
     <p class="total-iva">{{$total_iva}}</p>
     <p class="iva5-total">{{$iva5}}</p>
@@ -92,8 +97,8 @@
                 <td class="producto">{{$detalle['producto']['nombre']}}</td>
                 <td class="precio">{{$detalle['producto']['precio_venta']}}</td>
                 <td class="exentas">{{$detalle['producto']['iva'] == 0 ? $detalle['valor_venta'] : 0}}</td>
-                <td class="iva5">{{$detalle['producto']['iva'] == 21 ? $detalle['valor_venta'] / 21 : 0}}</td>
-                <td class="iva10">{{$detalle['producto']['iva'] == 11 ? $detalle['valor_venta'] / 11 : 0}}</td>
+                <td class="iva5">{{$detalle['producto']['iva'] == 21 ? $detalle['valor_venta'] : 0}}</td>
+                <td class="iva10">{{$detalle['producto']['iva'] == 11 ? $detalle['valor_venta'] : 0}}</td>
             </tr>
         @endforeach
     </table>
