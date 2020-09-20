@@ -38,6 +38,6 @@ Route::delete('productos/{id}', 'ProductosController@destroy')->name('productos.
 
 Route::get('/ventas', function(){
     return view('ventas.ventas');
-});
+})->middleware('auth');
 
 Route::post('/impresion', 'PdfController@pdf_recibo');
