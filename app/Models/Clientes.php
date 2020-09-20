@@ -1,15 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Clientes extends Model
 {
-     // Aqui realizamos la relacion entre cliente 
-    // Un cliente puede tener muchos pagos 
+     // Aqui realizamos la relacion entre cliente
+    // Un cliente puede tener muchos pagos
     public function pagos(){
-    	return $this->hasMany('App\Pago');
+    	return $this->hasMany('App\Models\Pago');
     }
 
 
@@ -23,7 +23,7 @@ class Clientes extends Model
     		 ->orWhere('telefono',  "LIKE", "%$name%")
     		 ->orWhere('id',  "LIKE", "%$name%");
     	}
-    	
+
     }
 
 }

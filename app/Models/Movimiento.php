@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
@@ -9,9 +9,9 @@ class Movimiento extends Model
 {
 
 	public function categoria(){
-        return $this->belongsTo('App\Categoria');
+        return $this->belongsTo('App\Models\Categoria');
 	}
-	
+
 	public function scopeDate($query, $date_ini, $date_fin) {
     	if ($date_ini || $date_fin) {
 			$format = substr_count($date_ini, "-");
@@ -46,7 +46,7 @@ class Movimiento extends Model
 			}
     	}
     }
-	
+
 	public function scopeCat_filtro($query, $cat_filtro) {
     	if ($cat_filtro != "") {
 			return $query->where('categoria_id','=',$cat_filtro);

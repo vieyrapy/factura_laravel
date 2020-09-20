@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Pago;
-use App\Clientes;
+use App\Models\Pago;
+use App\Models\Clientes;
 use Illuminate\Http\Request;
 
 class PagoController extends Controller
 {
-    
+
      public function __construct()
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +22,7 @@ class PagoController extends Controller
     public function index()
     {
         //
-   
+
     }
 
     /**
@@ -43,8 +43,8 @@ class PagoController extends Controller
      */
     public function store(Request $request)
     {
-        //  
-         
+        //
+
         $cliente_id = Clientes::all()->last()->id;
 
           $pago = new Pago;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Movimiento;
-use App\Categoria;
+use App\Models\Movimiento;
+use App\Models\Categoria;
 use DB;
 use PDF;
 
@@ -53,19 +53,19 @@ class MovimientosController extends Controller
             $movimiento = $movimiento -> get();
             $filtro = $request->get('filtro');
             $cat_filtro = $request -> get("cat_filtro") != "" ? Categoria::find($request -> get("cat_filtro"))->nombreCategoria : "";
-            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro, 'cat_filtro' => $cat_filtro] ); 
-            return $pdf->download('reporte.pdf');   
+            $pdf = PDF::loadView('movimientos.reporte', ['movimiento' => $movimiento, 'filtros' => $request, 'totales' => $totales, 'filtro' => $filtro, 'cat_filtro' => $cat_filtro] );
+            return $pdf->download('reporte.pdf');
     }
 
     private function filtros($request){
         $date_ini = $request->get('date_ini') == "" ? false : $request->get('date_ini');
         $date_fin = $request->get('date_fin') == "" ? false : $request->get('date_fin');
         $cat_filtro = $request->get('cat_filtro');
-    
-        $movimiento = Movimiento::selectRaw("MAX(id) AS id, MAX(fecha) AS fecha, 
-                                            MAX(entidad) AS entidad, MAX(categoria_id) AS categoria_id, 
+
+        $movimiento = Movimiento::selectRaw("MAX(id) AS id, MAX(fecha) AS fecha,
+                                            MAX(entidad) AS entidad, MAX(categoria_id) AS categoria_id,
                                             MAX(concepto) AS concepto, MAX(monto) AS monto, MAX(tipo_movimiento) AS tipo_movimiento,
-                                            SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso, 
+                                            SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso,
                                             SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->date($date_ini, $date_fin)
                                 ->cat_filtro($cat_filtro)

@@ -34,14 +34,14 @@ shared.install = () => {
     })
 };
 Vue.use(shared);
-Vue.component('nuevo-cliente-component', require('./components/NuevoClienteComponent.vue').default);
+Vue.component('nuevo-cliente-component', require('./components/Formularios/NuevoClienteComponent.vue').default);
 Vue.component('seleccion-cliente-component', require('./components/SeleccionClienteComponent.vue').default);
-Vue.component('nueva-venta-component', require('./components/NuevaVentaComponent.vue').default);
-Vue.component('nueva-categoria-producto-component', require('./components/NuevaCategoriaProductoComponent.vue').default);
-Vue.component('nuevo-producto-component', require('./components/NuevoProductoComponent.vue').default);
-Vue.component('tabla-ventas-component', require('./components/TablaVentasComponent.vue').default);
-Vue.component('tabla-productos-component', require('./components/TablaProductosComponent.vue').default);
-Vue.component('eliminar-component', require('./components/EliminarComponent.vue').default);
+Vue.component('nueva-venta-component', require('./components/Formularios/NuevaVentaComponent.vue').default);
+Vue.component('nueva-categoria-producto-component', require('./components/Formularios/NuevaCategoriaProductoComponent.vue').default);
+Vue.component('nuevo-producto-component', require('./components/Formularios/NuevoProductoComponent.vue').default);
+Vue.component('tabla-ventas-component', require('./components/Tablas/TablaVentasComponent.vue').default);
+Vue.component('tabla-productos-component', require('./components/Tablas/TablaProductosComponent.vue').default);
+Vue.component('eliminar-component', require('./components/Formularios/EliminarComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

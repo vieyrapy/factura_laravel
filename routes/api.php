@@ -1,14 +1,14 @@
 <?php
 
-use App\Categoria;
-use App\CategoriaProducto;
+use App\Models\Categoria;
+use App\Models\CategoriaProducto;
+use App\Models\Clientes;
 use Illuminate\Http\Request;
-use App\Clientes;
-use App\DetalleVenta;
-use App\Movimiento;
-use App\Pago;
-use App\Producto;
-use App\Venta;
+use App\Models\DetalleVenta;
+use App\Models\Movimiento;
+use App\Models\Pago;
+use App\Models\Producto;
+use App\Models\Venta;
 use Illuminate\Support\Facades\Mail;
 
 /*
@@ -31,7 +31,7 @@ Route::get('clientes', function(Request $request){
     return Clientes::name($request->get('name'))->orderBy('id', 'DESC')->get();
 });
 Route::post('clientes', function(Request $request){
-    $cliente = new Clientes;
+    $cliente = new Clientes();
     $cliente->nombre = $request->nombre;
     $cliente->ruc = $request->ruc;
     $cliente->email = $request->email;

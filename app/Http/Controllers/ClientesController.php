@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
- 
-use App\Clientes;
-use App\Pago;
-use App\Movimiento;
-use App\Categoria;
+
+use App\Models\Clientes;
+use App\Models\Pago;
+use App\Models\Movimiento;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;
 use DB;
-class ClientesController extends Controller 
+class ClientesController extends Controller
 {
 
      public function __construct()
@@ -24,19 +24,19 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {
-        //dd($request->get('name'));//probaar request 
+        //dd($request->get('name'));//probaar request
 
-        // Creamos una variable en este caso $cliente y le pedimos que traiga todos los clientes de la BD 
+        // Creamos una variable en este caso $cliente y le pedimos que traiga todos los clientes de la BD
         // Laravel utiliza ORM = Object Relational Mapping
         //$cliente = Clientes::all();//trae todos los clientes
 
         $cliente = Clientes::name($request->get('name'))->orderBy('id', 'DESC')->paginate(10);//trae todos los clientes
-        // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos 
+        // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos
         //var_dump($cliente);
 
 
         // es igual a clientes/index y pedimos que devuelva todos los clientes en index (nombre_tabla, variablecreada)
-        return view('clientes.index')->with('clientes', $cliente); 
+        return view('clientes.index')->with('clientes', $cliente);
 
     }
 
@@ -48,7 +48,7 @@ class ClientesController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -61,19 +61,20 @@ class ClientesController extends Controller
     {
         //Transaccion y Rollback
         DB::beginTransaction();
-        
+
         try{
-    
+
                   //Crear un nuevo cliente en nuestra base de datos
                   $cliente = new Clientes;
-                  $cliente->nombre = $request->input('nombre');  
+                  $cliente->nombre = $request->input('nombre');
+                  $cliente->ruc = $request->input('nombre');
                   $cliente->email = $request->input('email');
                   $cliente->telefono = $request->input('telefono');
                   $cliente->save();
 
                   //Se obtiene el ultimo id del cliente guardado para pasarle ese dato a clientes_id
                   $cliente_id = Clientes::all()->last()->id;
-               
+
                   $pago = new Pago;
                   $pago->concepto  = $request->input('concepto');
                   $pago->total = preg_replace('/\D/', '', $request->input('total'));
@@ -82,22 +83,22 @@ class ClientesController extends Controller
                   $pago->clientes_id =  $cliente_id;
                   $pago->save();
 
-                  if(!($categoria_id = Categoria::where('nombreCategoria', 'Recibo'))){
-                    $categoria = new Categoria;
-                    $categoria->nombreCategoria = 'Recibo';
-                    $categoria->save();
-                    $categoria_id = Categoria::where('nombreCategoria', 'Recibo');
-                }
+                //   if(!(Categoria::where('nombreCategoria', 'Recibo'))){
+                //     $categoria = new Categoria;
+                //     $categoria->nombreCategoria = 'Recibo';
+                //     $categoria->save();
+                //     $categoria_id = Categoria::where('nombreCategoria', 'Recibo');
+                // }
 
-                  $movimiento = new Movimiento;
-                  $movimiento->fecha = date("Y-m-d");
-                  $movimiento->entidad = $request -> input('nombre');
-                  $movimiento->categoria_id = $categoria_id->first()->id;
-                  $movimiento->concepto = $request->input('concepto');
-                  $movimiento->tipo_movimiento = 'Ingreso';
-                  $movimiento->monto = preg_replace('/\D/', '', $request->input('entrega'));
-                  $movimiento->save();
-                  
+                //   $movimiento = new Movimiento;
+                //   $movimiento->fecha = date("Y-m-d");
+                //   $movimiento->entidad = $request -> input('nombre');
+                //   $movimiento->categoria_id = $categoria_id->first()->id;
+                //   $movimiento->concepto = $request->input('concepto');
+                //   $movimiento->tipo_movimiento = 'Ingreso';
+                //   $movimiento->monto = preg_replace('/\D/', '', $request->input('entrega'));
+                //   $movimiento->save();
+
 
                 DB::commit();
 
@@ -112,42 +113,42 @@ class ClientesController extends Controller
 
 
 
-        try{        
-                // Se obtiene el correo electronico 
-                //$email_last = Clientes::all()->last()->email; 
+        try{
+                // Se obtiene el correo electronico
+                //$email_last = Clientes::all()->last()->email;
 
-            
-              // se realiza un array de los datos guaradados para enviara por email 
+
+              // se realiza un array de los datos guaradados para enviara por email
               $fecha_recibo = Pago::all()->last()->created_at;
               $data = array(
-                // preg_replace('/\D/', '', ) se utiliza para retirar caracteres de un lista recibe tres datos el valor a quitar '/\D/' el valor nuevo "" y cual es valor que debemos analizar y hacer los cambios 
+                // preg_replace('/\D/', '', ) se utiliza para retirar caracteres de un lista recibe tres datos el valor a quitar '/\D/' el valor nuevo "" y cual es valor que debemos analizar y hacer los cambios
 
                'nombre' => $request->input('nombre'),
                'concepto' => $request->input('concepto'),
                'total' => preg_replace('/\D/', '', $request->input('total')),
                'entrega' => preg_replace('/\D/', '', $request->input('entrega')),
-                'saldo' => preg_replace('/\D/', '', $request->input('saldo')), 
+                'saldo' => preg_replace('/\D/', '', $request->input('saldo')),
                 'fecha' => $fecha_recibo
                 );
 
-                    
+
                     Mail::send('emails.comprobante', $data, function($menssage){
 
-                    $menssage->from('recibos@studiosanchez.rocemi.com.py', 'Studio Sánchez');
-                    $menssage->to(Clientes::all()->last()->email)->cc('studiosanchezpy@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago_ID_'.Pago::all()->last()->id);
-                    }); 
-            
+                    $menssage->from('guillermekleeman@gmail.com', 'Studio Sánchez');
+                    $menssage->to(Clientes::all()->last()->email)->cc('guillermekleeman@gmail.com')->subject(Clientes::all()->last()->nombre.'_Comprobante de pago_ID_'.Pago::all()->last()->id);
+                    });
+
                     //Mail::failures();
-                    
+
             } catch(\Exception $e){
 
                 //si hay un error / excepción en el código anterior antes de confirmar, se revertirá los datos en la BD
                 // pero el EMAIL IGUAL SERÁ ENVIADO
 
-                    return 'No se pudo enviar el email';
+                    return 'No se pudo enviar el email' . $e;
                 }
 
-            try{  
+            try{
 
                   //redirige a la pagina index de cliente
                     return redirect()->route('clientes.index');
@@ -172,11 +173,11 @@ class ClientesController extends Controller
         //Mostrar detalles de un cliente
         $cliente_id = Pago::find($id)->clientes_id;
         $cliente = Clientes::find($cliente_id);
-        $pago = Pago::find($id);     
+        $pago = Pago::find($id);
 
-        return view('clientes.detalles')->with('pagos', $pago)->with('clientes', $cliente);  
+        return view('clientes.detalles')->with('pagos', $pago)->with('clientes', $cliente);
 
-      
+
     }
 
     public function pdf(Request $request)
@@ -197,14 +198,14 @@ class ClientesController extends Controller
             'entrega' => $pago->entrega,
             'saldo' =>  $pago->saldo,
             'fecha' => $pago->created_at
-           
+
         );
-        
-            $pdf = PDF::loadView('clientes.pdf', $data ); 
-            return $pdf->download($cliente->nombre.'_factura.pdf');     
+
+            $pdf = PDF::loadView('clientes.pdf', $data );
+            return $pdf->download($cliente->nombre.'_factura.pdf');
 
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *

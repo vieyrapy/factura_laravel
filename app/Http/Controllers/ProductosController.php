@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\CategoriaProducto;
-use App\Producto;
+use App\Models\CategoriaProducto;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use DB;
 
