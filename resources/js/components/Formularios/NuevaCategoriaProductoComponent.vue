@@ -38,6 +38,7 @@
         methods: {
             guardar(){
                 axios.post('/api/categoria-producto', this.formulario);
+                axios.get('/api/categorias/productos').then(resultado => this.$global.categorias = resultado.data);
                 $('#nuevaCategoriaProducto').modal('hide');
             }
         }

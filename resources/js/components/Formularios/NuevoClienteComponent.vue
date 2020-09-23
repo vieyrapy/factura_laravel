@@ -85,7 +85,7 @@
                     return;
                 }
                 axios.post('/api/clientes', this.formulario).then(resultado => this.$global.cliente = resultado.data);
-                axios.get('/api/clientes').then(resultado => this.$$global.clientes = resultado.data);
+                axios.get('/api/clientes').then(resultado => this.$global.clientes = resultado.data);
                 $('#nuevoCliente').modal('hide');
             }
         }

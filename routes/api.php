@@ -1,30 +1,20 @@
 <?php
 
-use App\Models\Categoria;
 use App\Models\CategoriaProducto;
 use App\Models\Clientes;
 use Illuminate\Http\Request;
 use App\Models\DetalleVenta;
-use App\Models\Movimiento;
 use App\Models\Pago;
 use App\Models\Producto;
 use App\Models\Venta;
 use Illuminate\Support\Facades\Mail;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::resource('pago', 'PagoController')->middleware('auth');
+Route::resource('cliente', 'ClientesController')->middleware('auth');
 
 //APIs relacionadas a clientes
 Route::get('clientes', function(Request $request){
@@ -129,7 +119,7 @@ Route::get('ventas', function(Request $request){
         ],
         'ventas' => $ventas
     ];
-});
+})->middleware('auth');
 Route::post('ventas', function(Request $request){
     $venta = new Venta();
     $venta->condicion_venta = $request->condicion;

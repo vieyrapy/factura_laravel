@@ -14,13 +14,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('pagos', 'PagoController');
-Route::resource('clientes', 'ClientesController');
+// Route::resource('clientes', 'ClientesController');
 Route::resource('movimiento', 'MovimientosController');
 Route::resource('categoria', 'CategoriasController');
 Route::resource('categorias_producto', 'CategoriasProductoController');
 Route::resource('productos', 'ProductosController');
 Auth::routes();
+
+Route::get('/clientes', function(){
+    return view('clientes.index');
+})->middleware('auth');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/comprobante', 'Email@index')->name('comprobante');

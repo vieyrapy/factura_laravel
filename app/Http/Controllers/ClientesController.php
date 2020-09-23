@@ -13,9 +13,9 @@ use DB;
 class ClientesController extends Controller
 {
 
-     public function __construct()
+     public function __construct(Clientes $cliente)
     {
-        $this->middleware('auth');
+        $this->cliente = $cliente;
     }
     /**
      * Display a listing of the resource.
@@ -24,20 +24,6 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {
-        //dd($request->get('name'));//probaar request
-
-        // Creamos una variable en este caso $cliente y le pedimos que traiga todos los clientes de la BD
-        // Laravel utiliza ORM = Object Relational Mapping
-        //$cliente = Clientes::all();//trae todos los clientes
-
-        $cliente = Clientes::name($request->get('name'))->orderBy('id', 'DESC')->paginate(10);//trae todos los clientes
-        // Var dump es una excelente función para comprobar si definitavamente la consulta debuelve algo de la base de datos
-        //var_dump($cliente);
-
-
-        // es igual a clientes/index y pedimos que devuelva todos los clientes en index (nombre_tabla, variablecreada)
-        return view('clientes.index')->with('clientes', $cliente);
-
     }
 
 

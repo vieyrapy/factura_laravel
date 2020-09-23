@@ -10,6 +10,13 @@
                     </div>
                         <div class="modal-body">
 
+                            <p v-if="errors.length">
+                                <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
+                                <ul>
+                                <li v-for="error in errors" :key="error">{{ error }}</li>
+                                </ul>
+                            </p>
+
                             <div hidden>
                                 <input v-model="formulario.id">
                             </div>
@@ -72,8 +79,8 @@
                             <div class="form-group row">
                                 <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
                                 <div class="col-md-6">
-                                    <select v-model="formulario.categoria_producto_id">
-                                        <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">{{categoria.nombre}}</option>
+                                    <select class="form-control" v-model="formulario.categoria_producto_id">
+                                        <option v-for="categoria in $global.categorias" :key="categoria.id" :value="categoria.id">{{categoria.nombre}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -109,9 +116,6 @@
                 errors: [],
                 categorias: []
             }
-        },
-        mounted() {
-            axios.get('/api/categorias/productos').then(resultado => this.categorias = resultado.data);
         },
         methods: {
             guardar(){
