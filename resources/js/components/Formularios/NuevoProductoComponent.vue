@@ -95,45 +95,55 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            formulario: {
-                default: {
-                    id: null,
-                    nombre: null,
-                    descripcion: null,
-                    stock_actual: null,
-                    stock_minimo: null,
-                    precio_compra: null,
-                    precio_venta: null,
-                    categoria_producto_id: null,
-                    iva: "11"
-                }
-            }
-        },
-        data: () => {
-            return {
-                errors: [],
-                categorias: []
-            }
-        },
-        methods: {
-            guardar(){
-                if(!(this.formulario.nombre || this.formulario.stock_actual || this.formulario.stock_minimo
-                    || this.formulario.precio_compra || this.formulario.precio_venta || this.formulario.categoria_producto_id)){
-                    errors.push('Aún hay campos que deben ser completados');
-                    return;
-                }
-                if(this.formulario.id){
-                    console.log(this.formulario.id);
-                    axios.put('/api/productos/' + this.formulario.id, this.formulario);
-                } else{
-                    axios.post('/api/productos', this.formulario);
-                }
-                axios.get('/api/productos/seleccion').then(resultado => this.$global.productos = resultado.data);
-                $('#nuevoProducto').modal('hide');
-                this.$emit('creado-producto');
-            }
-        }
-    }
+export default {
+  props: {
+    formulario: {
+      default: {
+        id: null,
+        nombre: null,
+        descripcion: null,
+        stock_actual: null,
+        stock_minimo: null,
+        precio_compra: null,
+        precio_venta: null,
+        categoria_producto_id: null,
+        iva: "11",
+      },
+    },
+  },
+  data: () => {
+    return {
+      errors: [],
+      categorias: [],
+    };
+  },
+  methods: {
+    guardar() {
+      if (
+        !(
+          this.formulario.nombre ||
+          this.formulario.stock_actual ||
+          this.formulario.stock_minimo ||
+          this.formulario.precio_compra ||
+          this.formulario.precio_venta ||
+          this.formulario.categoria_producto_id
+        )
+      ) {
+        errors.push("Aún hay campos que deben ser completados");
+        return;
+      }
+      if (this.formulario.id) {
+        console.log(this.formulario.id);
+        axios.put("/api/producto/" + this.formulario.id, this.formulario);
+      } else {
+        axios.post("/api/producto", this.formulario);
+      }
+      axios
+        .get("/api/productos-seleccion")
+        .then((resultado) => (this.$global.productos = resultado.data));
+      $("#nuevoProducto").modal("hide");
+      this.$emit("creado-producto");
+    },
+  },
+};
 </script>

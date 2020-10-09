@@ -99,48 +99,62 @@ export default {
         concepto: "",
         total: "",
         entrega: "",
-        saldo: 0
+        saldo: 0,
       },
-      errors: []
+      errors: [],
     };
   },
   mounted() {
-      axios.get('/api/clientes').then(resultado => this.$global.clientes = resultado.data);
+    axios
+      .get("/api/cliente")
+      .then((resultado) => (this.$global.clientes = resultado.data));
   },
   methods: {
-    calcular(){
-        const total = this.formulario.total.replace(/,/g, "");
-        const entrega = this.formulario.entrega.replace(/,/g, "");
-        this.formulario.saldo = this.numeroConComa(total - entrega);
-        this.formulario.total = this.numeroConComa(total);
-        this.formulario.entrega = this.numeroConComa(entrega);
+    calcular() {
+      const total = this.formulario.total.replace(/,/g, "");
+      const entrega = this.formulario.entrega.replace(/,/g, "");
+      this.formulario.saldo = this.numeroConComa(total - entrega);
+      this.formulario.total = this.numeroConComa(total);
+      this.formulario.entrega = this.numeroConComa(entrega);
     },
     numeroConComa(numero) {
-        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar() {
-        if(this.formulario.cliente_id == "" || this.formulario.concepto == "" || this.formulario.total == "" || this.formulario.entrega == ""){
-            this.errors.push('Aún hay campos que deben ser completados');
-            return;
-        }
-        if(this.formulario.saldo == NaN){
-          this.errors.push('Los campos Saldo y Entrega deben ser numéricos');
-          return;
-        }
-        if(this.formulario.total < this.formulario.entrega){
-            this.errors.push('La entrega no debe ser mayor al total');
-            return;
-        }
-      axios.post("/api/pago", this.formulario);
+      if (
+        this.formulario.cliente_id == "" ||
+        this.formulario.concepto == "" ||
+        this.formulario.total == "" ||
+        this.formulario.entrega == ""
+      ) {
+        this.errors.push("Aún hay campos que deben ser completados");
+        return;
+      }
+      if (this.formulario.saldo == NaN) {
+        this.errors.push("Los campos Saldo y Entrega deben ser numéricos");
+        return;
+      }
+      const total = this.formulario.total.replace(/,/g, "");
+      const entrega = this.formulario.entrega.replace(/,/g, "");
+      if (parseInt(total) < parseInt(entrega)) {
+        this.errors.push("La entrega no debe ser mayor al total");
+        return;
+      }
+      this.formulario.total = total;
+      this.formulario.entrega = entrega;
+      this.formulario.saldo = total - entrega;
+      axios.post("/api/pago", this.formulario).then((resultado) => {
+        axios.post("/api/mail", resultado.data).then("Correo enviado");
+      });
       this.formulario = {
         cliente_id: "",
         concepto: "",
         total: "",
         entrega: "",
-        saldo: 0
+        saldo: 0,
       };
       this.errors = [];
-    }
-  }
+    },
+  },
 };
 </script>

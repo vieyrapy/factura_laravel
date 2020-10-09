@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\Models\Clientes;
 
 class Pago extends Model
 {
@@ -35,10 +34,15 @@ class Pago extends Model
     public function crearPago($datos){
         $pago = new Pago;
         $pago->concepto  = $datos->input('concepto');
-        $pago->total = $datos->input('total');
-        $pago->entrega = $datos->input('entrega');
-        $pago->saldo = $datos->input('saldo');
+        $pago->total = str_replace(',', '', $datos->input('total'));
+        $pago->entrega = str_replace(',', '', $datos->input('entrega'));
+        $pago->saldo = str_replace(',', '', $datos->input('saldo'));
         $pago->clientes_id =  $datos->cliente_id;
         $pago->save();
+        return $pago;
+    }
+
+    public function getPagoById(){
+        return Pago::latest('id')->with('clientes')->first();
     }
 }

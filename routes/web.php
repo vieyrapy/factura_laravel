@@ -17,8 +17,6 @@ Route::get('/', function () {
 // Route::resource('clientes', 'ClientesController');
 Route::resource('movimiento', 'MovimientosController');
 Route::resource('categoria', 'CategoriasController');
-Route::resource('categorias_producto', 'CategoriasProductoController');
-Route::resource('productos', 'ProductosController');
 Auth::routes();
 
 Route::get('/clientes', function(){

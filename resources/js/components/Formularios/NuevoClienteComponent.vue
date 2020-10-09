@@ -65,29 +65,33 @@
 </template>
 
 <script>
-    export default {
-        data: () => {
-            return {
-                formulario: {
-                    nombre: "",
-                    ruc: "",
-                    email: "",
-                    telefono: "",
-                    direccion: ""
-                },
-                errors: []
-            }
-        },
-        methods: {
-            guardar(){
-                if(this.formulario.nombre == "" || this.formulario.ruc == ""){
-                    errors.push('Aún hay campos que deben ser completados');
-                    return;
-                }
-                axios.post('/api/clientes', this.formulario).then(resultado => this.$global.cliente = resultado.data);
-                axios.get('/api/clientes').then(resultado => this.$global.clientes = resultado.data);
-                $('#nuevoCliente').modal('hide');
-            }
-        }
-    }
+export default {
+  data: () => {
+    return {
+      formulario: {
+        nombre: "",
+        ruc: "",
+        email: "",
+        telefono: "",
+        direccion: "",
+      },
+      errors: [],
+    };
+  },
+  methods: {
+    guardar() {
+      if (this.formulario.nombre == "" || this.formulario.ruc == "") {
+        errors.push("Aún hay campos que deben ser completados");
+        return;
+      }
+      axios
+        .post("/api/cliente", this.formulario)
+        .then((resultado) => (this.$global.cliente = resultado.data));
+      axios
+        .get("/api/cliente")
+        .then((resultado) => (this.$global.clientes = resultado.data));
+      $("#nuevoCliente").modal("hide");
+    },
+  },
+};
 </script>

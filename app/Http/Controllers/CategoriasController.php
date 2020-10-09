@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Categoria;
-use DB;
-use Auth;
 
 class CategoriasController extends Controller
 {
+
+    public function __construct(Categoria $categoria)
+    {
+        $this->categoria = $categoria;
+    }
+
     public function store(Request $request){
-        DB::beginTransaction();
-        $categoria = new Categoria();
-        $categoria->nombreCategoria = $request->nombre;
-        $categoria->descripcion = $request->descripcion;
-        $categoria->save();
-        DB::commit();
+        $this->categoria->crearCategoria($request);
         return redirect('movimientos');
     }
 }

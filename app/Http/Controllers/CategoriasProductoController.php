@@ -8,16 +8,22 @@ use DB;
 
 class CategoriasProductoController extends Controller
 {
-    public function store(Request $request){
-        DB::beginTransaction();
-        if($request -> id){
-            $categoria = CategoriaProducto::find($request->id);
-        } else{
-            $categoria = new CategoriaProducto();
-        }
-        $categoria->nombre = $request->nombre;
-        $categoria->save();
-        DB::commit();
-        return redirect('productos');
+    public function __construct(CategoriaProducto $categoria)
+    {
+        $this->categoria = $categoria;
+    }
+
+    public function index()
+    {
+        return $this->categoria->getCategorias();
+    }
+
+    public function store(Request $request)
+    {
+        $this->categoria->crearCategoria($request);
+    }
+
+    public function getCategoriasSelect(){
+        return $this->categoria->getCategoriasSelect();
     }
 }

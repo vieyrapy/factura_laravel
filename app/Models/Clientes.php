@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Clientes extends Model
 {
@@ -11,8 +12,6 @@ class Clientes extends Model
     public function pagos(){
     	return $this->hasMany('App\Models\Pago');
     }
-
-
 
     public function scopeName($query, $name){
     	//dd("scope:".$name);
@@ -23,7 +22,30 @@ class Clientes extends Model
     		 ->orWhere('telefono',  "LIKE", "%$name%")
     		 ->orWhere('id',  "LIKE", "%$name%");
     	}
-
     }
 
+    public function getClientes(Request $request){
+        return Clientes::name($request->get('name'))->orderBy('id', 'DESC')->get();
+    }
+
+    public function crearCliente(Request $request){
+        $cliente = new Clientes();
+        $cliente->nombre = $request->nombre;
+        $cliente->ruc = $request->ruc;
+        $cliente->email = $request->email;
+        $cliente->telefono = $request->telefono;
+        $cliente->direccion = $request->direccion;
+        $cliente->save();
+        return $cliente;
+    }
+
+    public function editarCliente(Request $request, $id){
+        $cliente = Clientes::findOrFail($id);
+        $cliente->nombre = $request->nombre;
+        $cliente->ruc = $request->ruc;
+        $cliente->email = $request->email;
+        $cliente->telefono = $request->telefono;
+        $cliente->direccion = $request->direccion;
+        $cliente->save();
+    }
 }

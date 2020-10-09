@@ -93,81 +93,97 @@
 </template>
 
 <script>
-    export default {
-        data: () => {
-            return {
-                formulario: {
-                    factura: null,
-                    cliente: null,
-                    condicion: "Contado",
-                    detalles: [{producto: '', cantidad: '', precio_total: '', iva_total: ''}],
-                    total: 0,
-                    total_iva: 0
-                },
-                errors: []
-            }
-        },
-        mounted() {
-            axios.get('/api/productos/seleccion').then(resultado => this.$global.productos = resultado.data);
+export default {
+  data: () => {
+    return {
+      formulario: {
+        factura: null,
+        cliente: null,
+        condicion: "Contado",
+        detalles: [
+          { producto: "", cantidad: "", precio_total: "", iva_total: "" },
+        ],
+        total: 0,
+        total_iva: 0,
+      },
+      errors: [],
+    };
+  },
+  mounted() {
+    axios
+      .get("/api/producto-seleccion")
+      .then((resultado) => (this.$global.productos = resultado.data));
+  },
+  methods: {
+    addDetalle() {
+      this.formulario.detalles.push({
+        producto: "",
+        cantidad: 0,
+        precio_total: 0,
+        iva_total: 0,
+      });
+    },
+    removeDetalle(index) {
+      if (this.formulario.detalles.length != 1) {
+        this.formulario.detalles.splice(index, 1);
+      }
+    },
+    calcularTotales(index) {
+      const detalle = this.formulario.detalles[index];
+      detalle.precio_total = detalle.cantidad * detalle.producto.precio_venta;
+      detalle.iva_total = detalle.precio_total * detalle.producto.iva;
+    },
+    facturar() {
+      this.errors = [];
+      this.formulario.cliente = this.$global.cliente.id;
 
-        },
-        methods: {
-            addDetalle(){
-                this.formulario.detalles.push({producto: '', cantidad: 0, precio_total: 0, iva_total: 0});
-            },
-            removeDetalle(index){
-                if(this.formulario.detalles.length != 1){
-                    this.formulario.detalles.splice(index, 1);
-                }
-            },
-            calcularTotales(index){
-                const detalle = this.formulario.detalles[index];
-                detalle.precio_total = detalle.cantidad * detalle.producto.precio_venta;
-                detalle.iva_total = detalle.precio_total * detalle.producto.iva;
-            },
-            facturar(){
-                this.errors = [];
-                this.formulario.cliente = this.$global.cliente.id;
-
-                //Comprobar posibles errores y definir totales
-                for(const detalle of this.formulario.detalles){
-                    if(!detalle.producto){
-                        this.errors.push('No deben permanecer detalles en blanco');
-                        return;
-                    }
-                    if(detalle.producto.stock_actual < detalle.cantidad){
-                        this.errors.push('La cantidad del producto "' + detalle.producto.nombre + '" supera al stock actual');
-                        return;
-                    }
-                    detalle.producto = detalle.producto.id;
-                    this.formulario.total += detalle.precio_total;
-                    this.formulario.total_iva += detalle.iva_total;
-                }
-
-                //Guardar venta, luego imprimirla y después enviar correo
-                axios.post('/api/ventas', this.formulario).then(resultado => {
-                    this.$emit('venta-creada');
-                    axios.post('/impresion', resultado.data, {responseType: 'arraybuffer'}).then(response => {
-                        let blob = new Blob([response.data], { type: 'application/pdf' });
-                        let link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = 'factura.pdf';
-                        link.click();
-                    });
-                    axios.post('/api/mail', resultado.data).then('Correo enviado');
-                });
-
-                $("#nuevaVenta").modal('hide');
-                $("#cliente").modal('hide');
-                this.formulario = {
-                    factura: null,
-                    cliente: null,
-                    condicion: "Contado",
-                    detalles: [{producto: '', cantidad: '', precio_total: '', iva_total: ''}],
-                    total: 0,
-                    total_iva: 0
-                };
-            }
+      //Comprobar posibles errores y definir totales
+      for (const detalle of this.formulario.detalles) {
+        if (!detalle.producto) {
+          this.errors.push("No deben permanecer detalles en blanco");
+          return;
         }
-    }
+        if (detalle.producto.stock_actual < detalle.cantidad) {
+          this.errors.push(
+            'La cantidad del producto "' +
+              detalle.producto.nombre +
+              '" supera al stock actual'
+          );
+          return;
+        }
+        detalle.producto = detalle.producto.id;
+        this.formulario.total += detalle.precio_total;
+        this.formulario.total_iva += detalle.iva_total;
+      }
+
+      //Guardar venta, luego imprimirla y después enviar correo
+      axios.post("/api/venta", this.formulario).then((resultado) => {
+        this.$emit("venta-creada");
+        axios
+          .post("/impresion", resultado.data, { responseType: "arraybuffer" })
+          .then((response) => {
+            let blob = new Blob([response.data], { type: "application/pdf" });
+            let link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = "factura.pdf";
+            link.click();
+          });
+        axios.post("/api/mail", resultado.data).then("Correo enviado");
+      });
+
+      $("#nuevaVenta").modal("hide");
+      $("#cliente").modal("hide");
+      this.formulario = {
+        factura: null,
+        cliente: null,
+        condicion: "Contado",
+        detalles: [
+          { producto: "", cantidad: "", precio_total: "", iva_total: "" },
+        ],
+        total: 0,
+        total_iva: 0,
+      };
+    },
+  },
+};
 </script>

@@ -5,7 +5,7 @@
             <table cellspacing="0" cellpadding="0" width="600px">
                 <tbody><tr>
                     <td style="height:61px" align="center">
-                        
+
                     </td>
                 </tr>
                 <tr>
@@ -23,7 +23,7 @@
     </tr>
     <tr>
         <td width="420px" style="color:#ff7800;font-size:60px;font-family:'Lato-Light',Lato,sans-serif;line-height:55px" align="center" valign="middle">
-            Gracias por tu preferencia 
+            Gracias por tu preferencia
         </td>
     </tr>
     <tr>
@@ -31,7 +31,7 @@
     </tr>
     <tr align="center">
         <td style="color:#4a4a4a;font-size:18px;font-family:'Lato-Regular',Lato,sans-serif" align="center" width="351px" valign="middle">
-            <b>{{$nombre}}</b>, acontinuación se detalla el pago realizado por: <b>{{$concepto}}</b> .<br><br>
+            <b>{{$clientes['nombre']}}</b>, acontinuación se detalla el pago realizado por: <b>{{$concepto}}</b> .<br><br>
         </td>
     </tr>
     <tr>
@@ -41,30 +41,30 @@
         <td>
             <table>
                 <tbody><tr>
-                  
-                
+
+
                     <td valign="top">
                         <table>
                             <tbody>
                             <tr>
-                              
+
                                 <td valign="top">
                                     <table width="100%" cellspacing="0" cellpadding="0">
                                         <tbody><tr>
                                             <td style="font-family:'Lato-Light',Lato,sans-serif;font-size:20px;color:#4a4a4a">
-                                                {{date_format($fecha, 'd/m/Y')}}
+                                                {{date('d/m/Y')}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="color:#9b9b9b;font-size:12px;text-align:left;font-family:'Lato-Regular',Lato,sans-serif">
                                                 Fecha de pago
-                                            
+
                                             </td>
                                         </tr>
                                         <tr>
                                         <td height="9px"></td>
                                         </tr>
-                                
+
                                         <tr>
                                             <td height="8px"></td>
                                         </tr>
@@ -81,11 +81,11 @@
                                         <tr>
                                             <td height="9px"></td>
                                         </tr>
-                                
+
                                         <tr>
                                             <td height="8px"></td>
                                         </tr>
-                                   
+
                                          <tr>
                                             <td style="font-family:'Lato-Light',Lato,sans-serif;font-size:30px;color:#4a4a4a">
                                                 <b>Gs. {{number_format($total, 0, ',', '.')}}</b>
@@ -96,11 +96,11 @@
                                                 DEUDA TOTAL
                                             </td>
                                         </tr>
-                                       
+
                                         <tr>
                                             <td height="9px"></td>
                                         </tr>
-                                
+
                                         <tr>
                                             <td height="8px"></td>
                                         </tr>
@@ -111,7 +111,7 @@
                                         </tr>
                                         <tr>
                                             <td style="font-family:'Lato-Regular',Lato,sans-serif;font-size:12px;font-weight:900;color:#4a4a4a">
-                                                SALDO 
+                                                SALDO
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -145,7 +145,7 @@
                                 <td width="48px"></td>
                                 <td><a href="https://www.facebook.com/studiosanchez" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/fb.png" width="8px" class="CToWUd"></a></td>
                                 <td width="32px"></td>
-                               
+
                                 <td><a href="https://www.instagram.com/studiosanchezpy/" target="_blank"><img src="http://rocemi.com.py/wp-content/uploads/2019/03/inst.png" width="15px" class="CToWUd"></a></td>
                             </tr>
                         </tbody></table>

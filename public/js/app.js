@@ -1719,14 +1719,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['api', 'registro'],
+  props: ["api", "registro"],
   methods: {
     eliminar: function eliminar() {
-      axios.put('/api/' + this.api + '/' + this.registro, {
-        'eliminado': true
-      }).then(console.log('Producto eliminado'));
-      this.$emit('eliminado-producto');
+      axios.put("/api/" + this.api + "/" + this.registro, {
+        eliminado: true
+      }).then(console.log("Registro eliminado"));
+      this.$emit("eliminado-producto");
     }
   }
 });
@@ -1770,11 +1779,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       formulario: {
-        categoria: ''
+        categoria: ""
       }
     };
   },
@@ -1782,11 +1803,11 @@ __webpack_require__.r(__webpack_exports__);
     guardar: function guardar() {
       var _this = this;
 
-      axios.post('/api/categoria-producto', this.formulario);
-      axios.get('/api/categorias/productos').then(function (resultado) {
+      axios.post("/api/categoria-producto", this.formulario);
+      axios.get("/api/categoria-producto").then(function (resultado) {
         return _this.$global.categorias = resultado.data;
       });
-      $('#nuevaCategoriaProducto').modal('hide');
+      $("#nuevaCategoriaProducto").modal("hide");
     }
   }
 });
@@ -1910,10 +1931,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         cliente: null,
         condicion: "Contado",
         detalles: [{
-          producto: '',
-          cantidad: '',
-          precio_total: '',
-          iva_total: ''
+          producto: "",
+          cantidad: "",
+          precio_total: "",
+          iva_total: ""
         }],
         total: 0,
         total_iva: 0
@@ -1924,14 +1945,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('/api/productos/seleccion').then(function (resultado) {
+    axios.get("/api/producto-seleccion").then(function (resultado) {
       return _this.$global.productos = resultado.data;
     });
   },
   methods: {
     addDetalle: function addDetalle() {
       this.formulario.detalles.push({
-        producto: '',
+        producto: "",
         cantidad: 0,
         precio_total: 0,
         iva_total: 0
@@ -1961,7 +1982,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           var detalle = _step.value;
 
           if (!detalle.producto) {
-            this.errors.push('No deben permanecer detalles en blanco');
+            this.errors.push("No deben permanecer detalles en blanco");
             return;
           }
 
@@ -1981,33 +2002,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _iterator.f();
       }
 
-      axios.post('/api/ventas', this.formulario).then(function (resultado) {
-        _this2.$emit('venta-creada');
+      axios.post("/api/venta", this.formulario).then(function (resultado) {
+        _this2.$emit("venta-creada");
 
-        axios.post('/impresion', resultado.data, {
-          responseType: 'arraybuffer'
+        axios.post("/impresion", resultado.data, {
+          responseType: "arraybuffer"
         }).then(function (response) {
           var blob = new Blob([response.data], {
-            type: 'application/pdf'
+            type: "application/pdf"
           });
-          var link = document.createElement('a');
+          var link = document.createElement("a");
           link.href = window.URL.createObjectURL(blob);
-          link.download = 'factura.pdf';
+          link.download = "factura.pdf";
           link.click();
         });
-        axios.post('/api/mail', resultado.data).then('Correo enviado');
+        axios.post("/api/mail", resultado.data).then("Correo enviado");
       });
-      $("#nuevaVenta").modal('hide');
-      $("#cliente").modal('hide');
+      $("#nuevaVenta").modal("hide");
+      $("#cliente").modal("hide");
       this.formulario = {
         factura: null,
         cliente: null,
         condicion: "Contado",
         detalles: [{
-          producto: '',
-          cantidad: '',
-          precio_total: '',
-          iva_total: ''
+          producto: "",
+          cantidad: "",
+          precio_total: "",
+          iva_total: ""
         }],
         total: 0,
         total_iva: 0
@@ -2111,17 +2132,17 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       if (this.formulario.nombre == "" || this.formulario.ruc == "") {
-        errors.push('Aún hay campos que deben ser completados');
+        errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
-      axios.post('/api/clientes', this.formulario).then(function (resultado) {
+      axios.post("/api/cliente", this.formulario).then(function (resultado) {
         return _this.$global.cliente = resultado.data;
       });
-      axios.get('/api/clientes').then(function (resultado) {
+      axios.get("/api/cliente").then(function (resultado) {
         return _this.$global.clientes = resultado.data;
       });
-      $('#nuevoCliente').modal('hide');
+      $("#nuevoCliente").modal("hide");
     }
   }
 });
@@ -2245,7 +2266,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('/api/clientes').then(function (resultado) {
+    axios.get("/api/cliente").then(function (resultado) {
       return _this.$global.clientes = resultado.data;
     });
   },
@@ -2262,21 +2283,29 @@ __webpack_require__.r(__webpack_exports__);
     },
     guardar: function guardar() {
       if (this.formulario.cliente_id == "" || this.formulario.concepto == "" || this.formulario.total == "" || this.formulario.entrega == "") {
-        this.errors.push('Aún hay campos que deben ser completados');
+        this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
       if (this.formulario.saldo == NaN) {
-        this.errors.push('Los campos Saldo y Entrega deben ser numéricos');
+        this.errors.push("Los campos Saldo y Entrega deben ser numéricos");
         return;
       }
 
-      if (this.formulario.total < this.formulario.entrega) {
-        this.errors.push('La entrega no debe ser mayor al total');
+      var total = this.formulario.total.replace(/,/g, "");
+      var entrega = this.formulario.entrega.replace(/,/g, "");
+
+      if (parseInt(total) < parseInt(entrega)) {
+        this.errors.push("La entrega no debe ser mayor al total");
         return;
       }
 
-      axios.post("/api/pago", this.formulario);
+      this.formulario.total = total;
+      this.formulario.entrega = entrega;
+      this.formulario.saldo = total - entrega;
+      axios.post("/api/pago", this.formulario).then(function (resultado) {
+        axios.post("/api/mail", resultado.data).then("Correo enviado");
+      });
       this.formulario = {
         cliente_id: "",
         concepto: "",
@@ -2423,22 +2452,22 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       if (!(this.formulario.nombre || this.formulario.stock_actual || this.formulario.stock_minimo || this.formulario.precio_compra || this.formulario.precio_venta || this.formulario.categoria_producto_id)) {
-        errors.push('Aún hay campos que deben ser completados');
+        errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
       if (this.formulario.id) {
         console.log(this.formulario.id);
-        axios.put('/api/productos/' + this.formulario.id, this.formulario);
+        axios.put("/api/producto/" + this.formulario.id, this.formulario);
       } else {
-        axios.post('/api/productos', this.formulario);
+        axios.post("/api/producto", this.formulario);
       }
 
-      axios.get('/api/productos/seleccion').then(function (resultado) {
+      axios.get("/api/productos-seleccion").then(function (resultado) {
         return _this.$global.productos = resultado.data;
       });
-      $('#nuevoProducto').modal('hide');
-      this.$emit('creado-producto');
+      $("#nuevoProducto").modal("hide");
+      this.$emit("creado-producto");
     }
   }
 });
@@ -2481,6 +2510,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2490,7 +2538,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('/api/clientes').then(function (resultado) {
+    axios.get("/api/cliente").then(function (resultado) {
       return _this.$global.clientes = resultado.data;
     });
   },
@@ -2558,18 +2606,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       pagos: [],
       name: "",
       pagination: {
-        'total': 0,
-        'current_page': 0,
-        'per_page': 0,
-        'last_page': 0,
-        'from': 0,
-        'to': 0
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
       }
     };
   },
@@ -2611,7 +2681,7 @@ __webpack_require__.r(__webpack_exports__);
     getPagos: function getPagos(page) {
       var _this = this;
 
-      axios.get('/api/pago?page=' + page, {
+      axios.get("/api/pago?page=" + page, {
         params: {
           name: this.name
         }
@@ -2689,6 +2759,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2696,12 +2810,12 @@ __webpack_require__.r(__webpack_exports__);
       productoEditar: {},
       productoEliminar: 0,
       pagination: {
-        'total': 0,
-        'current_page': 0,
-        'per_page': 0,
-        'last_page': 0,
-        'from': 0,
-        'to': 0
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
       }
     };
   },
@@ -2756,7 +2870,7 @@ __webpack_require__.r(__webpack_exports__);
     getProductos: function getProductos(page) {
       var _this = this;
 
-      axios.get('/api/productos?page=' + page).then(function (resultado) {
+      axios.get("/api/producto?page=" + page).then(function (resultado) {
         _this.productos = resultado.data.productos.data;
         _this.pagination = resultado.data.pagination;
       });
@@ -2768,11 +2882,11 @@ __webpack_require__.r(__webpack_exports__);
     editar: function editar() {
       var producto = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.productoVacio;
       this.productoEditar = Object.assign({}, producto);
-      $('#nuevoProducto').modal('show');
+      $("#nuevoProducto").modal("show");
     },
     eliminar: function eliminar(id) {
       this.productoEliminar = id;
-      $('#eliminar').modal('show');
+      $("#eliminar").modal("show");
     }
   }
 });
@@ -2834,17 +2948,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       ventas: [],
       pagination: {
-        'total': 0,
-        'current_page': 0,
-        'per_page': 0,
-        'last_page': 0,
-        'from': 0,
-        'to': 0
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
       }
     };
   },
@@ -2886,7 +3025,7 @@ __webpack_require__.r(__webpack_exports__);
     getVentas: function getVentas(page) {
       var _this = this;
 
-      axios.get('/api/ventas?page=' + page).then(function (resultado) {
+      axios.get("/api/venta?page=" + page).then(function (resultado) {
         _this.ventas = resultado.data.ventas.data;
         _this.pagination = resultado.data.pagination;
       });
@@ -38524,7 +38663,7 @@ var render = function() {
                 staticClass: "btn btn-success",
                 attrs: { type: "button", "data-dismiss": "modal" }
               },
-              [_vm._v("Cancelar")]
+              [_vm._v("\n          Cancelar\n        ")]
             ),
             _vm._v(" "),
             _c(
@@ -38538,7 +38677,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Eliminar")]
+              [_vm._v("\n          Eliminar\n        ")]
             )
           ])
         ])
@@ -38655,7 +38794,7 @@ var render = function() {
                   attrs: { type: "submit" },
                   on: { click: _vm.guardar }
                 },
-                [_vm._v("Guardar")]
+                [_vm._v("\n            Guardar\n          ")]
               )
             ])
           ])
@@ -40304,7 +40443,7 @@ var render = function() {
                   "data-target": "#nuevoCliente"
                 }
               },
-              [_vm._v("+ Crear nuevo cliente")]
+              [_vm._v("\n          + Crear nuevo cliente\n        ")]
             ),
             _vm._v(" "),
             _c(
@@ -40341,7 +40480,11 @@ var render = function() {
                 return _c(
                   "option",
                   { key: cliente.id, domProps: { value: cliente } },
-                  [_vm._v(_vm._s(cliente.nombre))]
+                  [
+                    _vm._v(
+                      "\n            " + _vm._s(cliente.nombre) + "\n          "
+                    )
+                  ]
                 )
               }),
               0
@@ -40359,7 +40502,7 @@ var render = function() {
                   "data-target": "#nuevaVenta"
                 }
               },
-              [_vm._v("Seleccionar cliente")]
+              [_vm._v("\n          Seleccionar cliente\n        ")]
             )
           ])
         ])
@@ -40445,7 +40588,7 @@ var render = function() {
             }
           }
         },
-        [_vm._v("Buscar")]
+        [_vm._v("\n      Buscar\n    ")]
       ),
       _vm._v(" "),
       _c("br")
@@ -40524,13 +40667,7 @@ var render = function() {
                       }
                     }
                   },
-                  [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(page) +
-                        "\n                    "
-                    )
-                  ]
+                  [_vm._v("\n          " + _vm._s(page) + "\n        ")]
                 )
               ]
             )
@@ -40614,7 +40751,7 @@ var render = function() {
             }
           }
         },
-        [_vm._v("+ Nuevo Producto")]
+        [_vm._v("\n    + Nuevo Producto\n  ")]
       ),
       _vm._v(" "),
       _c(
@@ -40627,7 +40764,7 @@ var render = function() {
             "data-target": "#nuevaCategoriaProducto"
           }
         },
-        [_vm._v("+ Nueva Categoria")]
+        [_vm._v("\n    + Nueva Categoria\n  ")]
       ),
       _vm._v(" "),
       _c(
@@ -40660,7 +40797,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Modificar")]
+                    [_vm._v("\n            Modificar\n          ")]
                   ),
                   _vm._v(" "),
                   _c(
@@ -40674,7 +40811,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Eliminar")]
+                    [_vm._v("\n            Eliminar\n          ")]
                   )
                 ])
               ])
@@ -40729,13 +40866,7 @@ var render = function() {
                         }
                       }
                     },
-                    [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(page) +
-                          "\n                    "
-                      )
-                    ]
+                    [_vm._v("\n          " + _vm._s(page) + "\n        ")]
                   )
                 ]
               )
@@ -40774,7 +40905,7 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("eliminar-component", {
-        attrs: { api: "productos", registro: _vm.productoEliminar },
+        attrs: { api: "producto", registro: _vm.productoEliminar },
         on: {
           "eliminado-producto": function($event) {
             return _vm.getProductos(_vm.pagination.current_page)
@@ -40840,7 +40971,7 @@ var render = function() {
             "data-target": "#cliente"
           }
         },
-        [_vm._v("+ Nueva Venta")]
+        [_vm._v("\n    + Nueva Venta\n  ")]
       ),
       _vm._v(" "),
       _c(
@@ -40914,13 +41045,7 @@ var render = function() {
                         }
                       }
                     },
-                    [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(page) +
-                          "\n                    "
-                      )
-                    ]
+                    [_vm._v("\n          " + _vm._s(page) + "\n        ")]
                   )
                 ]
               )
