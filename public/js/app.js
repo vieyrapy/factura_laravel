@@ -3017,7 +3017,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     movimientoVacio: function movimientoVacio() {
       return {
-        fecha: new Date(),
+        fecha: this.fechaActual(),
         nombre: "",
         categoria: "",
         concepto: "",
@@ -40460,7 +40460,7 @@ var render = function() {
                   staticClass: "col-md-4 col-form-label text-md-right",
                   attrs: { for: "entidad" }
                 },
-                [_vm._v("entidad")]
+                [_vm._v("Nombre")]
               ),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [

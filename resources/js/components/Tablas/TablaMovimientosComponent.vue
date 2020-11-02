@@ -235,7 +235,7 @@ export default {
     },
     movimientoVacio() {
       return {
-        fecha: new Date(),
+        fecha: this.fechaActual(),
         nombre: "",
         categoria: "",
         concepto: "",
