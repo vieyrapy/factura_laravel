@@ -18,7 +18,7 @@
                             <div class="form-group row">
                                 <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha</label>
                                 <div class="col-md-6">
-                                    <input v-model="formulario.fecha" name="fecha" type="date" class="form-control">
+                                    <input v-model="formulario.fecha" name="fecha" type="date" class="form-control" :max="fechaActual">
                                 </div>
                             </div>
 
@@ -94,6 +94,17 @@ export default {
     axios
       .get("/api/categoria")
       .then((resultado) => (this.categorias = resultado.data));
+  },
+  computed: {
+      fechaActual() {
+        const fecha = new Date();
+        let mes = fecha.getMonth() + 1;
+        let dia = fecha.getDate();
+        const ano = fecha.getFullYear();
+        if (dia.toString().length == 1) dia = "0" + dia;
+        if (mes.toString().length == 1) mes = "0" + mes;
+        return ano + "-" + mes + "-" + dia;
+    },
   },
   methods: {
     numeroConComa(numero) {

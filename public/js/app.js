@@ -2338,6 +2338,17 @@ __webpack_require__.r(__webpack_exports__);
       return _this.categorias = resultado.data;
     });
   },
+  computed: {
+    fechaActual: function fechaActual() {
+      var fecha = new Date();
+      var mes = fecha.getMonth() + 1;
+      var dia = fecha.getDate();
+      var ano = fecha.getFullYear();
+      if (dia.toString().length == 1) dia = "0" + dia;
+      if (mes.toString().length == 1) mes = "0" + mes;
+      return ano + "-" + mes + "-" + dia;
+    }
+  },
   methods: {
     numeroConComa: function numeroConComa(numero) {
       return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -40439,7 +40450,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { name: "fecha", type: "date" },
+                  attrs: { name: "fecha", type: "date", max: _vm.fechaActual },
                   domProps: { value: _vm.formulario.fecha },
                   on: {
                     input: function($event) {
