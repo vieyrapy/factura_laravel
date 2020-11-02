@@ -13,4 +13,8 @@ class Categoria extends Model
         $categoria->descripcion = $request->descripcion;
         $categoria->save();
     }
+
+    public function getCategorias(){
+        return Categoria::all();
+    }
 }

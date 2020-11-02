@@ -15,6 +15,9 @@ class CategoriasController extends Controller
 
     public function store(Request $request){
         $this->categoria->crearCategoria($request);
-        return redirect('movimientos');
+    }
+
+    public function index(){
+        return $this->categoria->getCategorias();
     }
 }

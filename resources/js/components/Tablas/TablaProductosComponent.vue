@@ -86,7 +86,7 @@
     <eliminar-component
       api="producto"
       :registro="productoEliminar"
-      @eliminado-producto="getProductos(pagination.current_page)"
+      @eliminado="getProductos(pagination.current_page)"
     ></eliminar-component>
     <nueva-categoria-producto-component></nueva-categoria-producto-component>
   </div>

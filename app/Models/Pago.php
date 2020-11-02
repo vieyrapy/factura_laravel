@@ -42,7 +42,7 @@ class Pago extends Model
         return $pago;
     }
 
-    public function getPagoById(){
+    public function getUltimoPago(){
         return Pago::latest('id')->with('clientes')->first();
     }
 }

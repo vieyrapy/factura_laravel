@@ -21,6 +21,6 @@ class PagoController extends Controller
     public function store(Request $request)
     {
         $pago = $this->pago->crearPago($request);
-        return $this->pago->getPagoById();
+        return $this->pago->getUltimoPago();
     }
 }

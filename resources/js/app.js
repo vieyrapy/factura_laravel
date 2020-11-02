@@ -36,6 +36,8 @@ shared.install = () => {
 };
 Vue.use(shared);
 
+Vue.component('nuevo-movimiento-component', require('./components/Formularios/NuevoMovimientoComponent.vue').default);
+Vue.component('nueva-categoria-movimiento-component', require('./components/Formularios/NuevaCategoriaMovimientoComponent.vue').default);
 Vue.component('nuevo-pago-component', require('./components/Formularios/NuevoPagoComponent.vue').default);
 Vue.component('nuevo-cliente-component', require('./components/Formularios/NuevoClienteComponent.vue').default);
 Vue.component('nueva-venta-component', require('./components/Formularios/NuevaVentaComponent.vue').default);
@@ -46,6 +48,7 @@ Vue.component('eliminar-component', require('./components/Formularios/EliminarCo
 Vue.component('tabla-pagos-component', require('./components/Tablas/TablaPagosComponent.vue').default);
 Vue.component('tabla-ventas-component', require('./components/Tablas/TablaVentasComponent.vue').default);
 Vue.component('tabla-productos-component', require('./components/Tablas/TablaProductosComponent.vue').default);
+Vue.component('tabla-movimientos-component', require('./components/Tablas/TablaMovimientosComponent.vue').default);
 
 Vue.component('seleccion-cliente-component', require('./components/SeleccionClienteComponent.vue').default);
 

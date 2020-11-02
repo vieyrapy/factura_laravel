@@ -37,7 +37,7 @@ export default {
       axios
         .put("/api/" + this.api + "/" + this.registro, { eliminado: true })
         .then(console.log("Registro eliminado"));
-      this.$emit("eliminado-producto");
+      this.$emit("eliminado");
     },
   },
 };
