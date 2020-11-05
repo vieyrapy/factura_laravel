@@ -39,7 +39,7 @@ class Email extends Controller
             $nombre = $data['nombre'];
             $email = $data['email'];
         }
-        $tipo_movimiento = isset($data['detalles']) ? 'venta' : 'emails.comprobante-pago';
+        $tipo_movimiento = isset($data['detalles']) ? 'venta' : 'pago';
         $view = 'emails.comprobante-' . $tipo_movimiento;
         Mail::send($view, $data, function($menssage) use ($email, $nombre, $tipo_movimiento){
             $menssage->from('studiosanchezpy@gmail.com', 'Studio Sánchez');

@@ -144,7 +144,7 @@ export default {
       this.formulario.entrega = entrega;
       this.formulario.saldo = total - entrega;
       axios.post("/api/pago", this.formulario).then((resultado) => {
-        axios.post("/api/mail", resultado.data).then("Correo enviado");
+        axios.post("/api/mail", resultado.data);
       });
       this.formulario = {
         cliente_id: "",
@@ -154,6 +154,7 @@ export default {
         saldo: 0,
       };
       this.errors = [];
+      this.$emit("pago-registrado");
     },
   },
 };

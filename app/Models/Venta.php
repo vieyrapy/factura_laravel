@@ -36,6 +36,7 @@ class Venta extends Model
 
     public function crearVenta(Request $request){
         $venta = new Venta();
+        $venta->nro_factura = isset($request->factura) ? $request->factura : "";
         $venta->condicion_venta = $request->condicion;
         $venta->cliente_id = $request->cliente;
         $venta->total = $request->total;

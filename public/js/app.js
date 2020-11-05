@@ -2009,7 +2009,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   data: function data() {
     return {
       formulario: {
-        factura: null,
+        factura: "",
         cliente: null,
         condicion: "Contado",
         detalles: [{
@@ -2103,7 +2103,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       $("#nuevaVenta").modal("hide");
       $("#cliente").modal("hide");
       this.formulario = {
-        factura: null,
+        factura: "",
         cliente: null,
         condicion: "Contado",
         detalles: [{
@@ -2531,7 +2531,7 @@ __webpack_require__.r(__webpack_exports__);
       this.formulario.entrega = entrega;
       this.formulario.saldo = total - entrega;
       axios.post("/api/pago", this.formulario).then(function (resultado) {
-        axios.post("/api/mail", resultado.data).then("Correo enviado");
+        axios.post("/api/mail", resultado.data);
       });
       this.formulario = {
         cliente_id: "",
@@ -2541,6 +2541,7 @@ __webpack_require__.r(__webpack_exports__);
         saldo: 0
       };
       this.errors = [];
+      this.$emit("pago-registrado");
     }
   }
 });
@@ -3156,6 +3157,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -42262,150 +42266,169 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-sm" }, [
-    _c("div", { staticClass: "cold-md-4" }, [
-      _c("div", { staticClass: "active-cyan-3 active-cyan-4 mb-4" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.name,
-              expression: "name"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { placeholder: "Buscar..." },
-          domProps: { value: _vm.name },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+  return _c(
+    "div",
+    { staticClass: "row justify-content-center" },
+    [
+      _c("div", { staticClass: "col-sm" }, [
+        _c("div", { staticClass: "cold-md-4" }, [
+          _c("div", { staticClass: "active-cyan-3 active-cyan-4 mb-4" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { placeholder: "Buscar..." },
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
               }
-              _vm.name = $event.target.value
-            }
-          }
-        })
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-outline-primary",
+              on: {
+                click: function($event) {
+                  return _vm.getPagos(1)
+                }
+              }
+            },
+            [_vm._v("\n        Buscar\n      ")]
+          ),
+          _vm._v(" "),
+          _c("br")
+        ]),
+        _vm._v(" "),
+        _c("table", { staticClass: "table table-hover table-striped" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.pagos, function(pago) {
+              return _c("tr", { key: pago.id }, [
+                _c("td", [_vm._v(_vm._s(pago.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(pago.created_at))]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("a", { attrs: { href: "clientes/" + pago.id } }, [
+                    _vm._v(_vm._s(pago.clientes.nombre))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("a", { attrs: { href: "clientes/" + pago.id } }, [
+                    _vm._v(_vm._s(pago.saldo))
+                  ])
+                ])
+              ])
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("nav", [
+          _c(
+            "ul",
+            { staticClass: "pagination" },
+            [
+              _vm.pagination.current_page > 1
+                ? _c("li", { staticClass: "page-item" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.changePage(
+                              _vm.pagination.current_page - 1
+                            )
+                          }
+                        }
+                      },
+                      [_c("span", [_vm._v("Atras")])]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.pagesNumber, function(page) {
+                return _c(
+                  "li",
+                  {
+                    key: page,
+                    staticClass: "page-item",
+                    class: [page == _vm.isActivated ? "active" : ""]
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.changePage(page)
+                          }
+                        }
+                      },
+                      [_vm._v("\n            " + _vm._s(page) + "\n          ")]
+                    )
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              _vm.pagination.current_page < _vm.pagination.last_page
+                ? _c("li", { staticClass: "page-item" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.changePage(
+                              _vm.pagination.current_page + 1
+                            )
+                          }
+                        }
+                      },
+                      [_c("span", [_vm._v("Siguiente")])]
+                    )
+                  ])
+                : _vm._e()
+            ],
+            2
+          )
+        ])
       ]),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outline-primary",
-          on: {
-            click: function($event) {
-              return _vm.getPagos(1)
-            }
+      _c("nuevo-pago-component", {
+        on: {
+          "pago-registrado": function($event) {
+            return _vm.getPagos(_vm.pagination.current_page)
           }
-        },
-        [_vm._v("\n      Buscar\n    ")]
-      ),
-      _vm._v(" "),
-      _c("br")
-    ]),
-    _vm._v(" "),
-    _c("table", { staticClass: "table table-hover table-striped" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.pagos, function(pago) {
-          return _c("tr", { key: pago.id }, [
-            _c("td", [_vm._v(_vm._s(pago.id))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(pago.created_at))]),
-            _vm._v(" "),
-            _c("td", [
-              _c("a", { attrs: { href: "clientes/" + pago.id } }, [
-                _vm._v(_vm._s(pago.clientes.nombre))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _c("a", { attrs: { href: "clientes/" + pago.id } }, [
-                _vm._v(_vm._s(pago.saldo))
-              ])
-            ])
-          ])
-        }),
-        0
-      )
-    ]),
-    _vm._v(" "),
-    _c("nav", [
-      _c(
-        "ul",
-        { staticClass: "pagination" },
-        [
-          _vm.pagination.current_page > 1
-            ? _c("li", { staticClass: "page-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.changePage(_vm.pagination.current_page - 1)
-                      }
-                    }
-                  },
-                  [_c("span", [_vm._v("Atras")])]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.pagesNumber, function(page) {
-            return _c(
-              "li",
-              {
-                key: page,
-                staticClass: "page-item",
-                class: [page == _vm.isActivated ? "active" : ""]
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.changePage(page)
-                      }
-                    }
-                  },
-                  [_vm._v("\n          " + _vm._s(page) + "\n        ")]
-                )
-              ]
-            )
-          }),
-          _vm._v(" "),
-          _vm.pagination.current_page < _vm.pagination.last_page
-            ? _c("li", { staticClass: "page-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.changePage(_vm.pagination.current_page + 1)
-                      }
-                    }
-                  },
-                  [_c("span", [_vm._v("Siguiente")])]
-                )
-              ])
-            : _vm._e()
-        ],
-        2
-      )
-    ])
-  ])
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {

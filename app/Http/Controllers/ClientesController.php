@@ -17,7 +17,7 @@ class ClientesController extends Controller
         return $this->cliente->getClientes($request);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         return $this->cliente->crearCliente($request);
     }

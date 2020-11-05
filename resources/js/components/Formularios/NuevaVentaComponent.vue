@@ -97,7 +97,7 @@ export default {
   data: () => {
     return {
       formulario: {
-        factura: null,
+        factura: "",
         cliente: null,
         condicion: "Contado",
         detalles: [
@@ -174,7 +174,7 @@ export default {
       $("#nuevaVenta").modal("hide");
       $("#cliente").modal("hide");
       this.formulario = {
-        factura: null,
+        factura: "",
         cliente: null,
         condicion: "Contado",
         detalles: [
