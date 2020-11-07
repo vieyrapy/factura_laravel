@@ -46,6 +46,7 @@ Vue.component('nueva-venta-component', require('./components/Formularios/NuevaVe
 Vue.component('nueva-categoria-producto-component', require('./components/Formularios/NuevaCategoriaProductoComponent.vue').default);
 Vue.component('nuevo-producto-component', require('./components/Formularios/NuevoProductoComponent.vue').default);
 Vue.component('nuevo-proveedor-component', require('./components/Formularios/NuevoProveedorComponent.vue').default);
+Vue.component('nuevo-recibo-component', require('./components/Formularios/NuevoReciboComponent.vue').default);
 Vue.component('eliminar-component', require('./components/Formularios/EliminarComponent.vue').default);
 
 Vue.component('tabla-pagos-component', require('./components/Tablas/TablaPagosComponent.vue').default);

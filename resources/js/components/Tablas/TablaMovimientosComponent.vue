@@ -20,6 +20,14 @@
     >
       + Nueva Venta
     </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#nuevoRecibo"
+    >
+      + Nuevo Recibo
+    </button>
     <button class="btn btn-primary" @click="generarReporte">Generar PDF</button>
     <div class="m-3 row">
       <div class="col-5 row">
@@ -184,6 +192,7 @@
     <nueva-venta-component
       @venta-creada="getMovimientos(pagination.current_page)"
     ></nueva-venta-component>
+    <nuevo-recibo-component @pago-registrado="getMovimientos(pagination.current_page)"></nuevo-recibo-component>
   </div>
 </template>
 
