@@ -3154,6 +3154,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -42344,6 +42357,19 @@ var render = function() {
       _vm._v(" "),
       _c(
         "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button",
+            "data-toggle": "modal",
+            "data-target": "#cliente"
+          }
+        },
+        [_vm._v("\n    + Nueva Venta\n  ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
         { staticClass: "btn btn-primary", on: { click: _vm.generarReporte } },
         [_vm._v("Generar PDF")]
       ),
@@ -42896,6 +42922,18 @@ var render = function() {
       _vm._v(" "),
       _c("nueva-categoria-movimiento-component", {
         on: { "creada-categoria": _vm.getCategorias }
+      }),
+      _vm._v(" "),
+      _c("seleccion-cliente-component"),
+      _vm._v(" "),
+      _c("nuevo-cliente-component"),
+      _vm._v(" "),
+      _c("nueva-venta-component", {
+        on: {
+          "venta-creada": function($event) {
+            return _vm.getMovimientos(_vm.pagination.current_page)
+          }
+        }
       })
     ],
     1

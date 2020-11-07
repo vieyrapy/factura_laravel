@@ -12,6 +12,14 @@
     >
       + Nueva Categoría
     </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#cliente"
+    >
+      + Nueva Venta
+    </button>
     <button class="btn btn-primary" @click="generarReporte">Generar PDF</button>
     <div class="m-3 row">
       <div class="col-5 row">
@@ -171,6 +179,11 @@
     <nueva-categoria-movimiento-component
       @creada-categoria="getCategorias"
     ></nueva-categoria-movimiento-component>
+    <seleccion-cliente-component></seleccion-cliente-component>
+    <nuevo-cliente-component></nuevo-cliente-component>
+    <nueva-venta-component
+      @venta-creada="getMovimientos(pagination.current_page)"
+    ></nueva-venta-component>
   </div>
 </template>
 
