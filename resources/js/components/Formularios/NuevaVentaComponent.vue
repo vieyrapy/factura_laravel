@@ -35,10 +35,10 @@
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Condición de venta</label>
                             <div class="col-3 align-self-center text-center">
-                                <input type="radio" id="contado" name="tipo" value="Contado" v-model="formulario.condicion"><label for="ingreso">Contado</label>
+                                <input type="radio" id="contado" name="tipo" value="Contado" v-model="formulario.condicion"><label for="contado">&nbsp Contado</label>
                             </div>
                             <div class="col-3 align-self-center text-center">
-                                <input type="radio" id="credito" name="tipo" value="credito" v-model="formulario.condicion"><label for="egreso">Crédito</label>
+                                <input type="radio" id="credito" name="tipo" value="credito" v-model="formulario.condicion"><label for="credito">&nbsp Crédito</label>
                             </div>
                         </div>
 
@@ -52,32 +52,32 @@
                                         <th>Precio unitario</th>
                                         <th>Precio total</th>
                                         <th>IVA Total</th>
-                                        <th><button @click="addDetalle()">+</button></th>
+                                        <th><button class="btn btn-primary" @click="addDetalle()">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(detalle, index) in formulario.detalles" :key="detalle.id">
-                                        <td>
-                                            <select v-model="formulario.detalles[index].producto" class="form-control mt-4">
+                                        <td width="15%">
+                                            <select v-model="formulario.detalles[index].producto" class="form-control">
                                                 <option v-for="producto in $global.productos" :key="producto.id" :value="producto">{{producto.nombre}}</option>
                                             </select>
                                         </td>
-                                         <td>
+                                         <td width="15%">
                                             <input v-model="formulario.detalles[index].producto.stock_actual" class="form-control" disabled>
                                         </td>
-                                        <td>
+                                        <td width="15%">
                                             <input v-model="formulario.detalles[index].cantidad" @keyup="calcularTotales(index)" class="form-control" autofocus>
                                         </td>
-                                        <td>
+                                        <td width="15%">
                                             <input v-model="formulario.detalles[index].producto.precio_venta" class="form-control" disabled>
                                         </td>
-                                        <td>
+                                        <td width="15%">
                                             <input v-model="formulario.detalles[index].precio_total" class="form-control" disabled>
                                         </td>
-                                        <td>
+                                        <td width="15%">
                                             <input v-model="formulario.detalles[index].iva_total" class="form-control" disabled>
                                         </td>
-                                        <td><button @click="removeDetalle(index)">-</button></td>
+                                        <td><button class="btn btn-primary" @click="removeDetalle(index)">-</button></td>
                                     </tr>
                                 </tbody>
                             </table>

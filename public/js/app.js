@@ -40145,8 +40145,8 @@ var render = function() {
                         }
                       }
                     }),
-                    _c("label", { attrs: { for: "ingreso" } }, [
-                      _vm._v("Contado")
+                    _c("label", { attrs: { for: "contado" } }, [
+                      _vm._v("  Contado")
                     ])
                   ]
                 ),
@@ -40183,8 +40183,8 @@ var render = function() {
                         }
                       }
                     }),
-                    _c("label", { attrs: { for: "egreso" } }, [
-                      _vm._v("Crédito")
+                    _c("label", { attrs: { for: "credito" } }, [
+                      _vm._v("  Crédito")
                     ])
                   ]
                 )
@@ -40210,6 +40210,7 @@ var render = function() {
                         _c(
                           "button",
                           {
+                            staticClass: "btn btn-primary",
                             on: {
                               click: function($event) {
                                 return _vm.addDetalle()
@@ -40226,7 +40227,7 @@ var render = function() {
                     "tbody",
                     _vm._l(_vm.formulario.detalles, function(detalle, index) {
                       return _c("tr", { key: detalle.id }, [
-                        _c("td", [
+                        _c("td", { attrs: { width: "15%" } }, [
                           _c(
                             "select",
                             {
@@ -40240,7 +40241,7 @@ var render = function() {
                                     "formulario.detalles[index].producto"
                                 }
                               ],
-                              staticClass: "form-control mt-4",
+                              staticClass: "form-control",
                               on: {
                                 change: function($event) {
                                   var $$selectedVal = Array.prototype.filter
@@ -40276,7 +40277,7 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { attrs: { width: "15%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -40311,7 +40312,7 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { attrs: { width: "15%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -40345,7 +40346,7 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { attrs: { width: "15%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -40380,7 +40381,7 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { attrs: { width: "15%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -40412,7 +40413,7 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _c("td", [
+                        _c("td", { attrs: { width: "15%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -40447,6 +40448,7 @@ var render = function() {
                           _c(
                             "button",
                             {
+                              staticClass: "btn btn-primary",
                               on: {
                                 click: function($event) {
                                   return _vm.removeDetalle(index)
