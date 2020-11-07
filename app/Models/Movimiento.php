@@ -11,19 +11,30 @@ class Movimiento extends Model
 
 	public function categoria(){
         return $this->belongsTo('App\Models\Categoria');
+    }
+
+    public function proveedor(){
+        return $this->belongsTo('App\Models\Proveedor', 'entidad');
+    }
+
+    public function cliente(){
+        return $this->belongsTo('App\Models\Clientes', 'entidad');
 	}
 
 	public function scopeDate($query, $date_ini, $date_fin) {
     	if ($date_ini || $date_fin) {
 			$format = substr_count($date_ini, "-");
 			if($format == 2){
+                $query->leftJoin('clientes', 'movimientos.entidad', '=', 'clientes.id')
+                    ->leftJoin('proveedores', 'movimientos.entidad', '=', 'proveedores.id')
+                    ->selectRaw("movimientos.id, fecha, concepto, (CASE WHEN related_id IS NOT NULL THEN clientes.nombre ELSE proveedores.nombre END) AS entidad");
 				if($date_ini){
 					$query->whereDate('fecha', '>=', $date_ini);
 				}
 				if($date_fin){
 					$query->whereDate('fecha', '<=', $date_fin);
 				}
-				return $query->groupBy(["id", "fecha"]);
+				return $query->groupBy(["movimientos.id", "fecha", "categoria_id", "concepto", "clientes.nombre", "proveedores.nombre", "related_id"]);
 			} else if($format == 1){
 				$date_ini .= "-01";
 				$date_fin .= "-31";
@@ -60,11 +71,8 @@ class Movimiento extends Model
         $cat_filtro = $request->categoria;
 
 
-        $movimiento = $this->selectRaw("MAX(id) AS id, MAX(fecha) AS fecha,
-                                            MAX(entidad) AS entidad, MAX(categoria_id) AS categoria_id,
-                                            MAX(concepto) AS concepto, MAX(monto) AS monto, MAX(tipo_movimiento) AS tipo_movimiento,
-                                            SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso,
-                                            SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
+        $movimiento = $this->selectRaw("categoria_id, SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE 0 END) AS ingreso,
+                                        SUM(CASE WHEN tipo_movimiento = 'egreso' THEN monto ELSE 0 END) AS egreso")
                                 ->date($date_ini, $date_fin)
                                 ->cat_filtro($cat_filtro)
                                 ->with('categoria')
@@ -87,6 +95,7 @@ class Movimiento extends Model
     }
 
     public function getMovimientos(Request $request){
+
         $request = json_decode($request->get('filters'));
         $movimientos = $this->filtros($request);
         $totales = $this->totales($movimientos);

@@ -16,15 +16,15 @@ class CreateTrigger extends Migration
         DB::unprepared("
         CREATE TRIGGER tr_movimiento_venta AFTER INSERT ON `ventas` FOR EACH ROW
         BEGIN
-            INSERT INTO movimientos (fecha, entidad, categoria_id, concepto, tipo_movimiento, monto, created_at, updated_at)
-            VALUES (now(), NEW.cliente_id, 1, CONCAT('Factura ', NEW.nro_factura), 'Ingreso', NEW.total, now(), now());
+            INSERT INTO movimientos (fecha, entidad, categoria_id, concepto, tipo_movimiento, monto, related_id, created_at, updated_at)
+            VALUES (now(), NEW.cliente_id, 1, CONCAT('Factura ', NEW.nro_factura), 'Ingreso', NEW.total, NEW.id, now(), now());
         END
         ");
         DB::unprepared("
         CREATE TRIGGER tr_movimiento_pago AFTER INSERT ON `pagos` FOR EACH ROW
         BEGIN
-            INSERT INTO movimientos (fecha, entidad, categoria_id, concepto, tipo_movimiento, monto, created_at, updated_at)
-            VALUES (now(), NEW.clientes_id, 2, 'Recibo', 'Ingreso', NEW.entrega, now(), now());
+            INSERT INTO movimientos (fecha, entidad, categoria_id, concepto, tipo_movimiento, monto, related_id, created_at, updated_at)
+            VALUES (now(), NEW.clientes_id, 2, 'Recibo', 'Ingreso', NEW.entrega, NEW.id, now(), now());
         END
         ");
     }
@@ -37,5 +37,6 @@ class CreateTrigger extends Migration
     public function down()
     {
         DB::unprepared('DROP TRIGGER `tr_movimiento_venta`');
+        DB::unprepared('DROP TRIGGER `tr_movimiento_pago`');
     }
 }

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="editar()">
+    <button class="btn btn-primary" data-toggle="modal"
+      data-target="#nuevoMovimiento">
       + Nuevo Movimiento
     </button>
     <button
@@ -156,10 +157,12 @@
         </tbody>
       </table>
     </div>
+    <seleccion-proveedor-component></seleccion-proveedor-component>
     <nuevo-movimiento-component
       :formulario="movimientoEditar"
       @creado-movimiento="getMovimientos(pagination.current_page)"
     ></nuevo-movimiento-component>
+    <nuevo-proveedor-component></nuevo-proveedor-component>
     <eliminar-component
       api="movimiento"
       :registro="movimientoEliminar"

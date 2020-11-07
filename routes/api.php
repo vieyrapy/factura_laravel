@@ -14,6 +14,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('producto', 'ProductosController');
     Route::resource('venta', 'VentaController');
     Route::resource('movimiento', 'MovimientosController');
+    Route::resource('proveedor', 'ProveedoresController');
     Route::post('mail', 'Email@send');
     Route::get('producto-seleccion', 'CategoriasProductoController@getCategoriasSelect');
     Route::post('reporte', 'MovimientosController@pdf');

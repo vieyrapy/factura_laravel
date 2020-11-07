@@ -22,6 +22,7 @@ class CreateMovimientosTable extends Migration
             $table->string('concepto');
             $table->string('tipo_movimiento');
             $table->integer('monto');
+            $table->unsignedBigInteger('related_id')->nullable();
             $table->timestamps();
         });
     }

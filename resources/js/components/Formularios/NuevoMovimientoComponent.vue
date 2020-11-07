@@ -11,6 +11,10 @@
 
                         <div class="modal-body">
 
+                            <button class="btn btn-primary mb-5" @click="nuevoProveedor">
+                                + Nuevo Proveedor
+                            </button>
+
                             <div hidden>
                                 <input id="id" type="number" name="id">
                             </div>
@@ -25,7 +29,9 @@
                             <div class="form-group row">
                                 <label for="entidad" class="col-md-4 col-form-label text-md-right">Nombre</label>
                                 <div class="col-md-6">
-                                    <input v-model="formulario.entidad" class="form-control" name="entidad">
+                                    <select name="entidad" v-model="formulario.entidad" class="form-control">
+                                        <option v-for="proveedor in $global.proveedores" :key="proveedor.id" :value="proveedor.id">{{proveedor.nombre}}</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -130,6 +136,10 @@ export default {
       $("#nuevoMovimiento").modal("hide");
       this.$emit("creado-movimiento");
     },
+    nuevoProveedor(){
+        $("#nuevoMovimiento").modal("hide");
+        $("#nuevoProveedor").modal("show");
+    }
   },
 };
 </script>

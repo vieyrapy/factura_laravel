@@ -25,7 +25,9 @@ let shared = new Vue({
         cliente: {},
         productos: [],
         clientes: [],
-        categorias: []
+        categorias: [],
+        proveedor: {},
+        proveedores: []
     }
 });
 
@@ -43,6 +45,7 @@ Vue.component('nuevo-cliente-component', require('./components/Formularios/Nuevo
 Vue.component('nueva-venta-component', require('./components/Formularios/NuevaVentaComponent.vue').default);
 Vue.component('nueva-categoria-producto-component', require('./components/Formularios/NuevaCategoriaProductoComponent.vue').default);
 Vue.component('nuevo-producto-component', require('./components/Formularios/NuevoProductoComponent.vue').default);
+Vue.component('nuevo-proveedor-component', require('./components/Formularios/NuevoProveedorComponent.vue').default);
 Vue.component('eliminar-component', require('./components/Formularios/EliminarComponent.vue').default);
 
 Vue.component('tabla-pagos-component', require('./components/Tablas/TablaPagosComponent.vue').default);
@@ -51,6 +54,7 @@ Vue.component('tabla-productos-component', require('./components/Tablas/TablaPro
 Vue.component('tabla-movimientos-component', require('./components/Tablas/TablaMovimientosComponent.vue').default);
 
 Vue.component('seleccion-cliente-component', require('./components/SeleccionClienteComponent.vue').default);
+Vue.component('seleccion-proveedor-component', require('./components/SeleccionProveedorComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
