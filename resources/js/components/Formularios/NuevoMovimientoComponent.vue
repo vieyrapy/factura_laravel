@@ -64,7 +64,7 @@
                             <div class="form-group row">
                                 <label for="monto" class="col-md-4 col-form-label text-md-right">Monto</label>
                                 <div class="col-md-6">
-                                    <input v-model="formulario.monto" class="form-control" name="monto" onkeyup="puntitos(this,this.value.charAt(this.value.length-1))">
+                                    <input v-model="formulario.monto" class="form-control" name="monto" @keyup="formulario.monto = numeroConComa(formulario.monto)">
                                 </div>
                             </div>
                         </div>
@@ -87,6 +87,7 @@ export default {
         categoria_id: "",
         concepto: "",
         tipo_movimiento: 1,
+        monto: ""
       },
     },
   },
@@ -97,6 +98,7 @@ export default {
     };
   },
   mounted() {
+      this.formulario.fecha = this.fechaActual;
     axios
       .get("/api/categoria")
       .then((resultado) => (this.categorias = resultado.data));
@@ -114,7 +116,7 @@ export default {
   },
   methods: {
     numeroConComa(numero) {
-      return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar() {
       if (
@@ -124,14 +126,8 @@ export default {
           this.errors.push("Aún hay campos que deben ser completados");
           return;
       }
+      this.formulario.monto = this.formulario.monto.toString().replace(/,/g, "")
       axios.post("/api/movimiento", this.formulario);
-      this.formulario = {
-        fecha: new Date(),
-        entidad: "",
-        categoria_id: "",
-        concepto: "",
-        tipo_movimiento: "Ingreso",
-      };
       this.errors = [];
       $("#nuevoMovimiento").modal("hide");
       this.$emit("creado-movimiento");

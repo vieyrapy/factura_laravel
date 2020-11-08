@@ -142,8 +142,8 @@
             <td v-if="formularioFiltros.filtro == 1">
               {{ movimiento.concepto }}
             </td>
-            <td>{{ new Intl.NumberFormat().format(movimiento.ingreso) }}</td>
-            <td>{{ new Intl.NumberFormat().format(movimiento.egreso) }}</td>
+            <td>{{ new Intl.NumberFormat('es-PY').format(movimiento.ingreso) }}</td>
+            <td>{{ new Intl.NumberFormat('es-PY').format(movimiento.egreso) }}</td>
             <td v-if="formularioFiltros.filtro == 1">
               <button class="btn btn-primary" @click="editar(movimiento)">
                 Modificar
@@ -155,8 +155,8 @@
           </tr>
           <tr>
             <td :colspan="formularioFiltros.filtro == 1 ? 4 : 2">Totales:</td>
-            <td>{{ new Intl.NumberFormat().format(totales["ingreso"]) }}</td>
-            <td>{{ new Intl.NumberFormat().format(totales["egreso"]) }}</td>
+            <td>{{ new Intl.NumberFormat('es-PY').format(totales["ingreso"]) }}</td>
+            <td>{{ new Intl.NumberFormat('es-PY').format(totales["egreso"]) }}</td>
           </tr>
           <tr>
             <td :colspan="formularioFiltros.filtro == 1 ? 4 : 2">
@@ -164,7 +164,7 @@
             </td>
             <td colspan="2">
               {{
-                new Intl.NumberFormat().format(
+                new Intl.NumberFormat('es-PY').format(
                   totales["ingreso"] - totales["egreso"]
                 )
               }}
@@ -264,7 +264,7 @@ export default {
         nombre: "",
         categoria: "",
         concepto: "",
-        tipo: 1,
+        tipo: "Ingreso",
       };
     },
   },

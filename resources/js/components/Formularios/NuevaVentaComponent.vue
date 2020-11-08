@@ -101,7 +101,7 @@ export default {
         cliente: null,
         condicion: "Contado",
         detalles: [
-          { producto: "", cantidad: "", precio_total: "", iva_total: "" },
+          { producto: "", cantidad: 0, precio_total: 0, iva_total: 0 },
         ],
         total: 0,
         total_iva: 0,
@@ -115,6 +115,9 @@ export default {
       .then((resultado) => (this.$global.productos = resultado.data));
   },
   methods: {
+      numeroConComa(numero) {
+      return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
     addDetalle() {
       this.formulario.detalles.push({
         producto: "",
@@ -130,8 +133,10 @@ export default {
     },
     calcularTotales(index) {
       const detalle = this.formulario.detalles[index];
-      detalle.precio_total = detalle.cantidad * detalle.producto.precio_venta;
-      detalle.iva_total = detalle.precio_total * detalle.producto.iva;
+      const cantidad = detalle.cantidad.toString().replace(/,/g, "");
+      detalle.precio_total = cantidad * detalle.producto.precio_venta;
+      detalle.iva_total = this.numeroConComa(detalle.precio_total * detalle.producto.iva);
+      detalle.precio_total = this.numeroConComa(detalle.precio_total);
     },
     facturar() {
       this.errors = [];

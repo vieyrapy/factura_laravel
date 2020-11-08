@@ -2014,9 +2014,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         condicion: "Contado",
         detalles: [{
           producto: "",
-          cantidad: "",
-          precio_total: "",
-          iva_total: ""
+          cantidad: 0,
+          precio_total: 0,
+          iva_total: 0
         }],
         total: 0,
         total_iva: 0
@@ -2032,6 +2032,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   },
   methods: {
+    numeroConComa: function numeroConComa(numero) {
+      return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
     addDetalle: function addDetalle() {
       this.formulario.detalles.push({
         producto: "",
@@ -2047,8 +2050,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     calcularTotales: function calcularTotales(index) {
       var detalle = this.formulario.detalles[index];
-      detalle.precio_total = detalle.cantidad * detalle.producto.precio_venta;
-      detalle.iva_total = detalle.precio_total * detalle.producto.iva;
+      var cantidad = detalle.cantidad.toString().replace(/,/g, "");
+      detalle.precio_total = cantidad * detalle.producto.precio_venta;
+      detalle.iva_total = this.numeroConComa(detalle.precio_total * detalle.producto.iva);
+      detalle.precio_total = this.numeroConComa(detalle.precio_total);
     },
     facturar: function facturar() {
       var _this2 = this;
@@ -2327,7 +2332,8 @@ __webpack_require__.r(__webpack_exports__);
         entidad: "",
         categoria_id: "",
         concepto: "",
-        tipo_movimiento: 1
+        tipo_movimiento: 1,
+        monto: ""
       }
     }
   },
@@ -2340,6 +2346,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    this.formulario.fecha = this.fechaActual;
     axios.get("/api/categoria").then(function (resultado) {
       return _this.categorias = resultado.data;
     });
@@ -2357,7 +2364,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     numeroConComa: function numeroConComa(numero) {
-      return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar: function guardar() {
       if (this.formulario.entidad == "" || this.formulario.concepto == "") {
@@ -2365,14 +2372,8 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
+      this.formulario.monto = this.formulario.monto.toString().replace(/,/g, "");
       axios.post("/api/movimiento", this.formulario);
-      this.formulario = {
-        fecha: new Date(),
-        entidad: "",
-        categoria_id: "",
-        concepto: "",
-        tipo_movimiento: "Ingreso"
-      };
       this.errors = [];
       $("#nuevoMovimiento").modal("hide");
       this.$emit("creado-movimiento");
@@ -3432,7 +3433,7 @@ __webpack_require__.r(__webpack_exports__);
         nombre: "",
         categoria: "",
         concepto: "",
-        tipo: 1
+        tipo: "Ingreso"
       };
     }
   },
@@ -41124,13 +41125,14 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: {
-                    name: "monto",
-                    onkeyup:
-                      "puntitos(this,this.value.charAt(this.value.length-1))"
-                  },
+                  attrs: { name: "monto" },
                   domProps: { value: _vm.formulario.monto },
                   on: {
+                    keyup: function($event) {
+                      _vm.formulario.monto = _vm.numeroConComa(
+                        _vm.formulario.monto
+                      )
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -43297,7 +43299,9 @@ var render = function() {
                     _c("td", [
                       _vm._v(
                         _vm._s(
-                          new Intl.NumberFormat().format(movimiento.ingreso)
+                          new Intl.NumberFormat("es-PY").format(
+                            movimiento.ingreso
+                          )
                         )
                       )
                     ]),
@@ -43305,7 +43309,9 @@ var render = function() {
                     _c("td", [
                       _vm._v(
                         _vm._s(
-                          new Intl.NumberFormat().format(movimiento.egreso)
+                          new Intl.NumberFormat("es-PY").format(
+                            movimiento.egreso
+                          )
                         )
                       )
                     ]),
@@ -43356,7 +43362,9 @@ var render = function() {
                   _c("td", [
                     _vm._v(
                       _vm._s(
-                        new Intl.NumberFormat().format(_vm.totales["ingreso"])
+                        new Intl.NumberFormat("es-PY").format(
+                          _vm.totales["ingreso"]
+                        )
                       )
                     )
                   ]),
@@ -43364,7 +43372,9 @@ var render = function() {
                   _c("td", [
                     _vm._v(
                       _vm._s(
-                        new Intl.NumberFormat().format(_vm.totales["egreso"])
+                        new Intl.NumberFormat("es-PY").format(
+                          _vm.totales["egreso"]
+                        )
                       )
                     )
                   ])
@@ -43385,7 +43395,7 @@ var render = function() {
                     _vm._v(
                       "\n            " +
                         _vm._s(
-                          new Intl.NumberFormat().format(
+                          new Intl.NumberFormat("es-PY").format(
                             _vm.totales["ingreso"] - _vm.totales["egreso"]
                           )
                         ) +
