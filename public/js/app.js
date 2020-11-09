@@ -2073,12 +2073,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             return;
           }
 
-          if (detalle.producto.stock_actual < detalle.cantidad) {
+          if (detalle.producto.stock_actual < detalle.cantidad.toString().replace(/,/g, "")) {
             this.errors.push('La cantidad del producto "' + detalle.producto.nombre + '" supera al stock actual');
             return;
           }
 
           detalle.producto = detalle.producto.id;
+          detalle.precio_total = detalle.precio_total.toString().replace(/,/g, "");
+          detalle.iva_total = detalle.iva_total.toString().replace(/,/g, "");
           this.formulario.total += detalle.precio_total;
           this.formulario.total_iva += detalle.iva_total;
         } //Guardar venta, luego imprimirla y después enviar correo
@@ -2925,24 +2927,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       formulario: {
         cliente_id: "",
+        factura_id: {
+          monto_pendiente: 0
+        },
         concepto: "",
-        total: "",
         entrega: "",
         saldo: 0
       },
+      facturas: [],
       errors: []
     };
   },
@@ -2954,50 +2951,38 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    calcular: function calcular() {
-      var total = this.formulario.total.replace(/,/g, "");
-      var entrega = this.formulario.entrega.replace(/,/g, "");
-      this.formulario.saldo = this.numeroConComa(total - entrega);
-      this.formulario.total = this.numeroConComa(total);
-      this.formulario.entrega = this.numeroConComa(entrega);
+    buscarPendientes: function buscarPendientes() {
+      var _this2 = this;
+
+      axios.get("/api/venta/pendientes/" + this.formulario.cliente_id).then(function (resultado) {
+        return _this2.facturas = resultado.data;
+      });
     },
     numeroConComa: function numeroConComa(numero) {
       return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar: function guardar() {
-      if (this.formulario.cliente_id == "" || this.formulario.concepto == "" || this.formulario.total == "" || this.formulario.entrega == "") {
+      if (this.formulario.cliente_id == "" || this.formulario.concepto == "" || this.formulario.entrega == "") {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
-      if (this.formulario.saldo == NaN) {
-        this.errors.push("Los campos Saldo y Entrega deben ser numéricos");
-        return;
-      }
-
-      var total = this.formulario.total.replace(/,/g, "");
-      var entrega = this.formulario.entrega.replace(/,/g, "");
-
-      if (parseInt(total) < parseInt(entrega)) {
-        this.errors.push("La entrega no debe ser mayor al total");
-        return;
-      }
-
-      this.formulario.total = total;
-      this.formulario.entrega = entrega;
-      this.formulario.saldo = total - entrega;
+      this.formulario.entrega = this.formulario.entrega.toString().replace(/,/g, "");
       axios.post("/api/pago", this.formulario).then(function (resultado) {
         axios.post("/api/mail", resultado.data);
       });
       this.formulario = {
         cliente_id: "",
+        factura_id: {
+          monto_pendiente: 0
+        },
         concepto: "",
-        total: "",
         entrega: "",
         saldo: 0
       };
       this.errors = [];
       this.$emit("pago-registrado");
+      $("#nuevoRecibo").modal("hide");
     }
   }
 });
@@ -40146,7 +40131,7 @@ var render = function() {
                         }
                       }
                     }),
-                    _c("label", { attrs: { for: "contado" } }, [
+                    _c("label", { attrs: { for: "Contado" } }, [
                       _vm._v("  Contado")
                     ])
                   ]
@@ -40169,22 +40154,22 @@ var render = function() {
                         type: "radio",
                         id: "credito",
                         name: "tipo",
-                        value: "credito"
+                        value: "Credito"
                       },
                       domProps: {
-                        checked: _vm._q(_vm.formulario.condicion, "credito")
+                        checked: _vm._q(_vm.formulario.condicion, "Credito")
                       },
                       on: {
                         change: function($event) {
                           return _vm.$set(
                             _vm.formulario,
                             "condicion",
-                            "credito"
+                            "Credito"
                           )
                         }
                       }
                     }),
-                    _c("label", { attrs: { for: "credito" } }, [
+                    _c("label", { attrs: { for: "Credito" } }, [
                       _vm._v("  Crédito")
                     ])
                   ]
@@ -42273,18 +42258,6 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary mb-5 mt-2 ml-2",
-                attrs: {
-                  "data-toggle": "modal",
-                  "data-target": "#nuevoCliente"
-                }
-              },
-              [_vm._v("+ Crear nuevo cliente")]
-            ),
-            _vm._v(" "),
             _vm.errors.length
               ? _c("p", [
                   _c("b", [
@@ -42325,23 +42298,26 @@ var render = function() {
                     ],
                     staticClass: "form-control",
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.formulario,
-                          "cliente_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.formulario,
+                            "cliente_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        _vm.buscarPendientes
+                      ]
                     }
                   },
                   _vm._l(_vm.$global.clientes, function(cliente) {
@@ -42354,165 +42330,211 @@ var render = function() {
                   0
                 )
               ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c(
-              "label",
-              {
-                staticClass: "col-md-4 col-form-label text-md-right",
-                attrs: { for: "concepto" }
-              },
-              [_vm._v("Concepto")]
-            ),
+            ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("input", {
-                directives: [
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "factura" }
+                },
+                [_vm._v("Factura")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c(
+                  "select",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.formulario.concepto,
-                    expression: "formulario.concepto"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { autocomplete: "off", name: "concepto", autofocus: "" },
-                domProps: { value: _vm.formulario.concepto },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.formulario.factura_id,
+                        expression: "formulario.factura_id"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.formulario,
+                          "factura_id",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
                     }
-                    _vm.$set(_vm.formulario, "concepto", $event.target.value)
-                  }
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c(
-              "label",
-              {
-                staticClass: "col-md-4 col-form-label text-md-right",
-                attrs: { for: "total" }
-              },
-              [_vm._v("Total")]
-            ),
+                  },
+                  _vm._l(_vm.facturas, function(factura) {
+                    return _c(
+                      "option",
+                      { key: factura.id, domProps: { value: factura } },
+                      [
+                        _vm._v(
+                          _vm._s(
+                            factura.nro_factura != ""
+                              ? factura.nro_factura
+                              : "Sin número"
+                          ) +
+                            " - " +
+                            _vm._s(factura.monto_pendiente)
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.formulario.total,
-                    expression: "formulario.total"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { autocomplete: "off", name: "total", autofocus: "" },
-                domProps: { value: _vm.formulario.total },
-                on: {
-                  keyup: _vm.calcular,
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "concepto" }
+                },
+                [_vm._v("Concepto")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.formulario.concepto,
+                      expression: "formulario.concepto"
                     }
-                    _vm.$set(_vm.formulario, "total", $event.target.value)
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    autocomplete: "off",
+                    name: "concepto",
+                    autofocus: ""
+                  },
+                  domProps: { value: _vm.formulario.concepto },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.formulario, "concepto", $event.target.value)
+                    }
                   }
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c(
-              "label",
-              {
-                staticClass: "col-md-4 col-form-label text-md-right",
-                attrs: { for: "entrega" },
-                on: { keyup: _vm.calcular }
-              },
-              [_vm._v("Entrega")]
-            ),
+                })
+              ])
+            ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.formulario.entrega,
-                    expression: "formulario.entrega"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { autocomplete: "off", name: "entrega", autofocus: "" },
-                domProps: { value: _vm.formulario.entrega },
-                on: {
-                  keyup: _vm.calcular,
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "total" }
+                },
+                [_vm._v("Total Pendiente")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.formulario.factura_id.monto_pendiente,
+                      expression: "formulario.factura_id.monto_pendiente"
                     }
-                    _vm.$set(_vm.formulario, "entrega", $event.target.value)
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    autocomplete: "off",
+                    name: "total",
+                    autofocus: "",
+                    disabled: ""
+                  },
+                  domProps: {
+                    value: _vm.formulario.factura_id.monto_pendiente
+                  },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.formulario.factura_id,
+                        "monto_pendiente",
+                        $event.target.value
+                      )
+                    }
                   }
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group row" }, [
-            _c(
-              "label",
-              {
-                staticClass: "col-md-4 col-form-label text-md-right",
-                attrs: { for: "saldo" }
-              },
-              [_vm._v("Saldo")]
-            ),
+                })
+              ])
+            ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.formulario.saldo,
-                    expression: "formulario.saldo"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "saldo", autofocus: "", readonly: "" },
-                domProps: { value: _vm.formulario.saldo },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "entrega" }
+                },
+                [_vm._v("Entrega")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.formulario.entrega,
+                      expression: "formulario.entrega"
                     }
-                    _vm.$set(_vm.formulario, "saldo", $event.target.value)
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    autocomplete: "off",
+                    name: "entrega",
+                    autofocus: ""
+                  },
+                  domProps: { value: _vm.formulario.entrega },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.formulario, "entrega", $event.target.value)
+                    }
                   }
-                }
-              })
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  on: {
+                    click: function($event) {
+                      return _vm.guardar()
+                    }
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
             ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "modal-footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary",
-                on: {
-                  click: function($event) {
-                    return _vm.guardar()
-                  }
-                }
-              },
-              [_vm._v("Guardar")]
-            )
           ])
         ])
       ])

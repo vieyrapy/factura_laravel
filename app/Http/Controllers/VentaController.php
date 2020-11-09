@@ -22,4 +22,8 @@ class VentaController extends Controller
     {
         return $this->venta->crearVenta($request);
     }
+
+    public function pendientes($id){
+        return $this->venta->pendientes($id);
+    }
 }

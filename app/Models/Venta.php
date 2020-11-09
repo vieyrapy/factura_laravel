@@ -41,6 +41,7 @@ class Venta extends Model
         $venta->cliente_id = $request->cliente;
         $venta->total = $request->total;
         $venta->total_iva = $request->total_iva;
+        $venta->monto_pendiente = $request->condicion == "Contado" ? 0 : $request->total;
         $venta->save();
         $detalles_venta = [];
         $iva10 = 0;
@@ -83,6 +84,13 @@ class Venta extends Model
             'total_letras' => $formatterES->format($request->total)
         );
         return $data;
+    }
+
+    public function pendientes($id){
+        return Venta::where([
+            ['monto_pendiente', '>', '0'],
+            ['cliente_id', '=', $id]
+        ])->get();
     }
 
 }

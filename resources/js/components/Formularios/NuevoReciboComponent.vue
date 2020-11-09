@@ -11,7 +11,6 @@
 
                     <div class="modal-body">
 
-                        <button class="btn btn-primary mb-5 mt-2 ml-2" data-toggle="modal" data-target="#nuevoCliente">+ Crear nuevo cliente</button>
             <p v-if="errors.length">
                 <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
                 <ul>
@@ -22,11 +21,20 @@
             <label for="nombre" class="col-md-4 col-form-label text-md-right">Nombre</label>
 
             <div class="col-md-6">
-                <select class="form-control" v-model="formulario.cliente_id">
+                <select class="form-control" v-model="formulario.cliente_id" @change="buscarPendientes">
                     <option v-for="cliente in $global.clientes" :key="cliente.id" :value="cliente.id">{{cliente.nombre}}</option>
                 </select>
             </div>
-          </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="factura" class="col-md-4 col-form-label text-md-right">Factura</label>
+
+            <div class="col-md-6">
+                <select class="form-control" v-model="formulario.factura_id">
+                    <option v-for="factura in facturas" :key="factura.id" :value="factura">{{factura.nro_factura != "" ? factura.nro_factura : 'Sin número'}} - {{factura.monto_pendiente}}</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-group row">
@@ -44,26 +52,25 @@
         </div>
 
         <div class="form-group row">
-          <label for="total" class="col-md-4 col-form-label text-md-right">Total</label>
+          <label for="total" class="col-md-4 col-form-label text-md-right">Total Pendiente</label>
 
           <div class="col-md-6">
             <input
-              @keyup="calcular"
               class="form-control"
               autocomplete="off"
               name="total"
-              v-model="formulario.total"
+              v-model="formulario.factura_id.monto_pendiente"
               autofocus
+              disabled
             />
           </div>
         </div>
 
         <div class="form-group row">
-          <label for="entrega" class="col-md-4 col-form-label text-md-right" @keyup="calcular">Entrega</label>
+          <label for="entrega" class="col-md-4 col-form-label text-md-right">Entrega</label>
 
           <div class="col-md-6">
             <input
-              @keyup="calcular"
               class="form-control"
               autocomplete="off"
               name="entrega"
@@ -73,22 +80,6 @@
           </div>
         </div>
 
-        <div class="form-group row">
-          <label for="saldo" class="col-md-4 col-form-label text-md-right">Saldo</label>
-
-          <div class="col-md-6">
-            <input
-              class="form-control"
-              name="saldo"
-              v-model="formulario.saldo"
-              autofocus
-              readonly
-            />
-          </div>
-        </div>
-
-
-
                     <div class="modal-footer">
                         <!-- v-if="window.location.split('/') == 'ventas'" -->
                         <button @click="guardar()" class="btn btn-primary">Guardar</button>
@@ -96,6 +87,7 @@
             </div>
         </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -104,11 +96,14 @@ export default {
     return {
       formulario: {
         cliente_id: "",
+        factura_id: {
+            monto_pendiente: 0
+        },
         concepto: "",
-        total: "",
         entrega: "",
         saldo: 0,
       },
+      facturas: [],
       errors: [],
     };
   },
@@ -118,12 +113,10 @@ export default {
       .then((resultado) => (this.$global.clientes = resultado.data));
   },
   methods: {
-    calcular() {
-      const total = this.formulario.total.replace(/,/g, "");
-      const entrega = this.formulario.entrega.replace(/,/g, "");
-      this.formulario.saldo = this.numeroConComa(total - entrega);
-      this.formulario.total = this.numeroConComa(total);
-      this.formulario.entrega = this.numeroConComa(entrega);
+    buscarPendientes() {
+      axios
+        .get("/api/venta/pendientes/" + this.formulario.cliente_id)
+        .then((resultado) => (this.facturas = resultado.data));
     },
     numeroConComa(numero) {
       return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -132,37 +125,27 @@ export default {
       if (
         this.formulario.cliente_id == "" ||
         this.formulario.concepto == "" ||
-        this.formulario.total == "" ||
         this.formulario.entrega == ""
       ) {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
-      if (this.formulario.saldo == NaN) {
-        this.errors.push("Los campos Saldo y Entrega deben ser numéricos");
-        return;
-      }
-      const total = this.formulario.total.replace(/,/g, "");
-      const entrega = this.formulario.entrega.replace(/,/g, "");
-      if (parseInt(total) < parseInt(entrega)) {
-        this.errors.push("La entrega no debe ser mayor al total");
-        return;
-      }
-      this.formulario.total = total;
-      this.formulario.entrega = entrega;
-      this.formulario.saldo = total - entrega;
+      this.formulario.entrega = this.formulario.entrega.toString().replace(/,/g, "");
       axios.post("/api/pago", this.formulario).then((resultado) => {
         axios.post("/api/mail", resultado.data);
       });
       this.formulario = {
-        cliente_id: "",
+       cliente_id: "",
+        factura_id: {
+            monto_pendiente: 0
+        },
         concepto: "",
-        total: "",
         entrega: "",
         saldo: 0,
       };
       this.errors = [];
       this.$emit("pago-registrado");
+      $("#nuevoRecibo").modal("hide");
     },
   },
 };

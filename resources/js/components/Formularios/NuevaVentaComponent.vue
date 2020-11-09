@@ -35,10 +35,10 @@
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Condición de venta</label>
                             <div class="col-3 align-self-center text-center">
-                                <input type="radio" id="contado" name="tipo" value="Contado" v-model="formulario.condicion"><label for="contado">&nbsp Contado</label>
+                                <input type="radio" id="contado" name="tipo" value="Contado" v-model="formulario.condicion"><label for="Contado">&nbsp Contado</label>
                             </div>
                             <div class="col-3 align-self-center text-center">
-                                <input type="radio" id="credito" name="tipo" value="credito" v-model="formulario.condicion"><label for="credito">&nbsp Crédito</label>
+                                <input type="radio" id="credito" name="tipo" value="Credito" v-model="formulario.condicion"><label for="Credito">&nbsp Crédito</label>
                             </div>
                         </div>
 
@@ -148,7 +148,7 @@ export default {
           this.errors.push("No deben permanecer detalles en blanco");
           return;
         }
-        if (detalle.producto.stock_actual < detalle.cantidad) {
+        if (detalle.producto.stock_actual < detalle.cantidad.toString().replace(/,/g, "")) {
           this.errors.push(
             'La cantidad del producto "' +
               detalle.producto.nombre +
@@ -157,6 +157,8 @@ export default {
           return;
         }
         detalle.producto = detalle.producto.id;
+        detalle.precio_total = detalle.precio_total.toString().replace(/,/g, "");
+        detalle.iva_total = detalle.iva_total.toString().replace(/,/g, "");
         this.formulario.total += detalle.precio_total;
         this.formulario.total_iva += detalle.iva_total;
       }

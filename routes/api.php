@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VentaController;
 use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -18,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::post('mail', 'Email@send');
     Route::get('producto-seleccion', 'CategoriasProductoController@getCategoriasSelect');
     Route::post('reporte', 'MovimientosController@pdf');
+    Route::get('venta/pendientes/{id}', 'VentaController@pendientes');
 });
 
 ?>

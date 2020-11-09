@@ -34,9 +34,7 @@ class Pago extends Model
     public function crearPago($datos){
         $pago = new Pago;
         $pago->concepto  = $datos->input('concepto');
-        $pago->total = str_replace(',', '', $datos->input('total'));
         $pago->entrega = str_replace(',', '', $datos->input('entrega'));
-        $pago->saldo = str_replace(',', '', $datos->input('saldo'));
         $pago->clientes_id =  $datos->cliente_id;
         $pago->save();
         return $pago;

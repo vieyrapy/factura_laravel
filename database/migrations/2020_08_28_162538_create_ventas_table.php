@@ -20,6 +20,7 @@ class CreateVentasTable extends Migration
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->string('nro_factura')->nullable();
             $table->integer('total');
+            $table->integer('monto_pendiente');
             $table->integer('total_iva');
             $table->timestamps();
         });
