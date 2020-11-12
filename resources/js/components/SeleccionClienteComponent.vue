@@ -32,7 +32,7 @@
         <div class="modal-footer">
           <button
             class="btn btn-primary mx-auto"
-            :disabled="$global.cliente == {}"
+            :disabled="!$global.cliente.id"
             data-toggle="modal"
             data-target="#nuevaVenta"
           >

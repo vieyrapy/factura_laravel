@@ -15,6 +15,13 @@
                                 + Nuevo Proveedor
                             </button>
 
+                            <p v-if="errors.length">
+                                <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
+                                <ul>
+                                <li v-for="error in errors" :key="error">{{ error }}</li>
+                                </ul>
+                            </p>
+
                             <div hidden>
                                 <input id="id" type="number" name="id">
                             </div>
@@ -119,14 +126,16 @@ export default {
       return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar() {
+        this.errors = [];
       if (
         this.formulario.entidad == "" ||
-        this.formulario.concepto == ""
+        this.formulario.concepto == "" ||
+        this.formulario.categoria_id == "" ||
+        !(this.formulario.monto > 0)
       ) {
           this.errors.push("Aún hay campos que deben ser completados");
           return;
       }
-      this.formulario.monto = this.formulario.monto.toString().replace(/,/g, "")
       axios.post("/api/movimiento", this.formulario);
       this.errors = [];
       $("#nuevoMovimiento").modal("hide");

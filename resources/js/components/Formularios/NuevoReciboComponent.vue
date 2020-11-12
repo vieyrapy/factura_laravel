@@ -29,9 +29,8 @@
 
         <div class="form-group row">
             <label for="factura" class="col-md-4 col-form-label text-md-right">Factura</label>
-
             <div class="col-md-6">
-                <select class="form-control" v-model="formulario.factura_id">
+                <select :disabled="facturas.length < 1" class="form-control" v-model="formulario.factura_id">
                     <option v-for="factura in facturas" :key="factura.id" :value="factura">{{factura.nro_factura != "" ? factura.nro_factura : 'Sin número'}} - {{factura.monto_pendiente}}</option>
                 </select>
             </div>
@@ -116,7 +115,13 @@ export default {
     buscarPendientes() {
       axios
         .get("/api/venta/pendientes/" + this.formulario.cliente_id)
-        .then((resultado) => (this.facturas = resultado.data));
+        .then((resultado) => {
+            this.errors = [];
+            this.facturas = resultado.data;
+            if(resultado.data < 1){
+                this.errors.push("El cliente no tiene facturas pendientes");
+                return;
+            }})
     },
     numeroConComa(numero) {
       return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -143,6 +148,7 @@ export default {
         entrega: "",
         saldo: 0,
       };
+      this.facturas = [];
       this.errors = [];
       this.$emit("pago-registrado");
       $("#nuevoRecibo").modal("hide");

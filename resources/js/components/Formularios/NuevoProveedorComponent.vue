@@ -56,8 +56,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <!-- v-if="window.location.split('/') == 'ventas'" -->
-                        <button @click="guardar()" class="btn btn-primary" data-toggle="modal" data-target="#nuevaVenta">Guardar</button>
+                        <button @click="guardar()" class="btn btn-primary">Guardar</button>
                     </div>
             </div>
         </div>
@@ -80,8 +79,9 @@ export default {
   },
   methods: {
     guardar() {
+        this.errors = [];
       if (this.formulario.nombre == "" || this.formulario.ruc == "") {
-        errors.push("Aún hay campos que deben ser completados");
+        this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
       axios

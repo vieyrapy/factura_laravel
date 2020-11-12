@@ -156,6 +156,10 @@ export default {
           );
           return;
         }
+        if (!(detalle.cantidad > 0)) {
+          this.errors.push("No deben permanecer detalles sin cantidad");
+          return;
+        }
         detalle.producto = detalle.producto.id;
         detalle.precio_total = detalle.precio_total.toString().replace(/,/g, "");
         detalle.iva_total = detalle.iva_total.toString().replace(/,/g, "");

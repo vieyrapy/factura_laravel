@@ -2078,6 +2078,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             return;
           }
 
+          if (!(detalle.cantidad > 0)) {
+            this.errors.push("No deben permanecer detalles sin cantidad");
+            return;
+          }
+
           detalle.producto = detalle.producto.id;
           detalle.precio_total = detalle.precio_total.toString().replace(/,/g, "");
           detalle.iva_total = detalle.iva_total.toString().replace(/,/g, "");
@@ -2202,7 +2207,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2220,8 +2224,10 @@ __webpack_require__.r(__webpack_exports__);
     guardar: function guardar() {
       var _this = this;
 
+      this.errors = [];
+
       if (this.formulario.nombre == "" || this.formulario.ruc == "") {
-        errors.push("Aún hay campos que deben ser completados");
+        this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
@@ -2232,6 +2238,7 @@ __webpack_require__.r(__webpack_exports__);
         return _this.$global.clientes = resultado.data;
       });
       $("#nuevoCliente").modal("hide");
+      $("#nuevaVenta").modal("show");
     }
   }
 });
@@ -2247,6 +2254,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2369,12 +2383,13 @@ __webpack_require__.r(__webpack_exports__);
       return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar: function guardar() {
-      if (this.formulario.entidad == "" || this.formulario.concepto == "") {
+      this.errors = [];
+
+      if (this.formulario.entidad == "" || this.formulario.concepto == "" || this.formulario.categoria_id == "" || !(this.formulario.monto > 0)) {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
-      this.formulario.monto = this.formulario.monto.toString().replace(/,/g, "");
       axios.post("/api/movimiento", this.formulario);
       this.errors = [];
       $("#nuevoMovimiento").modal("hide");
@@ -2789,7 +2804,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2807,8 +2821,10 @@ __webpack_require__.r(__webpack_exports__);
     guardar: function guardar() {
       var _this = this;
 
+      this.errors = [];
+
       if (this.formulario.nombre == "" || this.formulario.ruc == "") {
-        errors.push("Aún hay campos que deben ser completados");
+        this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
@@ -2835,7 +2851,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -2955,7 +2970,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get("/api/venta/pendientes/" + this.formulario.cliente_id).then(function (resultado) {
-        return _this2.facturas = resultado.data;
+        _this2.errors = [];
+        _this2.facturas = resultado.data;
+
+        if (resultado.data < 1) {
+          _this2.errors.push("El cliente no tiene facturas pendientes");
+
+          return;
+        }
       });
     },
     numeroConComa: function numeroConComa(numero) {
@@ -2980,6 +3002,7 @@ __webpack_require__.r(__webpack_exports__);
         entrega: "",
         saldo: 0
       };
+      this.facturas = [];
       this.errors = [];
       this.$emit("pago-registrado");
       $("#nuevoRecibo").modal("hide");
@@ -40751,7 +40774,6 @@ var render = function() {
               "button",
               {
                 staticClass: "btn btn-primary",
-                attrs: { "data-toggle": "modal", "data-target": "#nuevaVenta" },
                 on: {
                   click: function($event) {
                     return _vm.guardar()
@@ -40830,6 +40852,22 @@ var render = function() {
                 )
               ]
             ),
+            _vm._v(" "),
+            _vm.errors.length
+              ? _c("p", [
+                  _c("b", [
+                    _vm._v("Por favor, corrija el(los) siguiente(s) error(es):")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "ul",
+                    _vm._l(_vm.errors, function(error) {
+                      return _c("li", { key: error }, [_vm._v(_vm._s(error))])
+                    }),
+                    0
+                  )
+                ])
+              : _vm._e(),
             _vm._v(" "),
             _vm._m(1),
             _vm._v(" "),
@@ -42191,7 +42229,6 @@ var render = function() {
               "button",
               {
                 staticClass: "btn btn-primary",
-                attrs: { "data-toggle": "modal", "data-target": "#nuevaVenta" },
                 on: {
                   click: function($event) {
                     return _vm.guardar()
@@ -42355,6 +42392,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
+                    attrs: { disabled: _vm.facturas.length < 1 },
                     on: {
                       change: function($event) {
                         var $$selectedVal = Array.prototype.filter
@@ -42656,7 +42694,7 @@ var render = function() {
               {
                 staticClass: "btn btn-primary mx-auto",
                 attrs: {
-                  disabled: _vm.$global.cliente == {},
+                  disabled: !_vm.$global.cliente.id,
                   "data-toggle": "modal",
                   "data-target": "#nuevaVenta"
                 }
