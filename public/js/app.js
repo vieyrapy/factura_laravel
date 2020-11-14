@@ -2984,12 +2984,20 @@ __webpack_require__.r(__webpack_exports__);
       return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar: function guardar() {
+      this.errors = [];
+
       if (this.formulario.cliente_id == "" || this.formulario.concepto == "" || this.formulario.entrega == "") {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
       this.formulario.entrega = this.formulario.entrega.toString().replace(/,/g, "");
+
+      if (this.formulario.entrega > this.formulario.factura_id.monto_pendiente) {
+        this.errors.push("La entrega no debe superar a la factura seleccionada");
+        return;
+      }
+
       axios.post("/api/pago", this.formulario).then(function (resultado) {
         axios.post("/api/mail", resultado.data);
       });

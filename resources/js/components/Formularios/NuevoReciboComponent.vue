@@ -127,6 +127,7 @@ export default {
       return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar() {
+        this.errors = [];
       if (
         this.formulario.cliente_id == "" ||
         this.formulario.concepto == "" ||
@@ -136,6 +137,10 @@ export default {
         return;
       }
       this.formulario.entrega = this.formulario.entrega.toString().replace(/,/g, "");
+      if(this.formulario.entrega > this.formulario.factura_id.monto_pendiente){
+          this.errors.push("La entrega no debe superar a la factura seleccionada");
+        return;
+      }
       axios.post("/api/pago", this.formulario).then((resultado) => {
         axios.post("/api/mail", resultado.data);
       });
