@@ -2385,7 +2385,7 @@ __webpack_require__.r(__webpack_exports__);
     guardar: function guardar() {
       this.errors = [];
 
-      if (this.formulario.entidad == "" || this.formulario.concepto == "" || this.formulario.categoria_id == "" || !(this.formulario.monto > 0)) {
+      if (this.formulario.entidad == "" || this.formulario.concepto == "" || this.formulario.categoria_id == "" || !(this.formulario.monto.toString().replace(/,/g, "") > 0)) {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
@@ -3373,6 +3373,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3454,6 +3478,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    creadoMovimiento: function creadoMovimiento() {
+      this.movimientoEditar = this.movimientoVacio;
+      this.getMovimientos(this.pagination.current_page);
+    },
     fechaActual: function fechaActual() {
       var anos = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var fecha = new Date();
@@ -3532,7 +3560,6 @@ __webpack_require__.r(__webpack_exports__);
               break;
           }
 
-          ;
           break;
 
         case 2:
@@ -3548,7 +3575,6 @@ __webpack_require__.r(__webpack_exports__);
               break;
           }
 
-          ;
           break;
 
         case 3:
@@ -3558,6 +3584,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.getMovimientos(this.pagination.current_page);
+    },
+    verDetalles: function verDetalles(id) {//TODO Ver detalles del comprobante
     }
   }
 });
@@ -43348,7 +43376,7 @@ var render = function() {
                       ? _c("td", [
                           _vm._v(
                             "\n            " +
-                              _vm._s(movimiento.entidad) +
+                              _vm._s(movimiento.entidad_nombre) +
                               "\n          "
                           )
                         ])
@@ -43366,51 +43394,84 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [
                       _vm._v(
-                        _vm._s(
-                          new Intl.NumberFormat("es-PY").format(
-                            movimiento.ingreso
-                          )
-                        )
+                        "\n            " +
+                          _vm._s(
+                            new Intl.NumberFormat("es-PY").format(
+                              movimiento.ingreso
+                            )
+                          ) +
+                          "\n          "
                       )
                     ]),
                     _vm._v(" "),
                     _c("td", [
                       _vm._v(
-                        _vm._s(
-                          new Intl.NumberFormat("es-PY").format(
-                            movimiento.egreso
-                          )
-                        )
+                        "\n            " +
+                          _vm._s(
+                            new Intl.NumberFormat("es-PY").format(
+                              movimiento.egreso
+                            )
+                          ) +
+                          "\n          "
                       )
                     ]),
                     _vm._v(" "),
                     _vm.formularioFiltros.filtro == 1
                       ? _c("td", [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-primary",
-                              on: {
-                                click: function($event) {
-                                  return _vm.editar(movimiento)
-                                }
-                              }
-                            },
-                            [_vm._v("\n              Modificar\n            ")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-primary",
-                              on: {
-                                click: function($event) {
-                                  return _vm.eliminar(movimiento.id)
-                                }
-                              }
-                            },
-                            [_vm._v("\n              Eliminar\n            ")]
-                          )
+                          !movimiento.related_id
+                            ? _c("div", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.editar(movimiento)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                Modificar\n              "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminar(movimiento.id)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                Eliminar\n              "
+                                    )
+                                  ]
+                                )
+                              ])
+                            : _c("div", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.verDetalles(movimiento.id)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                Ver Detalles\n              "
+                                    )
+                                  ]
+                                )
+                              ])
                         ])
                       : _vm._e()
                   ])
@@ -43429,21 +43490,25 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", [
                     _vm._v(
-                      _vm._s(
-                        new Intl.NumberFormat("es-PY").format(
-                          _vm.totales["ingreso"]
-                        )
-                      )
+                      "\n            " +
+                        _vm._s(
+                          new Intl.NumberFormat("es-PY").format(
+                            _vm.totales["ingreso"]
+                          )
+                        ) +
+                        "\n          "
                     )
                   ]),
                   _vm._v(" "),
                   _c("td", [
                     _vm._v(
-                      _vm._s(
-                        new Intl.NumberFormat("es-PY").format(
-                          _vm.totales["egreso"]
-                        )
-                      )
+                      "\n            " +
+                        _vm._s(
+                          new Intl.NumberFormat("es-PY").format(
+                            _vm.totales["egreso"]
+                          )
+                        ) +
+                        "\n          "
                     )
                   ])
                 ]),
@@ -43484,7 +43549,7 @@ var render = function() {
         attrs: { formulario: _vm.movimientoEditar },
         on: {
           "creado-movimiento": function($event) {
-            return _vm.getMovimientos(_vm.pagination.current_page)
+            return _vm.creadoMovimiento()
           }
         }
       }),

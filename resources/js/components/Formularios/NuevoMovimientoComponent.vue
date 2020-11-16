@@ -131,7 +131,7 @@ export default {
         this.formulario.entidad == "" ||
         this.formulario.concepto == "" ||
         this.formulario.categoria_id == "" ||
-        !(this.formulario.monto > 0)
+        !(this.formulario.monto.toString().replace(/,/g, "") > 0)
       ) {
           this.errors.push("Aún hay campos que deben ser completados");
           return;

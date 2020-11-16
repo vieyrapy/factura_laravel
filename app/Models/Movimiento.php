@@ -27,14 +27,14 @@ class Movimiento extends Model
 			if($format == 2){
                 $query->leftJoin('clientes', 'movimientos.entidad', '=', 'clientes.id')
                     ->leftJoin('proveedores', 'movimientos.entidad', '=', 'proveedores.id')
-                    ->selectRaw("movimientos.id, fecha, concepto, (CASE WHEN related_id IS NOT NULL THEN clientes.nombre ELSE proveedores.nombre END) AS entidad");
+                    ->selectRaw("movimientos.id, fecha, concepto, (CASE WHEN related_id IS NOT NULL THEN clientes.nombre ELSE proveedores.nombre END) AS entidad_nombre, (CASE WHEN related_id IS NOT NULL THEN clientes.id ELSE proveedores.id END) AS entidad, related_id, tipo_movimiento, monto");
 				if($date_ini){
 					$query->whereDate('fecha', '>=', $date_ini);
 				}
 				if($date_fin){
 					$query->whereDate('fecha', '<=', $date_fin);
 				}
-				return $query->groupBy(["movimientos.id", "fecha", "categoria_id", "concepto", "clientes.nombre", "proveedores.nombre", "related_id"]);
+				return $query->groupBy(["movimientos.id", "fecha", "categoria_id", "concepto", "clientes.nombre", "proveedores.nombre", "related_id", "clientes.id", "proveedores.id", "tipo_movimiento", "monto"]);
 			} else if($format == 1){
 				$date_ini .= "-01";
 				$date_fin .= "-31";

@@ -1,7 +1,10 @@
 <template>
   <div>
-    <button class="btn btn-primary" data-toggle="modal"
-      data-target="#nuevoMovimiento">
+    <button
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#nuevoMovimiento"
+    >
       + Nuevo Movimiento
     </button>
     <button
@@ -46,9 +49,7 @@
           </option>
         </select>
         <select
-          @change="
-            changeFiltros();
-          "
+          @change="changeFiltros()"
           v-model="formularioFiltros.filtro"
           class="custom-select ml-2 col"
         >
@@ -137,26 +138,47 @@
             <td>{{ movimiento.fecha }}</td>
             <td>{{ movimiento.categoria.nombreCategoria }}</td>
             <td v-if="formularioFiltros.filtro == 1">
-              {{ movimiento.entidad }}
+              {{ movimiento.entidad_nombre }}
             </td>
             <td v-if="formularioFiltros.filtro == 1">
               {{ movimiento.concepto }}
             </td>
-            <td>{{ new Intl.NumberFormat('es-PY').format(movimiento.ingreso) }}</td>
-            <td>{{ new Intl.NumberFormat('es-PY').format(movimiento.egreso) }}</td>
+            <td>
+              {{ new Intl.NumberFormat("es-PY").format(movimiento.ingreso) }}
+            </td>
+            <td>
+              {{ new Intl.NumberFormat("es-PY").format(movimiento.egreso) }}
+            </td>
             <td v-if="formularioFiltros.filtro == 1">
-              <button class="btn btn-primary" @click="editar(movimiento)">
-                Modificar
-              </button>
-              <button class="btn btn-primary" @click="eliminar(movimiento.id)">
-                Eliminar
-              </button>
+              <div v-if="!movimiento.related_id">
+                <button class="btn btn-primary" @click="editar(movimiento)">
+                  Modificar
+                </button>
+                <button
+                  class="btn btn-primary"
+                  @click="eliminar(movimiento.id)"
+                >
+                  Eliminar
+                </button>
+              </div>
+              <div v-else>
+                <button
+                  class="btn btn-primary"
+                  @click="verDetalles(movimiento.id)"
+                >
+                  Ver Detalles
+                </button>
+              </div>
             </td>
           </tr>
           <tr>
             <td :colspan="formularioFiltros.filtro == 1 ? 4 : 2">Totales:</td>
-            <td>{{ new Intl.NumberFormat('es-PY').format(totales["ingreso"]) }}</td>
-            <td>{{ new Intl.NumberFormat('es-PY').format(totales["egreso"]) }}</td>
+            <td>
+              {{ new Intl.NumberFormat("es-PY").format(totales["ingreso"]) }}
+            </td>
+            <td>
+              {{ new Intl.NumberFormat("es-PY").format(totales["egreso"]) }}
+            </td>
           </tr>
           <tr>
             <td :colspan="formularioFiltros.filtro == 1 ? 4 : 2">
@@ -164,7 +186,7 @@
             </td>
             <td colspan="2">
               {{
-                new Intl.NumberFormat('es-PY').format(
+                new Intl.NumberFormat("es-PY").format(
                   totales["ingreso"] - totales["egreso"]
                 )
               }}
@@ -176,7 +198,7 @@
     <seleccion-proveedor-component></seleccion-proveedor-component>
     <nuevo-movimiento-component
       :formulario="movimientoEditar"
-      @creado-movimiento="getMovimientos(pagination.current_page)"
+      @creado-movimiento="creadoMovimiento()"
     ></nuevo-movimiento-component>
     <nuevo-proveedor-component></nuevo-proveedor-component>
     <eliminar-component
@@ -192,7 +214,9 @@
     <nueva-venta-component
       @venta-creada="getMovimientos(pagination.current_page)"
     ></nueva-venta-component>
-    <nuevo-recibo-component @pago-registrado="getMovimientos(pagination.current_page)"></nuevo-recibo-component>
+    <nuevo-recibo-component
+      @pago-registrado="getMovimientos(pagination.current_page)"
+    ></nuevo-recibo-component>
   </div>
 </template>
 
@@ -269,23 +293,27 @@ export default {
     },
   },
   methods: {
-      fechaActual(anos = 0) {
-        const fecha = new Date();
-        let mes = fecha.getMonth() + 1;
-        let dia = fecha.getDate();
-        const ano = fecha.getFullYear() - anos;
-        return this.fecha(dia, mes, ano);
+      creadoMovimiento(){
+          this.movimientoEditar = this.movimientoVacio;
+          this.getMovimientos(this.pagination.current_page);
+      },
+    fechaActual(anos = 0) {
+      const fecha = new Date();
+      let mes = fecha.getMonth() + 1;
+      let dia = fecha.getDate();
+      const ano = fecha.getFullYear() - anos;
+      return this.fecha(dia, mes, ano);
     },
 
-    fecha(dia, mes, ano){
-        if (dia.toString().length == 1) dia = "0" + dia;
-        if (mes.toString().length == 1) mes = "0" + mes;
-        return ano + "-" + mes + "-" + dia;
+    fecha(dia, mes, ano) {
+      if (dia.toString().length == 1) dia = "0" + dia;
+      if (mes.toString().length == 1) mes = "0" + mes;
+      return ano + "-" + mes + "-" + dia;
     },
 
-    mes(mes, ano){
-        if (mes.toString().length == 1) mes = "0" + mes;
-        return ano + "-" + mes;
+    mes(mes, ano) {
+      if (mes.toString().length == 1) mes = "0" + mes;
+      return ano + "-" + mes;
     },
 
     getMovimientos(page = 1) {
@@ -338,22 +366,59 @@ export default {
         });
     },
 
-    changeFiltros(){
-        let date_ini = this.formularioFiltros.date_ini.split("-");
-        let date_fin = this.formularioFiltros.date_fin.split("-");
-        switch(this.formularioFiltros.filtro){
-            case 1: switch(date_ini.length){
-                case 1: this.formularioFiltros.date_ini = this.fecha(1, 1, date_ini[0]); this.formularioFiltros.date_fin = this.fecha(1, 1, date_fin[0]); break;
-                case 2: this.formularioFiltros.date_ini = this.fecha(1, date_ini[1], date_ini[0]); this.formularioFiltros.date_fin = this.fecha(1, date_fin[1], date_fin[0]); break;
-            }; break;
-            case 2: switch(date_ini.length){
-                case 1: this.formularioFiltros.date_ini = this.mes(1, date_ini[0]); this.formularioFiltros.date_fin = this.mes(1, date_fin[0]); break;
-                case 3: this.formularioFiltros.date_ini = this.mes(date_ini[1], date_ini[0]); this.formularioFiltros.date_fin = this.mes(date_fin[1], date_fin[0]); break;
-            }; break;
-            case 3: this.formularioFiltros.date_ini = date_ini[0]; this.formularioFiltros.date_fin = date_fin[0]; break;
-            }
-        this.getMovimientos(this.pagination.current_page);
-        }
+    changeFiltros() {
+      let date_ini = this.formularioFiltros.date_ini.split("-");
+      let date_fin = this.formularioFiltros.date_fin.split("-");
+      switch (this.formularioFiltros.filtro) {
+        case 1:
+          switch (date_ini.length) {
+            case 1:
+              this.formularioFiltros.date_ini = this.fecha(1, 1, date_ini[0]);
+              this.formularioFiltros.date_fin = this.fecha(1, 1, date_fin[0]);
+              break;
+            case 2:
+              this.formularioFiltros.date_ini = this.fecha(
+                1,
+                date_ini[1],
+                date_ini[0]
+              );
+              this.formularioFiltros.date_fin = this.fecha(
+                1,
+                date_fin[1],
+                date_fin[0]
+              );
+              break;
+          }
+          break;
+        case 2:
+          switch (date_ini.length) {
+            case 1:
+              this.formularioFiltros.date_ini = this.mes(1, date_ini[0]);
+              this.formularioFiltros.date_fin = this.mes(1, date_fin[0]);
+              break;
+            case 3:
+              this.formularioFiltros.date_ini = this.mes(
+                date_ini[1],
+                date_ini[0]
+              );
+              this.formularioFiltros.date_fin = this.mes(
+                date_fin[1],
+                date_fin[0]
+              );
+              break;
+          }
+          break;
+        case 3:
+          this.formularioFiltros.date_ini = date_ini[0];
+          this.formularioFiltros.date_fin = date_fin[0];
+          break;
+      }
+      this.getMovimientos(this.pagination.current_page);
+    },
+
+    verDetalles(id){
+        //TODO Ver detalles del comprobante
+    }
   },
 };
 </script>
