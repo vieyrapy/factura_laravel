@@ -82,7 +82,7 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                              
+
                     @else
                         <!--<a href="{{ route('login') }}">Entrar</a>-->
 
@@ -97,12 +97,11 @@
                 <div class="title m-b-md">
                     Studio Sánchez
                     <br>
-                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/clientes') }}'">Crear nuevo recibo ahora!</button>
-                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/movimientos') }}'">Registra tus gastos e ingresos!</button>
+                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/movimientos') }}'">Empieza a registrar tus movimientos aquí!</button>
 
                 </div>
-                
-              
+
+
                 <div class="links">
                       APPWEB CREADO POR <a href="https://www.facebook.com/vieyrapy/">vieyrapy</a>
                 </div>
