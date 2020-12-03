@@ -36,7 +36,7 @@
                                 <td>{{$m -> fecha}}</td>
                                 <td>{{$m -> categoria -> nombreCategoria}}</td>
                                 @if($filtro == 1)
-                                <td>{{$m -> entidad}}</td>
+                                <td>{{$m -> entidad_nombre}}</td>
                                 <td>{{$m -> concepto}}</td>
                                 @endif
                                 <td>{{number_format($m -> ingreso)}}</td>

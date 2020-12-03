@@ -33,8 +33,7 @@
           <button
             class="btn btn-primary mx-auto"
             :disabled="!$global.cliente.id"
-            data-toggle="modal"
-            data-target="#nuevaVenta"
+            @click="seleccionar"
           >
             Seleccionar cliente
           </button>
@@ -56,6 +55,11 @@ export default {
       .get("/api/cliente")
       .then((resultado) => (this.$global.clientes = resultado.data));
   },
-  methods: {},
+  methods: {
+      seleccionar(){
+          $("#cliente").modal("hide");
+      $("#nuevaVenta").modal("show");
+      }
+  },
 };
 </script>

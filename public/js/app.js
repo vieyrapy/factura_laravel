@@ -1806,18 +1806,26 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     guardar: function guardar() {
+      var _this = this;
+
       if (this.formulario.nombre == "") {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
-      axios.post("/api/categoria", this.formulario);
+      axios.post("/api/categoria", this.formulario).then(function () {
+        axios.get("/api/categoria").then(function (resultado) {
+          return _this.$global.categorias_movimiento = resultado.data;
+        });
+      });
       this.formulario = {
         nombre: "",
         descripcion: ""
       };
       this.errors = [];
       this.$emit("creada-categoria");
+      $("#nuevaCategoria").modal("hide");
+      $("#nuevoMovimiento").modal("show");
     }
   }
 });
@@ -1887,9 +1895,10 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post("/api/categoria-producto", this.formulario);
       axios.get("/api/categoria-producto").then(function (resultado) {
-        return _this.$global.categorias = resultado.data;
+        return _this.$global.categorias_producto = resultado.data;
       });
       $("#nuevaCategoriaProducto").modal("hide");
+      $("#nuevoProducto").modal("show");
     }
   }
 });
@@ -1911,6 +1920,10 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -2127,6 +2140,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         total: 0,
         total_iva: 0
       };
+    },
+    nuevoProducto: function nuevoProducto() {
+      $("#nuevaVenta").modal("hide");
+      $("#nuevoProducto").modal("show");
     }
   }
 });
@@ -2364,7 +2381,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.formulario.fecha = this.fechaActual;
     axios.get("/api/categoria").then(function (resultado) {
-      return _this.categorias = resultado.data;
+      return _this.$global.categorias_movimiento = resultado.data;
     });
   },
   computed: {
@@ -2385,11 +2402,12 @@ __webpack_require__.r(__webpack_exports__);
     guardar: function guardar() {
       this.errors = [];
 
-      if (this.formulario.entidad == "" || this.formulario.concepto == "" || this.formulario.categoria_id == "" || !(this.formulario.monto.toString().replace(/,/g, "") > 0)) {
+      if (this.formulario.concepto == "" || this.formulario.categoria_id == "" || !(this.formulario.monto.toString().replace(/,/g, "") > 0)) {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
 
+      this.formulario.entidad = this.$global.proveedor.id;
       axios.post("/api/movimiento", this.formulario);
       this.errors = [];
       $("#nuevoMovimiento").modal("hide");
@@ -2398,6 +2416,10 @@ __webpack_require__.r(__webpack_exports__);
     nuevoProveedor: function nuevoProveedor() {
       $("#nuevoMovimiento").modal("hide");
       $("#nuevoProveedor").modal("show");
+    },
+    nuevaCategoria: function nuevaCategoria() {
+      $("#nuevoMovimiento").modal("hide");
+      $("#nuevaCategoria").modal("show");
     }
   }
 });
@@ -2681,10 +2703,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: {
-    formulario: {
-      "default": {
+  data: function data() {
+    return {
+      errors: [],
+      categorias: [],
+      formulario: {
         id: null,
         nombre: null,
         descripcion: null,
@@ -2695,17 +2723,18 @@ __webpack_require__.r(__webpack_exports__);
         categoria_producto_id: null,
         iva: "11"
       }
-    }
-  },
-  data: function data() {
-    return {
-      errors: [],
-      categorias: []
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get("/api/categoria-producto").then(function (resultado) {
+      return _this.$global.categorias_producto = resultado.data;
+    });
   },
   methods: {
     guardar: function guardar() {
-      var _this = this;
+      var _this2 = this;
 
       if (!(this.formulario.nombre || this.formulario.stock_actual || this.formulario.stock_minimo || this.formulario.precio_compra || this.formulario.precio_venta || this.formulario.categoria_producto_id)) {
         errors.push("Aún hay campos que deben ser completados");
@@ -2719,11 +2748,15 @@ __webpack_require__.r(__webpack_exports__);
         axios.post("/api/producto", this.formulario);
       }
 
-      axios.get("/api/productos-seleccion").then(function (resultado) {
-        return _this.$global.productos = resultado.data;
+      axios.get("/api/producto-seleccion").then(function (resultado) {
+        return _this2.$global.productos = resultado.data;
       });
       $("#nuevoProducto").modal("hide");
-      this.$emit("creado-producto");
+      $("#nuevaVenta").modal("show");
+    },
+    nuevaCategoria: function nuevaCategoria() {
+      $("#nuevoProducto").modal("hide");
+      $("#nuevaCategoriaProducto").modal("show");
     }
   }
 });
@@ -3074,7 +3107,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3088,7 +3120,12 @@ __webpack_require__.r(__webpack_exports__);
       return _this.$global.clientes = resultado.data;
     });
   },
-  methods: {}
+  methods: {
+    seleccionar: function seleccionar() {
+      $("#cliente").modal("hide");
+      $("#nuevaVenta").modal("show");
+    }
+  }
 });
 
 /***/ }),
@@ -3148,6 +3185,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3161,7 +3200,11 @@ __webpack_require__.r(__webpack_exports__);
       return _this.$global.proveedores = resultado.data;
     });
   },
-  methods: {}
+  methods: {
+    cerrar: function cerrar() {
+      $("#proveedor").modal("hide");
+    }
+  }
 });
 
 /***/ }),
@@ -3175,12 +3218,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -40059,6 +40096,24 @@ var render = function() {
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary mb-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.nuevoProducto()
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        + Nuevo Producto\n                    "
+                  )
+                ]
+              ),
+              _vm._v(" "),
               _vm.errors.length
                 ? _c("p", [
                     _c("b", [
@@ -40876,19 +40931,6 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary mb-5",
-                on: { click: _vm.nuevoProveedor }
-              },
-              [
-                _vm._v(
-                  "\n                              + Nuevo Proveedor\n                          "
-                )
-              ]
-            ),
-            _vm._v(" "),
             _vm.errors.length
               ? _c("p", [
                   _c("b", [
@@ -40947,54 +40989,37 @@ var render = function() {
                 "label",
                 {
                   staticClass: "col-md-4 col-form-label text-md-right",
-                  attrs: { for: "entidad" }
+                  attrs: { for: "nombre" }
                 },
-                [_vm._v("Nombre")]
+                [_vm._v("Proveedor")]
               ),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.formulario.entidad,
-                        expression: "formulario.entidad"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { name: "entidad" },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.formulario,
-                          "entidad",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.$global.proveedor.nombre,
+                      expression: "$global.proveedor.nombre"
                     }
-                  },
-                  _vm._l(_vm.$global.proveedores, function(proveedor) {
-                    return _c(
-                      "option",
-                      { key: proveedor.id, domProps: { value: proveedor.id } },
-                      [_vm._v(_vm._s(proveedor.nombre))]
-                    )
-                  }),
-                  0
-                )
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "nombre", disabled: "" },
+                  domProps: { value: _vm.$global.proveedor.nombre },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.$global.proveedor,
+                        "nombre",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
               ])
             ]),
             _vm._v(" "),
@@ -41020,7 +41045,7 @@ var render = function() {
                         expression: "formulario.categoria_id"
                       }
                     ],
-                    staticClass: "form-control",
+                    staticClass: "form-control d-inline-block w-75",
                     attrs: { name: "categoria" },
                     on: {
                       change: function($event) {
@@ -41042,7 +41067,9 @@ var render = function() {
                       }
                     }
                   },
-                  _vm._l(_vm.categorias, function(categoria) {
+                  _vm._l(_vm.$global.categorias_movimiento, function(
+                    categoria
+                  ) {
                     return _c(
                       "option",
                       { key: categoria.id, domProps: { value: categoria.id } },
@@ -41050,6 +41077,15 @@ var render = function() {
                     )
                   }),
                   0
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary ml-3",
+                    on: { click: _vm.nuevaCategoria }
+                  },
+                  [_vm._v("\n    +\n  ")]
                 )
               ])
             ]),
@@ -41548,6 +41584,24 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary mb-2",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.nuevaCategoria()
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                            + Nueva Categoria\n                        "
+                )
+              ]
+            ),
+            _vm._v(" "),
             _vm.errors.length
               ? _c("p", [
                   _c("b", [
@@ -41584,6 +41638,61 @@ var render = function() {
                   }
                 }
               })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "categoria" }
+                },
+                [_vm._v("Categoria")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.formulario.categoria_producto_id,
+                        expression: "formulario.categoria_producto_id"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.formulario,
+                          "categoria_producto_id",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.$global.categorias_producto, function(categoria) {
+                    return _c(
+                      "option",
+                      { key: categoria.id, domProps: { value: categoria.id } },
+                      [_vm._v(_vm._s(categoria.nombre))]
+                    )
+                  }),
+                  0
+                )
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group row" }, [
@@ -41912,61 +42021,6 @@ var render = function() {
                   _c("label", { attrs: { for: "exenta" } }, [_vm._v("Exenta")])
                 ]
               )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group row" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-4 col-form-label text-md-right",
-                  attrs: { for: "categoria" }
-                },
-                [_vm._v("Categoria")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.formulario.categoria_producto_id,
-                        expression: "formulario.categoria_producto_id"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.formulario,
-                          "categoria_producto_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.$global.categorias, function(categoria) {
-                    return _c(
-                      "option",
-                      { key: categoria.id, domProps: { value: categoria.id } },
-                      [_vm._v(_vm._s(categoria.nombre))]
-                    )
-                  }),
-                  0
-                )
-              ])
             ])
           ]),
           _vm._v(" "),
@@ -42729,11 +42783,8 @@ var render = function() {
               "button",
               {
                 staticClass: "btn btn-primary mx-auto",
-                attrs: {
-                  disabled: !_vm.$global.cliente.id,
-                  "data-toggle": "modal",
-                  "data-target": "#nuevaVenta"
-                }
+                attrs: { disabled: !_vm.$global.cliente.id },
+                on: { click: _vm.seleccionar }
               },
               [_vm._v("\n          Seleccionar cliente\n        ")]
             )
@@ -42804,7 +42855,8 @@ var render = function() {
                 attrs: {
                   "data-toggle": "modal",
                   "data-target": "#nuevoProveedor"
-                }
+                },
+                on: { click: _vm.cerrar }
               },
               [_vm._v("\n          + Crear nuevo Proveedor\n        ")]
             ),
@@ -42865,7 +42917,8 @@ var render = function() {
                   disabled: _vm.$global.proveedor == {},
                   "data-toggle": "modal",
                   "data-target": "#nuevoMovimiento"
-                }
+                },
+                on: { click: _vm.cerrar }
               },
               [_vm._v("\n          Seleccionar proveedor\n        ")]
             )
@@ -42924,22 +42977,9 @@ var render = function() {
         "button",
         {
           staticClass: "btn btn-primary",
-          attrs: { "data-toggle": "modal", "data-target": "#nuevoMovimiento" }
+          attrs: { "data-toggle": "modal", "data-target": "#proveedor" }
         },
         [_vm._v("\n    + Nuevo Movimiento\n  ")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button",
-            "data-toggle": "modal",
-            "data-target": "#nuevaCategoria"
-          }
-        },
-        [_vm._v("\n    + Nueva Categoría\n  ")]
       ),
       _vm._v(" "),
       _c(
@@ -43587,7 +43627,11 @@ var render = function() {
             return _vm.getMovimientos(_vm.pagination.current_page)
           }
         }
-      })
+      }),
+      _vm._v(" "),
+      _c("nuevo-producto-component"),
+      _vm._v(" "),
+      _c("nueva-categoria-producto-component")
     ],
     1
   )
@@ -56386,7 +56430,8 @@ var shared = new Vue({
     cliente: {},
     productos: [],
     clientes: [],
-    categorias: [],
+    categorias_producto: [],
+    categorias_movimiento: [],
     proveedor: {},
     proveedores: []
   }

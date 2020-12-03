@@ -3,17 +3,9 @@
     <button
       class="btn btn-primary"
       data-toggle="modal"
-      data-target="#nuevoMovimiento"
+      data-target="#proveedor"
     >
       + Nuevo Movimiento
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-toggle="modal"
-      data-target="#nuevaCategoria"
-    >
-      + Nueva Categoría
     </button>
     <button
       type="button"
@@ -217,6 +209,8 @@
     <nuevo-recibo-component
       @pago-registrado="getMovimientos(pagination.current_page)"
     ></nuevo-recibo-component>
+    <nuevo-producto-component></nuevo-producto-component>
+    <nueva-categoria-producto-component></nueva-categoria-producto-component>
   </div>
 </template>
 

@@ -60,13 +60,19 @@ export default {
         this.errors.push("Aún hay campos que deben ser completados");
         return;
       }
-      axios.post("/api/categoria", this.formulario);
+      axios.post("/api/categoria", this.formulario).then(()=>{
+          axios
+            .get("/api/categoria")
+            .then((resultado) => (this.$global.categorias_movimiento = resultado.data));
+      });
       this.formulario = {
         nombre: "",
         descripcion: ""
       };
       this.errors = [];
       this.$emit("creada-categoria");
+      $("#nuevaCategoria").modal("hide");
+      $("#nuevoMovimiento").modal("show");
     },
   },
 };

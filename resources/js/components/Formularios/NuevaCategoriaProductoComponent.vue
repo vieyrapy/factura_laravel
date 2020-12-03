@@ -52,8 +52,9 @@ export default {
       axios.post("/api/categoria-producto", this.formulario);
       axios
         .get("/api/categoria-producto")
-        .then((resultado) => (this.$global.categorias = resultado.data));
+        .then((resultado) => (this.$global.categorias_producto = resultado.data));
       $("#nuevaCategoriaProducto").modal("hide");
+      $("#nuevoProducto").modal("show");
     },
   },
 };

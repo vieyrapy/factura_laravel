@@ -14,6 +14,7 @@
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#nuevoProveedor"
+            @click="cerrar"
           >
             + Crear nuevo Proveedor
           </button>
@@ -35,6 +36,7 @@
             :disabled="$global.proveedor == {}"
             data-toggle="modal"
             data-target="#nuevoMovimiento"
+            @click="cerrar"
           >
             Seleccionar proveedor
           </button>
@@ -56,6 +58,10 @@ export default {
       .get("/api/proveedor")
       .then((resultado) => (this.$global.proveedores = resultado.data));
   },
-  methods: {},
+  methods: {
+      cerrar(){
+          $("#proveedor").modal("hide");
+      }
+  },
 };
 </script>

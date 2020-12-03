@@ -11,10 +11,6 @@
 
                         <div class="modal-body">
 
-                            <button class="btn btn-primary mb-5" @click="nuevoProveedor">
-                                + Nuevo Proveedor
-                            </button>
-
                             <p v-if="errors.length">
                                 <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
                                 <ul>
@@ -34,20 +30,24 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="entidad" class="col-md-4 col-form-label text-md-right">Nombre</label>
-                                <div class="col-md-6">
-                                    <select name="entidad" v-model="formulario.entidad" class="form-control">
-                                        <option v-for="proveedor in $global.proveedores" :key="proveedor.id" :value="proveedor.id">{{proveedor.nombre}}</option>
-                                    </select>
-                                </div>
+                            <label for="nombre" class="col-md-4 col-form-label text-md-right">Proveedor</label>
+                            <div class="col-md-6">
+                                <input v-model="$global.proveedor.nombre" name="nombre" class="form-control" disabled>
                             </div>
+                        </div>
 
                             <div class="form-group row">
                                 <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
                                 <div class="col-md-6">
-                                    <select name="categoria" v-model="formulario.categoria_id" class="form-control">
-                                        <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">{{categoria.nombreCategoria}}</option>
+                                    <select name="categoria" v-model="formulario.categoria_id" class="form-control d-inline-block w-75">
+                                        <option v-for="categoria in $global.categorias_movimiento" :key="categoria.id" :value="categoria.id">{{categoria.nombreCategoria}}</option>
                                     </select>
+                                    <button
+                                    @click="nuevaCategoria"
+      class="btn btn-primary ml-3"
+    >
+      +
+    </button>
                                 </div>
                             </div>
 
@@ -86,7 +86,7 @@
 
 <script>
 export default {
-    props: {
+  props: {
     formulario: {
       default: {
         fecha: new Date(),
@@ -94,7 +94,7 @@ export default {
         categoria_id: "",
         concepto: "",
         tipo_movimiento: 1,
-        monto: ""
+        monto: "",
       },
     },
   },
@@ -105,45 +105,52 @@ export default {
     };
   },
   mounted() {
-      this.formulario.fecha = this.fechaActual;
+    this.formulario.fecha = this.fechaActual;
     axios
-      .get("/api/categoria")
-      .then((resultado) => (this.categorias = resultado.data));
+        .get("/api/categoria")
+        .then((resultado) => (this.$global.categorias_movimiento = resultado.data));
   },
   computed: {
-      fechaActual() {
-        const fecha = new Date();
-        let mes = fecha.getMonth() + 1;
-        let dia = fecha.getDate();
-        const ano = fecha.getFullYear();
-        if (dia.toString().length == 1) dia = "0" + dia;
-        if (mes.toString().length == 1) mes = "0" + mes;
-        return ano + "-" + mes + "-" + dia;
+    fechaActual() {
+      const fecha = new Date();
+      let mes = fecha.getMonth() + 1;
+      let dia = fecha.getDate();
+      const ano = fecha.getFullYear();
+      if (dia.toString().length == 1) dia = "0" + dia;
+      if (mes.toString().length == 1) mes = "0" + mes;
+      return ano + "-" + mes + "-" + dia;
     },
   },
   methods: {
     numeroConComa(numero) {
-      return numero.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return numero
+        .toString()
+        .replace(/,/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     guardar() {
-        this.errors = [];
+      this.errors = [];
       if (
-        this.formulario.entidad == "" ||
         this.formulario.concepto == "" ||
         this.formulario.categoria_id == "" ||
         !(this.formulario.monto.toString().replace(/,/g, "") > 0)
       ) {
-          this.errors.push("Aún hay campos que deben ser completados");
-          return;
+        this.errors.push("Aún hay campos que deben ser completados");
+        return;
       }
+      this.formulario.entidad = this.$global.proveedor.id;
       axios.post("/api/movimiento", this.formulario);
       this.errors = [];
       $("#nuevoMovimiento").modal("hide");
       this.$emit("creado-movimiento");
     },
-    nuevoProveedor(){
+    nuevoProveedor() {
+      $("#nuevoMovimiento").modal("hide");
+      $("#nuevoProveedor").modal("show");
+    },
+    nuevaCategoria(){
         $("#nuevoMovimiento").modal("hide");
-        $("#nuevoProveedor").modal("show");
+      $("#nuevaCategoria").modal("show");
     }
   },
 };

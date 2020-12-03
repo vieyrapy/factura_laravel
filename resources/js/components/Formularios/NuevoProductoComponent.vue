@@ -10,6 +10,10 @@
                     </div>
                         <div class="modal-body">
 
+                            <button type="button" class="btn btn-primary mb-2" @click="nuevaCategoria()">
+                                + Nueva Categoria
+                            </button>
+
                             <p v-if="errors.length">
                                 <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
                                 <ul>
@@ -19,6 +23,15 @@
 
                             <div hidden>
                                 <input v-model="formulario.id">
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" v-model="formulario.categoria_producto_id">
+                                        <option v-for="categoria in $global.categorias_producto" :key="categoria.id" :value="categoria.id">{{categoria.nombre}}</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="form-group row">
@@ -75,15 +88,6 @@
                                     <input type="radio" id="exenta" name="iva" value="0" v-model="formulario.iva"><label for="exenta">Exenta</label>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label for="categoria" class="col-md-4 col-form-label text-md-right">Categoria</label>
-                                <div class="col-md-6">
-                                    <select class="form-control" v-model="formulario.categoria_producto_id">
-                                        <option v-for="categoria in $global.categorias" :key="categoria.id" :value="categoria.id">{{categoria.nombre}}</option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="modal-footer">
@@ -96,9 +100,11 @@
 
 <script>
 export default {
-  props: {
-    formulario: {
-      default: {
+  data: () => {
+    return {
+      errors: [],
+      categorias: [],
+      formulario: {
         id: null,
         nombre: null,
         descripcion: null,
@@ -108,14 +114,13 @@ export default {
         precio_venta: null,
         categoria_producto_id: null,
         iva: "11",
-      },
     },
-  },
-  data: () => {
-    return {
-      errors: [],
-      categorias: [],
     };
+  },
+  mounted(){
+      axios
+        .get("/api/categoria-producto")
+        .then((resultado) => (this.$global.categorias_producto = resultado.data));
   },
   methods: {
     guardar() {
@@ -139,11 +144,15 @@ export default {
         axios.post("/api/producto", this.formulario);
       }
       axios
-        .get("/api/productos-seleccion")
+        .get("/api/producto-seleccion")
         .then((resultado) => (this.$global.productos = resultado.data));
       $("#nuevoProducto").modal("hide");
-      this.$emit("creado-producto");
+      $("#nuevaVenta").modal("show");
     },
+    nuevaCategoria(){
+      $("#nuevoProducto").modal("hide");
+      $("#nuevaCategoriaProducto").modal("show");
+  }
   },
 };
 </script>

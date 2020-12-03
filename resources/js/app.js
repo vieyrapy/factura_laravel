@@ -25,7 +25,8 @@ let shared = new Vue({
         cliente: {},
         productos: [],
         clientes: [],
-        categorias: [],
+        categorias_producto: [],
+        categorias_movimiento: [],
         proveedor: {},
         proveedores: []
     }

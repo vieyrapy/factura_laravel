@@ -11,6 +11,10 @@
 
                     <div class="modal-body">
 
+                        <button type="button" class="btn btn-primary mb-2" @click="nuevoProducto()">
+                            + Nuevo Producto
+                        </button>
+
                         <p v-if="errors.length">
                             <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
                             <ul>
@@ -195,6 +199,10 @@ export default {
         total_iva: 0,
       };
     },
+    nuevoProducto(){
+      $("#nuevaVenta").modal("hide");
+      $("#nuevoProducto").modal("show");
+    }
   },
 };
 </script>
