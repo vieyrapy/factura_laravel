@@ -18,12 +18,16 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                @if(asset('images/' . config('app.logo')))
+            <img class="logo" src="{{'images/' . config('app.logo')}}" style="width: {{config('app.ancho')}}cm; height: {{config('app.alto')}}cm" />
+                @endif
+                <a class="navbar-brand ml-2" href="{{ url('/') }}">
                     {{ config('app.name', 'Sanchez Recibo') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

@@ -1,5 +1,9 @@
 <style>
-    h1, p{
+    * {
+        padding-top: 10px;
+        margin-top: 0;
+    }
+    p, h3{
         text-align: center;
     }
     table{
@@ -10,9 +14,34 @@
     th, td{
         border: 1px solid black;
     }
+    .nombre-empresa{
+        display: inline-block;
+        margin-left: 5cm;
+    }
+    img{
+        margin: auto;
+        margin-left: 0.2cm;
+    }
 </style>
+<div>
+    <table class="encabezado">
+        <tr>
+            <td>
+                @if(asset('images/' . config('app.logo')))
+                    <img src="{{'images/' . config('app.logo')}}" style="width: {{config('app.ancho')}}cm; height: {{config('app.alto')}}cm" />
+                @endif
+                <h3 class="nombre-empresa">{{config('app.empresa')}}</h3>
+            </td>
+            <td>
+                <p>RUC: {{config('app.ruc')}}</p>
+                <p>Telefono: {{config('app.telefono')}}</p>
+                <p>Dirección: {{config('app.direccion')}}</p>
+            </td>
+        </tr>
+    </table>
 
-<h1>Reporte de Movimientos</h1>
+
+<h3>Reporte de Movimientos</h3>
 <p>Filtros: {{null != $filtros -> get('date_ini') ? "Desde: " . $filtros -> get('date_ini') : ""}}
             {{null != $filtros -> get('date_fin') ? "Hasta: " . $filtros -> get('date_fin') : ""}}</p>
 <p>{{null != $cat_filtro ? "Categoria:" . $cat_filtro : ""}}</P>
@@ -54,3 +83,4 @@
                         </tr>
                     </tbody>
         </table>
+</div>
