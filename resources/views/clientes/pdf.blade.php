@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Recibo de Dinero</title>
-  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>
 <style type="text/css">
@@ -31,7 +31,7 @@
   font-weight: 600;
   margin: 0;
 }
-  
+
 .receipt-label {
   font-weight: 600;
 }
@@ -64,7 +64,7 @@ img {
     margin-bottom: 10px;
     border-bottom: 1px solid #000;
 }
-  
+
   p {
     text-align: center;
     margin: 0;
@@ -73,8 +73,8 @@ img {
 </style>
 
 <div class="receipt-main">
-  
-  <p class="receipt-title">Recibo de Dinero</p> 
+
+  <p class="receipt-title">Recibo de Dinero</p>
 
    <img src="http://studiosanchez.rocemi.com.py/images/qr_code.png" width="100" height="100">
 
@@ -88,12 +88,12 @@ img {
     <span class="receipt-label text-large">Nombre/Cliente:</span>
     <span class="text-large">{{$nombre}}</span>
   </div>
-  
+
   <div class="pull-right receipt-section">
     <span class="text-large receipt-label">Entrega Gs.:</span>
     <span class="text-large">  {{number_format($entrega, 0, ',', '.')}}</span>
   </div>
-  
+
   <div class="pull-right receipt-section">
     <span class="text-large receipt-label">Total Gs.:</span>
     <span class="text-large">  {{number_format($total, 0, ',', '.')}}</span>
@@ -103,33 +103,31 @@ img {
     <span class="text-large receipt-label">Saldo Gs.:</span>
     <span class="text-large">{{number_format($saldo, 0, ',', '.')}}</span>
   </div>
-  
+
   <div class="receipt-section">
     <p class="pull-right text-large">El presente documento fué realizado en concepto de <b>{{$concepto}}. </b></p>
   </div>
-  
+
   <div class="receipt-section">
-    <p class="pull-right text-large">Gracias por su preferencia.</p> 
+    <p class="pull-right text-large">Gracias por su preferencia.</p>
   </div>
-  
+
 
   <div class="receipt-signature col-xs-6">
     <p class="receipt-line"></p>
-    <p class="text-large">Studio Digital Sánchez</p>
-    <p><b>Teléfonos:</b>071 - 208 206 / 0982- 359 850 <b>Email:</b>sanchezdigital1520@hotmail.com</p>
-    <p>Mons. Wiessen Nº 856 e/ Avda. Irrazábal y Tte. Honorio González</p>
-    <p>Encarnación - Paraguay</p>
+    <p class="text-large">{{ config('app.empresa', 'Studio Digital Sánchez') }}</p>
+    <p><b>Teléfonos:</b>{{ config('app.telefono', '071 - 208 206 / 0982- 359 850') }}</p>
+    <p>{{ config('app.direccion', 'Mons. Wiessen Nº 856 e/ Avda. Irrazábal y Tte. Honorio González - Encarnación - Paraguay') }}</p>
 
   </div>
 
 
 </div>
 
-               
+
 
 </body>
 </html>
 
-  
-               
- 
+
+

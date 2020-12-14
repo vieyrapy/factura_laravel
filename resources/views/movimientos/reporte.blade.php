@@ -3,8 +3,11 @@
         padding-top: 10px;
         margin-top: 0;
     }
-    p, h3{
+    p, h2{
         text-align: center;
+    }
+    h2{
+        margin-top: 1cm;
     }
     table{
         width: 100%;
@@ -27,9 +30,8 @@
     <table class="encabezado">
         <tr>
             <td>
-                @if(asset('images/' . config('app.logo')))
-                    <img src="{{'images/' . config('app.logo')}}" style="width: {{config('app.ancho')}}cm; height: {{config('app.alto')}}cm" />
-                @endif
+
+                <img src="{{'images/Logotipo.png'}}" width="100" height="100" style="border: 1px solid black" />
                 <h3 class="nombre-empresa">{{config('app.empresa')}}</h3>
             </td>
             <td>
@@ -41,7 +43,7 @@
     </table>
 
 
-<h3>Reporte de Movimientos</h3>
+<h2>Reporte de Movimientos</h2>
 <p>Filtros: {{null != $filtros -> get('date_ini') ? "Desde: " . $filtros -> get('date_ini') : ""}}
             {{null != $filtros -> get('date_fin') ? "Hasta: " . $filtros -> get('date_fin') : ""}}</p>
 <p>{{null != $cat_filtro ? "Categoria:" . $cat_filtro : ""}}</P>

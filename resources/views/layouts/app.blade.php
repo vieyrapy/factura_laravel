@@ -24,9 +24,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
-                @if(asset('images/' . config('app.logo')))
-            <img class="logo" src="{{'images/' . config('app.logo')}}" style="width: {{config('app.ancho')}}cm; height: {{config('app.alto')}}cm" />
-                @endif
+            <img class="logo" src="{{'images/Logotipo.png'}}" width="100" height="100" style="border: 1px solid black" />
                 <a class="navbar-brand ml-2" href="{{ url('/') }}">
                     {{ config('app.name', 'Sanchez Recibo') }}
                 </a>

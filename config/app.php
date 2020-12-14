@@ -6,9 +6,6 @@ return [
     'telefono' => env('EMPRESA_TELEFONO'),
     'direccion' => env('EMPRESA_DIRECCION'),
     'ruc' => env('EMPRESA_RUC'),
-    'logo' => env('EMPRESA_LOGO'),
-    'ancho' => env('EMPRESA_LOGO_DIMENSIONES_W'),
-    'alto' => env('EMPRESA_LOGO_DIMENSIONES_H'),
 
     /*
     |--------------------------------------------------------------------------
