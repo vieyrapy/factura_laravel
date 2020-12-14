@@ -2974,7 +2974,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -43494,24 +43493,7 @@ var render = function() {
                                   ]
                                 )
                               ])
-                            : _c("div", [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-primary",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.verDetalles(movimiento.id)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                Ver Detalles\n              "
-                                    )
-                                  ]
-                                )
-                              ])
+                            : _c("div")
                         ])
                       : _vm._e()
                   ])

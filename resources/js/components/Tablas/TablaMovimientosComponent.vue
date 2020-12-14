@@ -154,12 +154,12 @@
                 </button>
               </div>
               <div v-else>
-                <button
+                <!-- <button
                   class="btn btn-primary"
                   @click="verDetalles(movimiento.id)"
                 >
                   Ver Detalles
-                </button>
+                </button> -->
               </div>
             </td>
           </tr>
