@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\VentaController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -20,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::get('producto-seleccion', 'CategoriasProductoController@getCategoriasSelect');
     Route::post('reporte', 'MovimientosController@pdf');
     Route::get('venta/pendientes/{id}', 'VentaController@pendientes');
+    Route::post('caja/apertura', 'CajaController@apertura');
 });
 
 ?>

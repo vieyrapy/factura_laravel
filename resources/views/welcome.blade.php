@@ -97,7 +97,7 @@
                     <img src="{{asset('images/logo.JPG')}}" width="100" height="100"/>
                     {{ \App\Models\Empresa::nombre() ? Empresa::nombre() : "APPWEB" }}
                     <br>
-                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/movimientos') }}'">Empezar a vender</button>
+                    <button type="button" class="btn btn-outline-dark btn-lg" onclick="location.href='{{ url('/registros') }}'">Empezar a vender</button>
 
                 </div>
 

@@ -17,9 +17,10 @@ Route::get('/', function () {
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/stop', 'StopController@index')->name('stop');
 
-// Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::get('/registros', 'PagesController@registros');
 //     Route::get('/clientes', function(){ return view('clientes.index');});
 //     Route::get('/movimientos', function(){ return view('movimientos.movimientos');});
 //     Route::get('/ventas', function(){ return view('ventas.ventas');});
 //     Route::post('/impresion', 'PdfController@pdf_recibo');
-// });
+});

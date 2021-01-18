@@ -13,9 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class)->times(10)->create();
-        $this->categoriaMovimiento('Factura');
-        $this->categoriaMovimiento('Recibo');
+        factory(User::class)->times(1)->create();
+        // $this->categoriaMovimiento('Factura');
+        // $this->categoriaMovimiento('Recibo');
     }
 
     private function categoriaMovimiento($nombreCategoria){
