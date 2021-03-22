@@ -80,7 +80,6 @@
         </div>
 
                     <div class="modal-footer">
-                        <!-- v-if="window.location.split('/') == 'ventas'" -->
                         <button @click="guardar()" class="btn btn-primary">Guardar</button>
                     </div>
             </div>

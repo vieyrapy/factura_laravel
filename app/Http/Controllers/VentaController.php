@@ -23,6 +23,10 @@ class VentaController extends Controller
         return $this->venta->crearVenta($request);
     }
 
+    public function update($id){
+        $this->venta->eliminarVenta($id);
+    }
+
     public function pendientes($id){
         return $this->venta->pendientes($id);
     }

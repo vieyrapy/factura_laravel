@@ -1,13 +1,6 @@
 <template>
   <div>
     <button
-      class="btn btn-primary"
-      data-toggle="modal"
-      data-target="#proveedor"
-    >
-      + Nuevo Movimiento
-    </button>
-    <button
       type="button"
       class="btn btn-primary"
       data-toggle="modal"
@@ -16,49 +9,141 @@
       + Nueva Venta
     </button>
     <button
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#proveedor"
+    >
+      + Nuevo Movimiento
+    </button>
+    <!-- <button
       type="button"
       class="btn btn-primary"
       data-toggle="modal"
       data-target="#nuevoRecibo"
     >
       + Nuevo Recibo
-    </button>
-    <button class="btn btn-primary" @click="generarReporte">Generar PDF</button>
-    <div class="m-3 row">
-      <div class="col-5 row">
-        <select
-          @change="getMovimientos(pagination.current_page)"
-          v-model="formularioFiltros.categoria"
-          class="custom-select col"
+    </button> -->
+    <button class="btn btn-primary" @click="generarReporte">Speed PDF</button>
+    <button class="btn btn-dark">Cerrar Caja</button>
+    <div class="row vw-100 my-3 ml-1">
+      <div class="dropdown mr-2">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="dropdownVenta"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
         >
-          <option value="">Filtrar por categoria</option>
-          <option
-            v-for="categoria in categorias"
-            v-bind:key="categoria.id"
-            :value="categoria.id"
-          >
-            {{ categoria.nombreCategoria }}
-          </option>
-        </select>
-        <select
-          @change="changeFiltros()"
-          v-model="formularioFiltros.filtro"
-          class="custom-select ml-2 col"
-        >
-          <option
-            v-for="filtro in filtros"
-            v-bind:key="filtro.id"
-            :value="filtro.id"
-          >
-            {{ filtro.descripcion }}
-          </option>
-        </select>
+          Filtrar venta
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownVenta">
+          <div class="dropdown-item">
+            <label>Número: </label
+            ><input
+              class="ml-1 venta"
+              v-model="ventas.numero_factura"
+              @keyup="filtrar($event)"
+            />
+          </div>
+          <div class="dropdown-item">
+            <label>Cliente: </label
+            ><input
+              class="ml-1 venta"
+              v-model="ventas.cliente"
+              @keyup="filtrar($event)"
+            />
+          </div>
+          <div class="dropdown-item">
+            <label>Pago: </label
+            ><input
+              class="ml-1 venta"
+              v-model="ventas.pago"
+              @keyup="filtrar($event)"
+            />
+          </div>
+        </div>
       </div>
-      <div class="col-7 d-inline-block float-right">
-        <div v-if="formularioFiltros.filtro == 1" class="d-inline-block col-10">
+      <div class="dropdown mr-2">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="dropdownMovimiento"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Filtrar movimiento
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMovimiento">
+          <div class="dropdown-item">
+            <label>Proveedor: </label
+            ><input
+              class="ml-1 movimiento"
+              v-model="movimientos.proveedor"
+              @keyup="filtrar($event)"
+            />
+          </div>
+          <div class="dropdown-item">
+            <label>Categoria: </label
+            ><input
+              class="ml-1 movimiento"
+              v-model="movimientos.categoria"
+              @keyup="filtrar($event)"
+            />
+          </div>
+          <div class="dropdown-item">
+            <label>Concepto: </label
+            ><input
+              class="ml-1 movimiento"
+              v-model="movimientos.concepto"
+              @keyup="filtrar($event)"
+            />
+          </div>
+          <div class="dropdown-item">
+            <label>Tipo de Movimiento: </label
+            ><input
+              class="ml-1 movimiento"
+              v-model="movimientos.tipo"
+              @keyup="filtrar($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- <div class="dropdown mr-2">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownRecibo"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filtrar recibo
+          </button>
+        </div> -->
+      <select
+        @change="changeFiltros()"
+        v-model="formularioFiltros.filtro"
+        class="custom-select ml-2 col-2"
+      >
+        <option
+          v-for="filtro in filtros"
+          v-bind:key="filtro.id"
+          :value="filtro.id"
+        >
+          {{ filtro.descripcion }}
+        </option>
+      </select>
+
+      <div class="col-6 d-inline-block float-right">
+        <div
+          v-if="formularioFiltros.filtro == 1"
+          class="d-inline-block col-12 p-0 m-0"
+        >
           <label class="d-inline-block">Desde:</label>
           <input
-            @change="getMovimientos(pagination.current_page)"
+            @change="filtrar()"
             type="date"
             v-model="formularioFiltros.date_ini"
             class="form-control d-inline-block date col-4"
@@ -66,16 +151,16 @@
 
           <label class="d-inline-block">Hasta:</label>
           <input
-            @change="getMovimientos(pagination.current_page)"
+            @change="filtrar()"
             type="date"
             v-model="formularioFiltros.date_fin"
             class="form-control d-inline-block date col-4"
           />
         </div>
-        <div v-if="formularioFiltros.filtro == 2" class="d-inline-block col-10">
+        <div v-if="formularioFiltros.filtro == 2" class="d-inline-block col-12">
           <label class="d-inline-block">Desde:</label>
           <input
-            @change="getMovimientos(pagination.current_page)"
+            @change="filtrar()"
             type="month"
             v-model="formularioFiltros.date_ini"
             class="form-control d-inline-block date col-4"
@@ -83,16 +168,16 @@
 
           <label class="d-inline-block">Hasta:</label>
           <input
-            @change="getMovimientos(pagination.current_page)"
+            @change="filtrar()"
             type="month"
             v-model="formularioFiltros.date_fin"
             class="form-control d-inline-block date col-4"
           />
         </div>
-        <div v-if="formularioFiltros.filtro == 3" class="d-inline-block col-10">
+        <div v-if="formularioFiltros.filtro == 3" class="d-inline-block col-12">
           <label class="d-inline-block">Desde:</label>
           <select
-            @change="getMovimientos(pagination.current_page)"
+            @change="filtrar()"
             v-model="formularioFiltros.date_ini"
             class="form-control d-inline-block date col-4"
           >
@@ -103,7 +188,7 @@
 
           <label class="d-inline-block">Hasta:</label>
           <select
-            @change="getMovimientos(this.pagination.current_page)"
+            @change="filtrar(this.pagination.current_page)"
             v-model="formularioFiltros.date_fin"
             class="form-control d-inline-block date col-4"
           >
@@ -114,126 +199,141 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-center">
+    <div
+      v-if="listado_movimientos.length != 0"
+      class="row justify-content-center"
+    >
       <table class="table table-hover thead-light text-center">
         <thead>
           <th>Fecha</th>
-          <th>Categoria</th>
-          <th v-if="formularioFiltros.filtro == 1">Nombre</th>
-          <th v-if="formularioFiltros.filtro == 1">Concepto</th>
-          <th>Ingreso</th>
-          <th>Egreso</th>
-          <th v-if="formularioFiltros.filtro == 1">Acciones</th>
+          <th v-if="listado_movimientos[0].categoria">Categoria</th>
+          <th v-if="listado_movimientos[0].proveedor">Proveedor</th>
+          <th v-if="listado_movimientos[0].concepto">Concepto</th>
+          <th>Total</th>
+          <th colspan="2" v-if="listado_movimientos[0].id"></th>
         </thead>
         <tbody>
-          <tr v-for="movimiento in movimientos" :key="movimiento.id">
+          <tr v-for="movimiento in listado_movimientos" :key="movimiento.id">
             <td>{{ movimiento.fecha }}</td>
-            <td>{{ movimiento.categoria.nombreCategoria }}</td>
-            <td v-if="formularioFiltros.filtro == 1">
-              {{ movimiento.entidad_nombre }}
+            <td v-if="movimiento.categoria">
+              {{ movimiento.categoria.nombre }}
             </td>
-            <td v-if="formularioFiltros.filtro == 1">
-              {{ movimiento.concepto }}
+            <td v-if="movimiento.proveedor">
+              {{ movimiento.proveedor.nombres }}
             </td>
-            <td>
-              {{ new Intl.NumberFormat("es-PY").format(movimiento.ingreso) }}
-            </td>
-            <td>
-              {{ new Intl.NumberFormat("es-PY").format(movimiento.egreso) }}
-            </td>
-            <td v-if="formularioFiltros.filtro == 1">
-              <div v-if="!movimiento.related_id">
-                <button class="btn btn-primary" @click="editar(movimiento)">
-                  Modificar
-                </button>
-                <button
-                  class="btn btn-primary"
-                  @click="eliminar(movimiento.id)"
-                >
-                  Eliminar
-                </button>
-              </div>
-              <div v-else>
-                <!-- <button
-                  class="btn btn-primary"
-                  @click="verDetalles(movimiento.id)"
-                >
-                  Ver Detalles
-                </button> -->
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td :colspan="formularioFiltros.filtro == 1 ? 4 : 2">Totales:</td>
-            <td>
-              {{ new Intl.NumberFormat("es-PY").format(totales["ingreso"]) }}
-            </td>
-            <td>
-              {{ new Intl.NumberFormat("es-PY").format(totales["egreso"]) }}
-            </td>
-          </tr>
-          <tr>
-            <td :colspan="formularioFiltros.filtro == 1 ? 4 : 2">
-              Total final:
-            </td>
-            <td colspan="2">
-              {{
-                new Intl.NumberFormat("es-PY").format(
-                  totales["ingreso"] - totales["egreso"]
-                )
-              }}
+            <td v-if="movimiento.concepto">{{ movimiento.concepto }}</td>
+            <td>{{ new Intl.NumberFormat().format(movimiento.monto) }}</td>
+            <td v-if="movimiento.id"><a>Detalles</a></td>
+            <td v-if="movimiento.id">
+              <a href="#">Imprimir</a>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+    <div v-if="listado_ventas.length != 0" class="row justify-content-center">
+      <table class="table table-hover thead-light text-center">
+        <thead>
+          <th>Fecha</th>
+          <th v-if="listado_ventas[0].factura_numero">Fact. Num</th>
+          <th v-if="listado_ventas[0].cliente">Cliente</th>
+          <th>Pago</th>
+          <th>Total</th>
+          <th colspan="2" v-if="listado_ventas[0].id"></th>
+        </thead>
+        <tbody>
+          <tr v-for="venta in listado_ventas" :key="venta.id">
+            <td>{{ venta.fecha }}</td>
+            <td v-if="venta.factura_numero">{{ venta.factura_numero }}</td>
+            <td v-if="venta.cliente">{{ venta.cliente }}</td>
+            <td>{{ venta.forma_pago }}</td>
+            <td>{{ new Intl.NumberFormat().format(venta.monto) }}</td>
+            <td v-if="venta.id"><a>Detalles</a></td>
+            <td v-if="venta.id">
+              <a href="#">Imprimir</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <nav>
+      <ul class="pagination">
+        <li class="page-item" v-if="pagination.current_page > 1">
+          <a
+            class="page-link"
+            href="#"
+            @click.prevent="changePage(pagination.current_page - 1)"
+          >
+            <span>Anterior</span>
+          </a>
+        </li>
+        <li
+          class="page-item"
+          v-for="page in pagesNumber"
+          :key="page"
+          :class="[page == isActivated ? 'active' : '']"
+        >
+          <a class="page-link" href="#" @click.prevent="changePage(page)">
+            {{ page }}
+          </a>
+        </li>
+        <li
+          class="page-item"
+          v-if="pagination.current_page < pagination.last_page"
+        >
+          <a
+            class="page-link"
+            href="#"
+            @click.prevent="changePage(pagination.current_page + 1)"
+          >
+            <span>Siguiente</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
     <seleccion-proveedor-component></seleccion-proveedor-component>
-    <nuevo-movimiento-component
-      :formulario="movimientoEditar"
-      @creado-movimiento="creadoMovimiento()"
-    ></nuevo-movimiento-component>
-    <nuevo-proveedor-component></nuevo-proveedor-component>
-    <eliminar-component
-      api="movimiento"
-      :registro="movimientoEliminar"
-      @eliminado="getMovimientos(pagination.current_page)"
-    ></eliminar-component>
-    <nueva-categoria-movimiento-component
-      @creada-categoria="getCategorias"
-    ></nueva-categoria-movimiento-component>
     <seleccion-cliente-component></seleccion-cliente-component>
-    <nuevo-cliente-component></nuevo-cliente-component>
-    <nueva-venta-component
-      @venta-creada="getMovimientos(pagination.current_page)"
-    ></nueva-venta-component>
-    <nuevo-recibo-component
-      @pago-registrado="getMovimientos(pagination.current_page)"
-    ></nuevo-recibo-component>
-    <nuevo-producto-component></nuevo-producto-component>
-    <nueva-categoria-producto-component></nueva-categoria-producto-component>
+    <nueva-venta-component @venta-creada="filtrar()"></nueva-venta-component>
+    <eliminar-component
+      :api="api_eliminar"
+      :registro="id_eliminar"
+      @eliminado="filtrar()"
+    ></eliminar-component>
   </div>
 </template>
 
 <script>
+import EliminarComponent from "../Formularios/EliminarComponent.vue";
 export default {
+  components: { EliminarComponent },
   data: () => {
     return {
       formularioFiltros: {
-        categoria: "",
         filtro: 1,
         date_ini: "",
         date_fin: "",
       },
-      categorias: [],
       filtros: [
         { id: 1, descripcion: "Filtrar según Fechas" },
         { id: 2, descripcion: "Filtrar según Meses" },
         { id: 3, descripcion: "Filtrar según Años" },
       ],
-      movimientoEditar: {},
-      movimientoEliminar: 0,
-      movimientos: [],
-      totales: [],
+      ventas: {
+        numero_factura: "",
+        cliente: "",
+        pago: "",
+      },
+      movimientos: {
+        proveedor: "",
+        categoria: "",
+        concepto: "",
+        tipo: "",
+      },
+      is_venta: true,
+      api_eliminar: "",
+      id_eliminar: "",
+      listado_ventas: [],
+      listado_movimientos: [],
       pagination: {
         total: 0,
         current_page: 0,
@@ -244,11 +344,10 @@ export default {
       },
     };
   },
-  mounted() {
-    this.formularioFiltros.date_ini = this.fechaActual(1);
+  created() {
+    this.formularioFiltros.date_ini = this.fechaActual();
     this.formularioFiltros.date_fin = this.fechaActual();
-    this.getCategorias();
-    this.getMovimientos();
+    this.filtrar(null, 1, true);
   },
   computed: {
     isActivated() {
@@ -287,10 +386,10 @@ export default {
     },
   },
   methods: {
-      creadoMovimiento(){
-          this.movimientoEditar = this.movimientoVacio;
-          this.getMovimientos(this.pagination.current_page);
-      },
+    creadoMovimiento() {
+      this.movimientoEditar = this.movimientoVacio;
+      this.filtrar(this.pagination.current_page);
+    },
     fechaActual(anos = 0) {
       const fecha = new Date();
       let mes = fecha.getMonth() + 1;
@@ -310,40 +409,15 @@ export default {
       return ano + "-" + mes;
     },
 
-    getMovimientos(page = 1) {
-      axios
-        .get(
-          "/api/movimiento?page=" +
-            page +
-            "&filters=" +
-            JSON.stringify(this.formularioFiltros)
-        )
-        .then((resultado) => {
-          this.movimientos = resultado.data.movimientos.data;
-          this.totales = resultado.data.totales;
-          this.pagination = resultado.data.pagination;
-        });
-    },
-
     changePage(page) {
       this.pagination.current_page = page;
-      this.getMovimientos(page);
+      this.filtrar(null, page);
     },
 
-    editar(movimiento = this.movimientoVacio) {
-      this.movimientoEditar = Object.assign({}, movimiento);
-      $("#nuevoMovimiento").modal("show");
-    },
-
-    eliminar(id) {
-      this.movimientoEliminar = id;
+    eliminar(id, api) {
+      this.id_eliminar = id;
+      this.api_eliminar = api;
       $("#eliminar").modal("show");
-    },
-
-    getCategorias() {
-      axios.get("/api/categoria").then((resultado) => {
-        this.categorias = resultado.data;
-      });
     },
 
     generarReporte() {
@@ -407,12 +481,61 @@ export default {
           this.formularioFiltros.date_fin = date_fin[0];
           break;
       }
-      this.getMovimientos(this.pagination.current_page);
+      this.filtrar(null, this.pagination.current_page);
     },
 
-    verDetalles(id){
-        //TODO Ver detalles del comprobante
-    }
+    filtrar(evento = null, page = 1, apertura = false) {
+      this.is_venta =
+        evento == null
+          ? this.is_venta
+          : evento.target.classList.contains("venta");
+      if (this.is_venta) {
+        this.movimientos = {
+          proveedor: "",
+          categoria: "",
+          concepto: "",
+          tipo: "",
+        };
+        axios
+          .get(
+            "api/venta?page=" +
+              page +
+              "&filters=" +
+              JSON.stringify(this.formularioFiltros) +
+              "&ventas=" +
+              JSON.stringify(this.ventas) +
+              "&apertura=" +
+              apertura
+          )
+          .then((resultado) => {
+            this.listado_ventas = resultado.data.ventas.data;
+            this.listado_movimientos = [];
+            this.pagination = resultado.data.pagination;
+            this.is_venta = true;
+          });
+      } else {
+        this.ventas = {
+          numero_factura: "",
+          cliente: "",
+          pago: "",
+        };
+        axios
+          .get(
+            "api/movimiento?page=" +
+              page +
+              "&filters=" +
+              JSON.stringify(this.formularioFiltros) +
+              "&movimientos=" +
+              JSON.stringify(this.movimientos)
+          )
+          .then((resultado) => {
+            this.listado_movimientos = resultado.data.movimientos;
+            this.listado_ventas = [];
+            this.pagination = resultado.data.pagination;
+            this.is_venta = false;
+          });
+      }
+    },
   },
 };
 </script>
