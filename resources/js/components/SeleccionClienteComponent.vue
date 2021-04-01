@@ -31,7 +31,7 @@
 
         <div class="modal-footer">
           <button
-            class="btn btn-primary mx-auto"
+            class="btn btn-primary"
             :disabled="!$global.cliente.id"
             @click="seleccionar"
           >
