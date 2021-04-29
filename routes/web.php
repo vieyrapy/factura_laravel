@@ -22,5 +22,5 @@ Route::middleware('auth')->group(function () {
 //     Route::get('/clientes', function(){ return view('clientes.index');});
 //     Route::get('/movimientos', function(){ return view('movimientos.movimientos');});
 //     Route::get('/ventas', function(){ return view('ventas.ventas');});
-//     Route::post('/impresion', 'PdfController@pdf_recibo');
+     Route::post('/impresion', 'PdfController@pdf_recibo');
 });

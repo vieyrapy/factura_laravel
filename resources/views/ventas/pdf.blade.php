@@ -10,7 +10,7 @@
     }
     .condicion {
         top: 4.5cm;
-        left: {{$condicion == "Contado" ? "15.5cm" : "18cm"}}
+        left: {{$condicion == 1 ? "15.5cm" : "18cm"}}
     }
     .nombre {
         top: 5cm;
@@ -87,18 +87,18 @@
     <p class="direccion">{{$direccion}}</p>
     <p class="total-letras">{{$total_letras}}</p>
     <p class="total">{{$total}}</p>
-    <p class="total-iva">{{$total_iva}}</p>
-    <p class="iva5-total">{{$iva5}}</p>
-    <p class="iva10-total">{{$iva10}}</p>
+    <p class="total-iva">{{float_val($total_iva)}}</p>
+    <p class="iva5-total">{{float_val($iva5)}}</p>
+    <p class="iva10-total">{{float_val($iva10)}}</p>
     <table class="tabla">
         @foreach($detalles as $detalle)
             <tr>
                 <td class="cantidad">{{$detalle['cantidad']}}</td>
                 <td class="producto">{{$detalle['producto']['nombre']}}</td>
                 <td class="precio">{{$detalle['producto']['precio_venta']}}</td>
-                <td class="exentas">{{$detalle['producto']['iva'] == 0 ? $detalle['valor_venta'] : 0}}</td>
-                <td class="iva5">{{$detalle['producto']['iva'] == 21 ? $detalle['valor_venta'] : 0}}</td>
-                <td class="iva10">{{$detalle['producto']['iva'] == 11 ? $detalle['valor_venta'] : 0}}</td>
+                <td class="exentas">{{$detalle['iva'] == 0 ? $detalle['valor_guaranies'] : 0}}</td>
+                <td class="iva5">{{$detalle['iva'] == 5 ? $detalle['valor_guaranies'] : 0}}</td>
+                <td class="iva10">{{$detalle['iva'] == 10 ? $detalle['valor_guaranies'] : 0}}</td>
             </tr>
         @endforeach
     </table>

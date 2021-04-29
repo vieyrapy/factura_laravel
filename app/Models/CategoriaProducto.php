@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class CategoriaProducto extends Model
 {
+  public $table = 'producto_categorias';
     public function getCategorias(){
         return CategoriaProducto::all();
     }

@@ -9,6 +9,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::resource('pago-forma', 'PagoFormasController');
+    Route::resource('moneda', 'MonedasController');
     Route::resource('pago', 'PagoController');
     Route::resource('cliente', 'ClientesController');
     Route::resource('categoria', 'CategoriasController');
@@ -18,7 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('movimiento', 'MovimientosController');
     Route::resource('proveedor', 'ProveedoresController');
     Route::post('mail', 'Email@send');
-    Route::get('producto-seleccion', 'CategoriasProductoController@getCategoriasSelect');
+    Route::get('producto-seleccion', 'ProductosController@getProductosSelect');
     Route::post('reporte', 'MovimientosController@pdf');
     Route::get('venta/pendientes/{id}', 'VentaController@pendientes');
     Route::post('caja/apertura', 'CajaController@apertura');

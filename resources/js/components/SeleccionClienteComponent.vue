@@ -24,7 +24,7 @@
               v-bind:key="cliente.id"
               :value="cliente"
             >
-              {{ cliente.nombre }}
+              {{ cliente.nombres }}
             </option>
           </select>
         </div>

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class Clientes extends Model
 {
+
+    public $table = 'clientes';
      // Aqui realizamos la relacion entre cliente
     // Un cliente puede tener muchos pagos
     public function pagos(){

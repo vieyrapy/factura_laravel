@@ -7,8 +7,15 @@ use Illuminate\Http\Request;
 
 class Producto extends Model
 {
+  public $timestamps = false;
     public function categoria_producto(){
         return $this->belongsTo('App\Models\CategoriaProducto');
+    }
+
+    public function getProductosSelect(){
+      return Producto::select(['productos.id', 'productos.nombre', 'stock_actual', 'precio_venta', 'categoria.iva'])
+                      ->join('producto_categorias as categoria', 'categoria.id', '=', 'producto_categoria_id')
+                      ->where('productos.eliminado', '=', 0)->get();
     }
 
     public function getProductos(){

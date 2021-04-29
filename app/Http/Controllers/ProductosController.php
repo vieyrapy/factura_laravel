@@ -22,4 +22,8 @@ class ProductosController extends Controller
     public function update(Request $request, $id){
         $this->producto->editarProducto($request, $id);
     }
+
+    public function getProductosSelect(){
+        return $this->producto->getProductosSelect();
+    }
 }
