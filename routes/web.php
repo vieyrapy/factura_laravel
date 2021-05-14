@@ -10,6 +10,8 @@
 |
 */
 
+use App\Http\Controllers\VentaController;
+
 Auth::routes();
 Route::get('/', function () {
     return view('welcome');
@@ -23,4 +25,5 @@ Route::middleware('auth')->group(function () {
 //     Route::get('/movimientos', function(){ return view('movimientos.movimientos');});
 //     Route::get('/ventas', function(){ return view('ventas.ventas');});
      Route::post('/impresion', 'PdfController@pdf_recibo');
+     Route::get('/impresion/{id}', 'VentaController@imprimir');
 });

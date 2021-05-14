@@ -131,9 +131,9 @@ class Venta extends Model
         $venta->factura_numero = isset($request->factura) ? $request->factura : "";
         $venta->condicion = $request->pago_forma == 2 ? 2 : 1;
         $venta->cliente_id = $request->cliente;
-        $venta->total = $request->total;
+        $venta->total = $request->total_guaranies;
         $venta->total_iva = $request->total_iva;
-        $venta->monto_pendiente = $request->total - $request->pago;
+        $venta->monto_pendiente = $request->total_guaranies - $request->pago;
         $venta->numero_transaccion = $request->numero_transaccion;
         $venta->operadora = $request->operadora;
         $venta->pago_forma_id = $request->pago_forma;
@@ -144,20 +144,20 @@ class Venta extends Model
         $iva5 = 0;
         $iva10 = 0;
         foreach($request->detalles as $detalle){
+            $producto = Producto::find($detalle['producto']);
+            $producto->stock_actual -= $detalle['cantidad'];
+            $producto->save();
             $detalle_venta = new DetalleVenta();
             $detalle_venta->venta_id = $venta->id;
             $detalle_venta->productos_id = $detalle['producto'];
             $detalle_venta->cantidad = $detalle['cantidad'];
-            $detalle_venta->valor_guaranies = $detalle['precio_total'];
-            switch($request->moneda->id){
-              case 2: $detalle_venta->total_dolares = $request->total_moneda; break;
-              case 3: $detalle_venta->total_reales = $request->total_moneda; break;
-              case 4: $detalle_venta->total_pesos = $request->total_moneda; break;
+            $detalle_venta->valor_guaranies = $detalle['cantidad'] * $producto->precio_venta;
+            switch($request->moneda['id']){
+              case 2: $detalle_venta->total_dolares = $request->total; break;
+              case 3: $detalle_venta->total_reales = $request->total; break;
+              case 4: $detalle_venta->total_pesos = $request->total; break;
             }
             $detalle_venta->save();
-            $producto = Producto::find($detalle['producto']);
-            $producto->stock_actual -= $detalle['cantidad'];
-            $producto->save();
             $categoria_iva = CategoriaProducto::find($producto->producto_categoria_id)->iva;
             $detalle_venta->producto = $producto;
             $detalle_venta->iva = $categoria_iva;
@@ -176,7 +176,7 @@ class Venta extends Model
             'nombre' => $cliente->nombre,
             'email' => $cliente->email,
             'detalles' => $detalles_venta,
-            'total' => $request->total,
+            'total' => $request->total_guaranies,
             'fecha' => $fecha_venta,
             'condicion' => $venta->condicion,
             'ruc' => $cliente->ruc,
@@ -185,7 +185,49 @@ class Venta extends Model
             'direccion' => $cliente->direccion,
             'iva5' => $iva5,
             'iva10' => $iva10,
-            'total_letras' => $formatterES->format($request->total)
+            'total_letras' => $formatterES->format($request->total_guaranies)
+        );
+        return $data;
+    }
+
+    public function imprimir($id){
+        $venta = Venta::find($id);
+        $detalles_venta_query = DetalleVenta::where('venta_id', $id)->get();
+        $detalles_venta = [];
+        $iva5 = 0;
+        $iva10 = 0;
+        foreach($detalles_venta_query as $detalle){
+            $producto = Producto::find($detalle->productos_id);
+            $detalle_venta = clone $detalle;
+            $detalle_venta->valor_guaranies = $detalle['cantidad'] * $producto->precio_venta;
+            $categoria_iva = CategoriaProducto::find($producto->producto_categoria_id)->iva;
+            $detalle_venta->producto = $producto;
+            $detalle_venta->iva = $categoria_iva;
+            if($categoria_iva == 5){
+                $iva5 += $detalle_venta->iva_total;
+            }else if($categoria_iva == 10){
+                $iva10 += $detalle_venta->iva_total;
+            }
+            array_push($detalles_venta, $detalle_venta);
+        }
+
+        $fecha_venta = $venta->created_at;
+        $cliente = Clientes::find($venta->cliente_id);
+        $formatterES = new \NumberFormatter("es", \NumberFormatter::SPELLOUT);
+        $data = array(
+            'nombre' => $cliente->nombre,
+            'email' => $cliente->email,
+            'detalles' => $detalles_venta,
+            'total' => $venta->total,
+            'fecha' => $fecha_venta,
+            'condicion' => $venta->condicion,
+            'ruc' => $cliente->ruc,
+            'total_iva' => $venta->total_iva,
+            'telefono' => $cliente->telefono,
+            'direccion' => $cliente->direccion,
+            'iva5' => $iva5,
+            'iva10' => $iva10,
+            'total_letras' => $formatterES->format($venta->total)
         );
         return $data;
     }

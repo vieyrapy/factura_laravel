@@ -87,9 +87,9 @@
     <p class="direccion">{{$direccion}}</p>
     <p class="total-letras">{{$total_letras}}</p>
     <p class="total">{{$total}}</p>
-    <p class="total-iva">{{float_val($total_iva)}}</p>
-    <p class="iva5-total">{{float_val($iva5)}}</p>
-    <p class="iva10-total">{{float_val($iva10)}}</p>
+    <p class="total-iva">{{floatval($total_iva)}}</p>
+    <p class="iva5-total">{{floatval($iva5)}}</p>
+    <p class="iva10-total">{{floatval($iva10)}}</p>
     <table class="tabla">
         @foreach($detalles as $detalle)
             <tr>

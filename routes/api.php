@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('reporte', 'MovimientosController@pdf');
     Route::get('venta/pendientes/{id}', 'VentaController@pendientes');
     Route::post('caja/apertura', 'CajaController@apertura');
+    Route::get('ventas-dia', 'VentaController@totalDia');
 });
 
 ?>

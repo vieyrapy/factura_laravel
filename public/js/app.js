@@ -2133,6 +2133,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           iva_total: 0
         }],
         total: 0,
+        total_guaranies: 0,
         total_iva: 0
       },
       errors: []
@@ -2164,6 +2165,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: {
     calcularTotalFinal: function calcularTotalFinal() {
       this.formulario.total = 0;
+      this.formulario.total_guaranies = 0;
 
       var _iterator = _createForOfIteratorHelper(this.formulario.detalles),
           _step;
@@ -2173,6 +2175,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           var detalle = _step.value;
           detalle.precio_total = this.numeroSinComa(detalle.precio_total);
           this.formulario.total += detalle.precio_total;
+          this.formulario.total_guaranies += detalle.producto.precio_venta * this.numeroSinComa(detalle.cantidad);
         }
       } catch (err) {
         _iterator.e(err);
@@ -2204,7 +2207,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var detalle = this.formulario.detalles[index];
       var cantidad = this.numeroSinComa(detalle.cantidad);
       detalle.precio_total = cantidad * detalle.producto.precio_venta / this.formulario.moneda.valor;
-      detalle.iva_total = detalle.precio_total / (detalle.producto.iva * 0.01 + 1) * detalle.producto.iva * 0.01;
+      detalle.iva_total = cantidad * detalle.producto.precio_venta / (detalle.producto.iva * 0.01 + 1) * detalle.producto.iva * 0.01;
     },
     facturar: function facturar() {
       var _this2 = this;
@@ -2280,6 +2283,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           iva_total: ""
         }],
         total: 0,
+        total_guaranies: 0,
         total_iva: 0
       };
     },
@@ -3643,6 +3647,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3676,6 +3711,7 @@ __webpack_require__.r(__webpack_exports__);
         concepto: "",
         tipo: ""
       },
+      total_dia: 0,
       is_venta: true,
       api_eliminar: "",
       id_eliminar: "",
@@ -3695,6 +3731,7 @@ __webpack_require__.r(__webpack_exports__);
     this.formularioFiltros.date_ini = this.fechaActual();
     this.formularioFiltros.date_fin = this.fechaActual();
     this.filtrar(null, 1, true);
+    this.valorDia();
   },
   computed: {
     isActivated: function isActivated() {
@@ -3823,8 +3860,30 @@ __webpack_require__.r(__webpack_exports__);
 
       this.filtrar(null, this.pagination.current_page);
     },
-    filtrar: function filtrar() {
+    valorDia: function valorDia() {
       var _this = this;
+
+      axios.get("api/ventas-dia").then(function (resultado) {
+        return _this.total_dia = resultado.data;
+      });
+    },
+    imprimir: function imprimir(id) {
+      axios.get("impresion/" + id).then(function (resultado) {
+        axios.post("/impresion", resultado.data, {
+          responseType: "arraybuffer"
+        }).then(function (response) {
+          var blob = new Blob([response.data], {
+            type: "application/pdf"
+          });
+          var link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = "factura.pdf";
+          link.click();
+        });
+      });
+    },
+    filtrar: function filtrar() {
+      var _this2 = this;
 
       var evento = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
@@ -3839,10 +3898,10 @@ __webpack_require__.r(__webpack_exports__);
           tipo: ""
         };
         axios.get("api/venta?page=" + page + "&filters=" + JSON.stringify(this.formularioFiltros) + "&ventas=" + JSON.stringify(this.ventas) + "&apertura=" + apertura).then(function (resultado) {
-          _this.listado_ventas = resultado.data.ventas.data;
-          _this.listado_movimientos = [];
-          _this.pagination = resultado.data.pagination;
-          _this.is_venta = true;
+          _this2.listado_ventas = resultado.data.ventas.data;
+          _this2.listado_movimientos = [];
+          _this2.pagination = resultado.data.pagination;
+          _this2.is_venta = true;
         });
       } else {
         this.ventas = {
@@ -3851,10 +3910,10 @@ __webpack_require__.r(__webpack_exports__);
           pago: ""
         };
         axios.get("api/movimiento?page=" + page + "&filters=" + JSON.stringify(this.formularioFiltros) + "&movimientos=" + JSON.stringify(this.movimientos)).then(function (resultado) {
-          _this.listado_movimientos = resultado.data.movimientos;
-          _this.listado_ventas = [];
-          _this.pagination = resultado.data.pagination;
-          _this.is_venta = false;
+          _this2.listado_movimientos = resultado.data.movimientos;
+          _this2.listado_ventas = [];
+          _this2.pagination = resultado.data.pagination;
+          _this2.is_venta = false;
         });
       }
     }
@@ -44162,8 +44221,18 @@ var render = function() {
                     return _c("tr", { key: venta.id }, [
                       _c("td", [_vm._v(_vm._s(venta.fecha))]),
                       _vm._v(" "),
-                      venta.factura_numero
-                        ? _c("td", [_vm._v(_vm._s(venta.factura_numero))])
+                      venta.cliente
+                        ? _c("td", [
+                            _vm._v(
+                              "\n            " +
+                                _vm._s(
+                                  venta.factura_numero
+                                    ? venta.factura_numero
+                                    : ""
+                                ) +
+                                "\n          "
+                            )
+                          ])
                         : _vm._e(),
                       _vm._v(" "),
                       venta.cliente
@@ -44184,9 +44253,18 @@ var render = function() {
                       _vm._v(" "),
                       venta.id
                         ? _c("td", [
-                            _c("a", { attrs: { href: "#" } }, [
-                              _vm._v("Imprimir")
-                            ])
+                            _c(
+                              "a",
+                              {
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.imprimir(venta.id)
+                                  }
+                                }
+                              },
+                              [_vm._v("Imprimir")]
+                            )
                           ])
                         : _vm._e()
                     ])
@@ -44272,6 +44350,14 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
+      _c("p", { staticClass: "h2" }, [
+        _vm._v(
+          "\n    Total en caja del día: " +
+            _vm._s(new Intl.NumberFormat().format(_vm.total_dia)) +
+            "\n  "
+        )
+      ]),
+      _vm._v(" "),
       _c("seleccion-proveedor-component"),
       _vm._v(" "),
       _c("seleccion-cliente-component"),
@@ -44279,7 +44365,8 @@ var render = function() {
       _c("nueva-venta-component", {
         on: {
           "venta-creada": function($event) {
-            return _vm.filtrar()
+            _vm.filtrar()
+            _vm.valorDia()
           }
         }
       }),

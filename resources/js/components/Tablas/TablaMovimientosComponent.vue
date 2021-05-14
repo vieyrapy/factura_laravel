@@ -8,7 +8,11 @@
     >
       + Nueva Venta
     </button>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#proveedor">
+    <button
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#proveedor"
+    >
       + Nuevo Movimiento
     </button>
     <!-- <button
@@ -52,7 +56,11 @@
           </div>
           <div class="dropdown-item">
             <label>Pago: </label
-            ><input class="ml-1 venta" v-model="ventas.pago" @keyup="filtrar($event)" />
+            ><input
+              class="ml-1 venta"
+              v-model="ventas.pago"
+              @keyup="filtrar($event)"
+            />
           </div>
         </div>
       </div>
@@ -119,13 +127,20 @@
         v-model="formularioFiltros.filtro"
         class="custom-select ml-2 col-2"
       >
-        <option v-for="filtro in filtros" v-bind:key="filtro.id" :value="filtro.id">
+        <option
+          v-for="filtro in filtros"
+          v-bind:key="filtro.id"
+          :value="filtro.id"
+        >
           {{ filtro.descripcion }}
         </option>
       </select>
 
       <div class="col-6 d-inline-block float-right">
-        <div v-if="formularioFiltros.filtro == 1" class="d-inline-block col-12 p-0 m-0">
+        <div
+          v-if="formularioFiltros.filtro == 1"
+          class="d-inline-block col-12 p-0 m-0"
+        >
           <label class="d-inline-block">Desde:</label>
           <input
             @change="filtrar()"
@@ -184,7 +199,10 @@
         </div>
       </div>
     </div>
-    <div v-if="listado_movimientos.length != 0" class="row justify-content-center">
+    <div
+      v-if="listado_movimientos.length != 0"
+      class="row justify-content-center"
+    >
       <table class="table table-hover thead-light text-center">
         <thead>
           <th>Fecha</th>
@@ -226,13 +244,15 @@
         <tbody>
           <tr v-for="venta in listado_ventas" :key="venta.id">
             <td>{{ venta.fecha }}</td>
-            <td v-if="venta.factura_numero">{{ venta.factura_numero }}</td>
+            <td v-if="venta.cliente">
+              {{ venta.factura_numero ? venta.factura_numero : "" }}
+            </td>
             <td v-if="venta.cliente">{{ venta.cliente }}</td>
             <td>{{ venta.forma_pago }}</td>
             <td>{{ new Intl.NumberFormat().format(venta.monto) }}</td>
             <td v-if="venta.id"><a>Detalles</a></td>
             <td v-if="venta.id">
-              <a href="#">Imprimir</a>
+              <a href="#" @click="imprimir(venta.id)">Imprimir</a>
             </td>
           </tr>
         </tbody>
@@ -259,7 +279,10 @@
             {{ page }}
           </a>
         </li>
-        <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+        <li
+          class="page-item"
+          v-if="pagination.current_page < pagination.last_page"
+        >
           <a
             class="page-link"
             href="#"
@@ -270,9 +293,17 @@
         </li>
       </ul>
     </nav>
+    <p class="h2">
+      Total en caja del día: {{ new Intl.NumberFormat().format(total_dia) }}
+    </p>
     <seleccion-proveedor-component></seleccion-proveedor-component>
     <seleccion-cliente-component></seleccion-cliente-component>
-    <nueva-venta-component @venta-creada="filtrar()"></nueva-venta-component>
+    <nueva-venta-component
+      @venta-creada="
+        filtrar();
+        valorDia();
+      "
+    ></nueva-venta-component>
     <eliminar-component
       :api="api_eliminar"
       :registro="id_eliminar"
@@ -308,6 +339,7 @@ export default {
         concepto: "",
         tipo: "",
       },
+      total_dia: 0,
       is_venta: true,
       api_eliminar: "",
       id_eliminar: "",
@@ -327,6 +359,7 @@ export default {
     this.formularioFiltros.date_ini = this.fechaActual();
     this.formularioFiltros.date_fin = this.fechaActual();
     this.filtrar(null, 1, true);
+    this.valorDia();
   },
   computed: {
     isActivated() {
@@ -424,8 +457,16 @@ export default {
               this.formularioFiltros.date_fin = this.fecha(1, 1, date_fin[0]);
               break;
             case 2:
-              this.formularioFiltros.date_ini = this.fecha(1, date_ini[1], date_ini[0]);
-              this.formularioFiltros.date_fin = this.fecha(1, date_fin[1], date_fin[0]);
+              this.formularioFiltros.date_ini = this.fecha(
+                1,
+                date_ini[1],
+                date_ini[0]
+              );
+              this.formularioFiltros.date_fin = this.fecha(
+                1,
+                date_fin[1],
+                date_fin[0]
+              );
               break;
           }
           break;
@@ -436,8 +477,14 @@ export default {
               this.formularioFiltros.date_fin = this.mes(1, date_fin[0]);
               break;
             case 3:
-              this.formularioFiltros.date_ini = this.mes(date_ini[1], date_ini[0]);
-              this.formularioFiltros.date_fin = this.mes(date_fin[1], date_fin[0]);
+              this.formularioFiltros.date_ini = this.mes(
+                date_ini[1],
+                date_ini[0]
+              );
+              this.formularioFiltros.date_fin = this.mes(
+                date_fin[1],
+                date_fin[0]
+              );
               break;
           }
           break;
@@ -449,9 +496,31 @@ export default {
       this.filtrar(null, this.pagination.current_page);
     },
 
+    valorDia() {
+      axios
+        .get("api/ventas-dia")
+        .then((resultado) => (this.total_dia = resultado.data));
+    },
+
+    imprimir(id) {
+      axios.get("impresion/" + id).then((resultado) => {
+        axios
+          .post("/impresion", resultado.data, { responseType: "arraybuffer" })
+          .then((response) => {
+            let blob = new Blob([response.data], { type: "application/pdf" });
+            let link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = "factura.pdf";
+            link.click();
+          });
+      });
+    },
+
     filtrar(evento = null, page = 1, apertura = false) {
       this.is_venta =
-        evento == null ? this.is_venta : evento.target.classList.contains("venta");
+        evento == null
+          ? this.is_venta
+          : evento.target.classList.contains("venta");
       if (this.is_venta) {
         this.movimientos = {
           proveedor: "",

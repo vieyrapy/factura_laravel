@@ -30,4 +30,12 @@ class VentaController extends Controller
     public function pendientes($id){
         return $this->venta->pendientes($id);
     }
+
+    public function imprimir($id){
+        return $this->venta->imprimir($id);
+    }
+
+    public function totalDia(){
+        return (new Venta())->filtros()->get()->sum('monto');
+    }
 }

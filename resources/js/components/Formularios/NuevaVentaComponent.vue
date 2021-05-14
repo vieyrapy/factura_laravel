@@ -137,6 +137,7 @@ export default {
           { producto: "", cantidad: 0, precio_total: 0, iva_total: 0 },
         ],
         total: 0,
+        total_guaranies: 0,
         total_iva: 0,
       },
       errors: [],
@@ -159,9 +160,11 @@ export default {
   computed: {
     calcularTotalFinal() {
       this.formulario.total = 0;
+      this.formulario.total_guaranies = 0;
       for (const detalle of this.formulario.detalles) {
         detalle.precio_total = this.numeroSinComa(detalle.precio_total);
         this.formulario.total += detalle.precio_total;
+        this.formulario.total_guaranies += detalle.producto.precio_venta * this.numeroSinComa(detalle.cantidad);
       }
       return parseFloat(this.formulario.total).toFixed(2).toLocaleString();
     },
@@ -189,7 +192,7 @@ export default {
       const detalle = this.formulario.detalles[index];
       const cantidad = this.numeroSinComa(detalle.cantidad);
       detalle.precio_total = cantidad * detalle.producto.precio_venta / this.formulario.moneda.valor;
-      detalle.iva_total = (detalle.precio_total / (detalle.producto.iva * 0.01 + 1)) * detalle.producto.iva * 0.01;
+      detalle.iva_total = (cantidad * detalle.producto.precio_venta / (detalle.producto.iva * 0.01 + 1)) * detalle.producto.iva * 0.01;
     },
     facturar() {
       this.errors = [];
@@ -253,6 +256,7 @@ export default {
           { producto: "", cantidad: "", precio_total: "", iva_total: "" },
         ],
         total: 0,
+        total_guaranies: 0,
         total_iva: 0,
       };
     },
